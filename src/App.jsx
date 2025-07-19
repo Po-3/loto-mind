@@ -23,27 +23,45 @@ export default function App() {
   const selectedUrl = tabs.find(t => t.key === selectedTab).url;
 
   return (
-    <div style={{ width: '100%', boxSizing: 'border-box' }}>
+    <div
+      style={{
+        maxWidth: 1280,
+        width: '100%',
+        margin: '0 auto',
+        padding: '2rem',
+        boxSizing: 'border-box',
+        textAlign: 'left',
+        fontFamily: 'sans-serif',
+      }}
+    >
       {/* ロゴ＆タイトル */}
-      <div style={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        marginBottom: 14,
-        userSelect: 'none'
-      }}>
-        <div style={{
+      <div
+        style={{
           display: 'flex',
+          flexDirection: 'column',
           alignItems: 'center',
-          gap: 12
-        }}>
-          <span style={{
-            fontSize: '7vw', // スマホでも自動調整
-            fontWeight: 800,
-            color: '#337be8',
-            letterSpacing: '0.08em',
-            fontFamily: 'sans-serif'
-          }}>Loto</span>
+          marginBottom: 14,
+          userSelect: 'none'
+        }}
+      >
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 12
+          }}
+        >
+          <span
+            style={{
+              fontSize: '7vw',
+              fontWeight: 800,
+              color: '#337be8',
+              letterSpacing: '0.08em',
+              fontFamily: 'sans-serif'
+            }}
+          >
+            Loto
+          </span>
           <img
             src="/tonari.png"
             alt="となりアイコン"
@@ -58,31 +76,42 @@ export default function App() {
               background: '#fff'
             }}
           />
-          <span style={{
-            fontSize: '7vw',
-            fontWeight: 800,
-            color: '#337be8',
-            letterSpacing: '0.08em',
-            fontFamily: 'sans-serif'
-          }}>Mind</span>
+          <span
+            style={{
+              fontSize: '7vw',
+              fontWeight: 800,
+              color: '#337be8',
+              letterSpacing: '0.08em',
+              fontFamily: 'sans-serif'
+            }}
+          >
+            Mind
+          </span>
         </div>
-        <span style={{
-          fontSize: '1.01em',
-          color: '#888',
-          fontWeight: 500,
-          letterSpacing: '0.09em',
-          marginTop: 7
-        }}>by tonari</span>
+        <span
+          style={{
+            fontSize: '1.01em',
+            color: '#888',
+            fontWeight: 500,
+            letterSpacing: '0.09em',
+            marginTop: 7
+          }}
+        >
+          by tonari
+        </span>
       </div>
+
       {/* ロト種別タブ */}
-      <div style={{
-        display: 'flex',
-        gap: 10,
-        justifyContent: 'center',
-        marginBottom: 20,
-        width: '100%'
-      }}>
-        {tabs.map(tab =>
+      <div
+        style={{
+          display: 'flex',
+          gap: 10,
+          justifyContent: 'center',
+          marginBottom: 20,
+          width: '100%'
+        }}
+      >
+        {tabs.map(tab => (
           <button
             key={tab.key}
             onClick={() => setSelectedTab(tab.key)}
@@ -97,9 +126,12 @@ export default function App() {
               minWidth: 0,
               fontSize: '1em'
             }}
-          >{tab.label}</button>
-        )}
+          >
+            {tab.label}
+          </button>
+        ))}
       </div>
+
       {/* 機能タブ */}
       <div
         style={{
@@ -112,7 +144,7 @@ export default function App() {
           marginRight: 'auto'
         }}
       >
-        {features.map((f, idx) =>
+        {features.map(f => (
           <button
             key={f.key}
             onClick={() => setFeature(f.key)}
@@ -136,8 +168,9 @@ export default function App() {
               {f.label}
             </span>
           </button>
-        )}
+        ))}
       </div>
+
       {/* メイン画面切り替え */}
       <div style={{ width: '100%' }}>
         {feature === 'past' && (
@@ -147,6 +180,7 @@ export default function App() {
         {feature === 'prediction' && <Prediction lotoType={selectedTab} />}
         {feature === 'settings' && <Settings />}
       </div>
+
       <div style={{ textAlign: 'right', marginTop: 36, opacity: 0.5, fontSize: '0.97em' }}>
         <span>数字くん👦がいつも応援中！</span>
       </div>
