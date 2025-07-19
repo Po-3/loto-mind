@@ -28,23 +28,19 @@ function getLocalStorage(key, fallback) {
 const DEFAULT_BG_COLOR = '#fafcff';
 
 export default function App() {
-  // 初回レンダリング時のみdefaultMenu/defaultLotoTypeで初期化
   const [selectedTab, setSelectedTab] = useState(() => getLocalStorage('defaultLotoType', 'loto6'));
   const [feature, setFeature] = useState(() => getLocalStorage('defaultMenu', 'past'));
   const [font, setFont] = useState(getLocalStorage('font', 'system-ui, Avenir, Helvetica, Arial, sans-serif'));
   const [themeColor, setThemeColor] = useState(getLocalStorage('themeColor', DEFAULT_BG_COLOR));
 
-  // 「タブ（ロト種別）」変更 → 画面と設定も即保存
   const handleTabChange = (tabKey) => {
     setSelectedTab(tabKey);
   };
 
-  // 「機能タブ」変更
   const handleFeatureChange = (menu) => {
     setFeature(menu);
   };
 
-  // 設定ページ用（設定値のみ保存。画面は切り替えない）
   const handleDefaultLotoChange = (type) => {
     localStorage.setItem('defaultLotoType', type);
   };
@@ -60,15 +56,14 @@ export default function App() {
     localStorage.setItem('themeColor', colorVal);
   };
 
-  // フォント・背景色即時反映
   useEffect(() => {
     document.body.style.fontFamily = font;
   }, [font]);
+
   useEffect(() => {
     document.body.style.backgroundColor = themeColor || DEFAULT_BG_COLOR;
   }, [themeColor]);
 
-  // 「設定変更後の反映」ではなく、「起動時は必ずデフォルトで起動」ロジック
   useEffect(() => {
     setSelectedTab(getLocalStorage('defaultLotoType', 'loto6'));
     setFeature(getLocalStorage('defaultMenu', 'past'));
@@ -78,7 +73,15 @@ export default function App() {
 
   return (
     <div style={containerStyle}>
-      {/* 明示的な再読込ボタン（完全丸形＋刷新アイコン） */}
+      {/* 明示的な再読込ボタン */}
+      <button
+        onClick={() => window.location.reload()}
+        style={reloadButtonStyle}
+        title="アプリを再読込（更新）"
+        aria-label="アプリ再読込"
+        onMouseEnter={e => e.currentTarget.style.boxShadow = '0 4px 14px #1767a7cc'}
+        onMouseLeave={e => e.currentTarget.style.boxShadow = '0 2px 10px #337be823'}
+      >
         <svg
           width="24"
           height="24"
@@ -139,25 +142,27 @@ export default function App() {
 
       {/* メイン表示エリア */}
       <div style={{ width: '100%', position: 'relative' }}>
-        {/* ↑↓ スクロールボタン（右下） */}
-        <div style={scrollButtonContainer}>
-          <button
-            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-            style={scrollButtonStyle}
-            title="最上段へ"
-            aria-label="最上段へ"
-          >
-            ↑
-          </button>
-          <button
-            onClick={() => window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })}
-            style={scrollButtonStyle}
-            title="最下段へ"
-            aria-label="最下段へ"
-          >
-            ↓
-          </button>
-        </div>
+        {/* 「過去検索」機能の時だけ表示 */}
+        {feature === 'past' && (
+          <div style={scrollButtonContainer}>
+            <button
+              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              style={scrollButtonStyle}
+              title="最上段へ"
+              aria-label="最上段へ"
+            >
+              ↑
+            </button>
+            <button
+              onClick={() => window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })}
+              style={scrollButtonStyle}
+              title="最下段へ"
+              aria-label="最下段へ"
+            >
+              ↓
+            </button>
+          </div>
+        )}
 
         {feature === 'past' && (
           <div style={{
