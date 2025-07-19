@@ -146,3 +146,15 @@ thead {
     color: #ffffff;
   }
 }
+
+thead th {
+  color: #213547 !important;
+  background-color: #e0e0e0 !important;
+}
+
+@media (prefers-color-scheme: dark) {
+  thead th {
+    color: #ffffff !important;
+    background-color: #333 !important;
+  }
+}
