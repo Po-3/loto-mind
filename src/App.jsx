@@ -274,6 +274,8 @@ const scrollButtonStyle = {
   borderRadius: '50%',
   width: 44,
   height: 44,
+  minWidth: 44,
+  minHeight: 44,
   fontSize: 24,
   boxShadow: '0 2px 8px #337be822',
   cursor: 'pointer',
@@ -281,6 +283,7 @@ const scrollButtonStyle = {
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
+  flexShrink: 0,
 };
 
 const headerStyle = {
