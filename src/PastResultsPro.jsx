@@ -48,6 +48,47 @@ const InfoIcon = ({ onClick }) => (
   <span style={{ display: 'inline-block', marginLeft: 6, cursor: 'pointer', color: '#e26580', fontSize: 15 }} onClick={onClick}>ⓘ</span>
 );
 
+// スクロール用ボタン（上）
+const ScrollUpButton = () => (
+  <button
+    onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+    style={scrollButtonStyle}
+    title="最上段へ"
+  >↑</button>
+);
+// スクロール用ボタン（下）
+const ScrollDownButton = () => (
+  <button
+    onClick={() => window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })}
+    style={scrollButtonStyle}
+    title="最下段へ"
+  >↓</button>
+);
+// 更新ボタンアイコン（丸）
+const ReloadIcon = ({ onClick }) => (
+  <button
+    onClick={onClick}
+    title="更新"
+    style={{
+      ...reloadButtonStyle,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      cursor: 'pointer',
+      borderRadius: '50%',
+      border: 'none',
+      background: '#337be8',
+      width: 40,
+      height: 40,
+      color: 'white',
+      fontSize: 22,
+      fontWeight: 'bold',
+      boxShadow: '0 2px 8px #337be811',
+      userSelect: 'none'
+    }}
+  >⟳</button>
+);
+
 export default function PastResultsPro({ jsonUrl, lotoType }) {
   const [data, setData] = useState([]);
   const [filter, setFilter] = useState({
@@ -69,8 +110,8 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
     '偶数多め': `${config.main >= 7 ? '5個以上' : config.main === 6 ? '4個以上' : '4個以上'}の偶数を含む構成です。`,
     'バランス型': '奇数と偶数が2:3または3:2などバランスよく含まれています。',
     '下一桁かぶり': '同じ下一桁の数字が2個以上（例：11・21など）含まれる構成です。',
-    '合計小さめ': `合計値が${config.loto7 ? '160未満' : config.loto6 ? '110未満' : '60未満'}の構成です。`,
-    '合計大きめ': `合計値が${config.loto7 ? '160以上' : config.loto6 ? '180以上' : '80以上'}の構成です。`,
+    '合計小さめ': `合計値が${lotoType === 'loto7' ? '160未満' : lotoType === 'loto6' ? '110未満' : '60未満'}の構成です。`,
+    '合計大きめ': `合計値が${lotoType === 'loto7' ? '160以上' : lotoType === 'loto6' ? '180以上' : '80以上'}の構成です。`,
     'キャリーあり': 'キャリーオーバーが発生していた回です。'
   };
 
@@ -119,13 +160,17 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
     const head = [
       '開催回', '日付',
       ...Array(config.main).fill(0).map((_, i) => `第${i + 1}数字`),
-      ...config.bonusNames, '特徴'
+      ...config.bonusNames, '特徴', '1等口数', '1等賞金', '2等口数', '2等賞金'
     ];
     const rows = arr.map(row => [
       row['開催回'], row['日付'],
       ...Array(config.main).fill(0).map((_, i) => row[`第${i + 1}数字`]),
       ...config.bonusNames.map(b => row[b] || ''),
-      row['特徴'] || ''
+      row['特徴'] || '',
+      row['1等口数'] || '',
+      row['1等賞金'] || '',
+      row['2等口数'] || '',
+      row['2等賞金'] || ''
     ]);
     return [head, ...rows].map(row => row.join(',')).join('\n');
   }
@@ -177,22 +222,93 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
           onClick={hidePopup}
         >{popup.text}</div>
       )}
+      {/* スクロール＆更新ボタン */}
       <div style={{
-        background: '#ffecec',
-        border: '1px solid #ffd4d4',
-        borderRadius: 10,
-        padding: '18px 12px 10px 12px',
-        marginBottom: 15,
-        boxShadow: '0 1px 7px #ffd4d466',
-        fontSize: '0.97em',
+        position: 'fixed',
+        bottom: 22,
+        right: 16,
+        zIndex: 99,
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 9
       }}>
-        <div style={{
-          display: 'flex',
-          flexWrap: 'wrap',
-          gap: 15,
-          alignItems: 'flex-end',
-          marginBottom: 8
-        }}>
+        <button
+          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          style={{
+            background: '#337be8',
+            color: '#fff',
+            border: 'none',
+            borderRadius: '50%',
+            width: 40,
+            height: 40,
+            fontSize: 24,
+            boxShadow: '0 2px 8px #337be822',
+            cursor: 'pointer',
+            outline: 'none',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}
+          title="最上段へ"
+        >↑</button>
+        <button
+          onClick={() => window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })}
+          style={{
+            background: '#337be8',
+            color: '#fff',
+            border: 'none',
+            borderRadius: '50%',
+            width: 40,
+            height: 40,
+            fontSize: 24,
+            boxShadow: '0 2px 8px #337be822',
+            cursor: 'pointer',
+            outline: 'none',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}
+          title="最下段へ"
+        >↓</button>
+        <button
+          onClick={() => {
+            fetch(jsonUrl).then(res => res.json()).then(json => {
+              json.sort((a, b) => Number(b['開催回']) - Number(a['開催回']));
+              setData(json);
+              setPage(1);
+            });
+          }}
+          title="更新"
+          style={{
+            background: '#337be8',
+            color: '#fff',
+            border: 'none',
+            borderRadius: '50%',
+            width: 40,
+            height: 40,
+            fontSize: 24,
+            boxShadow: '0 2px 8px #337be822',
+            cursor: 'pointer',
+            outline: 'none',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}
+        >⟳</button>
+      </div>
+
+      <div style={{
+        background: '#f9f9fd',
+        border: '1px solid #cde',
+        borderRadius: 12,
+        boxShadow: '0 1px 16px #eef3ff44',
+        width: '100%',
+        margin: '0 auto',
+        padding: '4vw 2vw 3vw 2vw',
+        boxSizing: 'border-box'
+      }}>
+        {/* 検索ツール */}
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 15, marginBottom: 15, alignItems: 'flex-end' }}>
           <label>開催回From:
             <input type="number" min={1} value={filter.fromRound} onChange={e => setFilter(f => ({ ...f, fromRound: e.target.value }))} style={filterInputStyle} />
           </label>
@@ -213,9 +329,7 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
           </label>
         </div>
         {/* 特徴ラベル群 */}
-        <div style={{
-          display: 'flex', flexWrap: 'wrap', gap: 8, alignItems: 'center', marginBottom: 7
-        }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, alignItems: 'center', marginBottom: 7 }}>
           {config.labels.map(label =>
             <label key={label} style={{ marginRight: 3 }}>
               <input
@@ -275,24 +389,25 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
             setFilter({
               fromRound: '', toRound: '', fromDate: '', toDate: '',
               includeNumbers: '', excludeNumbers: '', features: [], minSum: '', maxSum: '', oddEven: ''
-            }); setPage(1);
+            });
+            setPage(1);
           }} style={resetBtnStyle}><i className="fa fa-rotate-right"></i> リセット</button>
           <button onClick={handleCSV} style={csvBtnStyle}><i className="fa fa-file-csv"></i> CSV出力</button>
         </div>
-        {/* 結果件数・出現回数エリア */}
+
+        {/* 検索結果・ランキング */}
         <div style={{ fontSize: '0.97em', margin: '8px 0' }}>
           検索結果：<b>{filtered.length}</b>件　
           <span style={{ color: '#357' }}>
-            {filtered.length > 0 &&
-              <>
-                最多本数字：{ranking.slice(0, 3).map(v => <b key={v.n} style={{ color: '#357', marginLeft: 6 }}>{v.n}（{v.c}回）</b>)}　
-                最少本数字：{ranking.slice(-3).map(v => <b key={v.n} style={{ color: '#d43', marginLeft: 6 }}>{v.n}（{v.c}回）</b>)}
-              </>
-            }
+            {filtered.length > 0 && <>
+              最多本数字：{ranking.slice(0, 3).map(v => <b key={v.n} style={{ color: '#357', marginLeft: 6 }}>{v.n}（{v.c}回）</b>)}　
+              最少本数字：{ranking.slice(-3).map(v => <b key={v.n} style={{ color: '#d43', marginLeft: 6 }}>{v.n}（{v.c}回）</b>)}
+            </>}
           </span>
         </div>
       </div>
-      {/* ====== 既存テーブル ====== */}
+
+      {/* 既存テーブル */}
       <div style={{
         overflowX: 'auto',
         border: '1px solid #ccd',
@@ -302,7 +417,7 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
         width: '100%',
         minWidth: 0
       }}>
-        <table style={{ borderCollapse: 'collapse', width: '100%', minWidth: 650, fontSize: '0.96em' }}>
+        <table style={{ borderCollapse: 'collapse', width: '100%', minWidth: 850, fontSize: '0.96em' }}>
           <thead>
             <tr>
               <th style={{ ...thStyle, ...stickyLeftStyle }}>回</th>
@@ -311,6 +426,11 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
               {config.bonusNames.map((name, i) => <th key={name} style={thStyle}>B数字{i + 1}</th>)}
               <th style={thStyle}>特徴</th>
               <th style={thStyle}>合計</th>
+              {/* 口数・賞金列追加 */}
+              <th style={thStyle}>1等口数</th>
+              <th style={thStyle}>1等賞金</th>
+              <th style={thStyle}>2等口数</th>
+              <th style={thStyle}>2等賞金</th>
             </tr>
           </thead>
           <tbody>
@@ -318,15 +438,25 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
               <tr key={row['開催回']}>
                 <td style={{ ...tdStyle, ...stickyLeftStyle, fontWeight: 700 }}>{row['開催回']}</td>
                 <td style={tdStyle}>{row['日付']}</td>
-                {Array(config.main).fill(0).map((_, i) => <td key={i} style={{ ...tdStyle, color: '#1767a7', fontWeight: 600 }}>{row[`第${i + 1}数字`]}</td>)}
-                {config.bonusNames.map((name, i) => <td key={name} style={{ ...tdStyle, color: '#fa5', fontWeight: 600 }}>{row[name]}</td>)}
+                {Array(config.main).fill(0).map((_, i) =>
+                  <td key={i} style={{ ...tdStyle, color: '#1767a7', fontWeight: 600 }}>{row[`第${i + 1}数字`]}</td>
+                )}
+                {config.bonusNames.map((name, i) =>
+                  <td key={name} style={{ ...tdStyle, color: '#fa5', fontWeight: 600 }}>{row[name]}</td>
+                )}
                 <td style={{ ...tdStyle, color: '#286', fontSize: '0.98em' }}>{row['特徴']}</td>
                 <td style={{ ...tdStyle, color: '#135', fontWeight: 600 }}>{sumMain(row)}</td>
+                {/* 口数・賞金列表示 */}
+                <td style={tdStyle}>{row['1等口数'] || ''}</td>
+                <td style={tdStyle}>{row['1等賞金'] || ''}</td>
+                <td style={tdStyle}>{row['2等口数'] || ''}</td>
+                <td style={tdStyle}>{row['2等賞金'] || ''}</td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
+
       {/* ページネーション */}
       {pages > 1 && (
         <div style={{ textAlign: 'center', margin: '10px 0 4px 0' }}>
@@ -396,4 +526,25 @@ const stickyLeftStyle = {
   left: 0,
   zIndex: 4,
   background: '#f7faff'
+};
+const scrollButtonStyle = {
+  background: '#337be8',
+  color: '#fff',
+  border: 'none',
+  borderRadius: '50%',
+  width: 40,
+  height: 40,
+  fontSize: 24,
+  boxShadow: '0 2px 8px #337be822',
+  cursor: 'pointer',
+  outline: 'none',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center'
+};
+const reloadButtonStyle = {
+  ...scrollButtonStyle,
+  fontSize: 22,
+  fontWeight: 'bold',
+  userSelect: 'none'
 };
