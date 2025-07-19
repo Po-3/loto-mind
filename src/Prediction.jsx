@@ -11,32 +11,51 @@ export default function Prediction({ lotoType }) {
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(false);
   const [searched, setSearched] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
 
-  // inputDrawNoが変更された時に自動fetch
   useEffect(() => {
     if (!lotoType || !inputDrawNo) {
       setRows([]);
       setSearched(false);
+      setErrorMsg('');
       return;
     }
     setLoading(true);
     setSearched(true);
     setRows([]);
+    setErrorMsg('');
     const url = getPredictionUrl(lotoType, inputDrawNo);
+
     fetch(url)
       .then(res => res.text())
       .then(html => {
         const doc = new window.DOMParser().parseFromString(html, 'text/html');
-        const table = doc.querySelector('table');
+        // 1. 通常table
+        let table = doc.querySelector('table');
+        // 2. class名対応
+        if (!table) table = doc.querySelector('table.loto-prediction-table');
+        // 3. テーブルが複数の場合: trの多いもの
+        if (!table) {
+          const allTables = Array.from(doc.querySelectorAll('table'));
+          table = allTables.sort((a, b) => b.querySelectorAll('tr').length - a.querySelectorAll('tr').length)[0];
+        }
+
         if (!table) {
           setRows([]);
+          setErrorMsg('表が見つかりませんでした（サイト構造変更の可能性あり）');
           setLoading(false);
           return;
         }
-        const trs = table.querySelectorAll('tbody tr');
+
+        const trs = table.querySelectorAll('tbody tr').length
+          ? table.querySelectorAll('tbody tr')
+          : table.querySelectorAll('tr');
+
+        // 4列未満はデータでないので弾く
         const arr = [];
         trs.forEach(tr => {
           const tds = Array.from(tr.children);
+          if (tds.length < 4) return;
           arr.push({
             type: tds[0]?.textContent.trim(),
             nums: tds[1]?.textContent.trim(),
@@ -46,9 +65,11 @@ export default function Prediction({ lotoType }) {
         });
         setRows(arr);
         setLoading(false);
+        setErrorMsg(arr.length === 0 ? 'ズバリ予想データが見つかりませんでした（抽選日前や記事未公開の場合あり）' : '');
       })
-      .catch(() => {
+      .catch((e) => {
         setRows([]);
+        setErrorMsg('データ取得に失敗しました');
         setLoading(false);
       });
   }, [lotoType, inputDrawNo]);
@@ -68,8 +89,8 @@ export default function Prediction({ lotoType }) {
 
       {/* --- 結果表示 --- */}
       {loading && <div>読み込み中…</div>}
-      {!loading && searched && !rows.length && (
-        <div>ズバリ予想が取得できませんでした。</div>
+      {!loading && searched && !!errorMsg && (
+        <div style={{ color: '#c44', fontWeight: 500 }}>{errorMsg}</div>
       )}
       {!loading && rows.length > 0 && (
         <div style={scrollStyle}>
@@ -104,7 +125,7 @@ export default function Prediction({ lotoType }) {
   );
 }
 
-// ===== スタイル定義 =====
+// ===== スタイル定義はそのまま =====
 
 const outerStyle = {
   width: '100%',
