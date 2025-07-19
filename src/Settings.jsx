@@ -21,6 +21,10 @@ export default function Settings() {
         <a href="https://x.com/tkjtonari" target="_blank" rel="noopener noreferrer">
           X（旧Twitter）最新情報
         </a>
+        <br />
+        <a href="https://www.youtube.com/@%E3%81%8F%E3%81%98%E3%81%A8%E3%81%AA%E3%82%8A" target="_blank" rel="noopener noreferrer">
+          くじとなり公式YouTubeチャンネル（動画も配信中！）
+        </a>
       </div>
       <div style={{ marginTop: 18, color: '#888', fontSize: '0.96em' }}>
         ※ 本サービスはデータ検証およびエンタメ目的で提供しています。<br />
