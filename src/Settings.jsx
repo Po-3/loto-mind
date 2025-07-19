@@ -24,16 +24,47 @@ const MENU_OPTIONS = [
 ];
 
 export default function Settings({
-  onThemeChange,
-  onFontChange,
-  onDefaultLotoChange,
-  onDefaultMenuChange,
   defaultLotoType,
   defaultMenu,
+  font,
   theme,
-  font
+  onDefaultLotoChange,
+  onDefaultMenuChange,
+  onFontChange,
+  onThemeChange
 }) {
-  // useState一切ナシ！propsによる100%制御
+  // useStateで"現在の設定値"を内部管理し、変更時に即表示を更新する
+  // ここではuseStateを使うことで、propsから初期化し、onChange時に値がすぐ変わる
+
+  const [selectedLoto, setSelectedLoto] = useState(defaultLotoType || 'loto6');
+  const [selectedMenu, setSelectedMenu] = useState(defaultMenu || 'past');
+  const [selectedFont, setSelectedFont] = useState(font || FONT_OPTIONS[0].value);
+  const [selectedTheme, setSelectedTheme] = useState(theme || 'tonari');
+
+  // プルダウン変更時：ローカル値＋親へ通知
+  const handleLotoChange = (val) => {
+    setSelectedLoto(val);
+    onDefaultLotoChange && onDefaultLotoChange(val);
+  };
+  const handleMenuChange = (val) => {
+    setSelectedMenu(val);
+    onDefaultMenuChange && onDefaultMenuChange(val);
+  };
+  const handleFontChange = (val) => {
+    setSelectedFont(val);
+    onFontChange && onFontChange(val);
+  };
+  const handleThemeChange = (val) => {
+    setSelectedTheme(val);
+    onThemeChange && onThemeChange(val);
+  };
+
+  // props変更時にも反映（例：親でデフォルトが変わった場合）
+  // ※なくても問題ないが、初期値厳密に反映したい場合は↓
+  // useEffect(() => { setSelectedLoto(defaultLotoType || 'loto6'); }, [defaultLotoType]);
+  // useEffect(() => { setSelectedMenu(defaultMenu || 'past'); }, [defaultMenu]);
+  // useEffect(() => { setSelectedFont(font || FONT_OPTIONS[0].value); }, [font]);
+  // useEffect(() => { setSelectedTheme(theme || 'tonari'); }, [theme]);
 
   return (
     <div style={{ width: '100%', boxSizing: 'border-box' }}>
@@ -42,8 +73,8 @@ export default function Settings({
       <div style={settingBlock}>
         <strong>デフォルトロト種別：</strong>
         <select
-          value={defaultLotoType}
-          onChange={e => onDefaultLotoChange && onDefaultLotoChange(e.target.value)}
+          value={selectedLoto}
+          onChange={e => handleLotoChange(e.target.value)}
           style={selectStyle}
         >
           {LOTO_OPTIONS.map(opt => (
@@ -55,8 +86,8 @@ export default function Settings({
       <div style={settingBlock}>
         <strong>起動時の初期メニュー：</strong>
         <select
-          value={defaultMenu}
-          onChange={e => onDefaultMenuChange && onDefaultMenuChange(e.target.value)}
+          value={selectedMenu}
+          onChange={e => handleMenuChange(e.target.value)}
           style={selectStyle}
         >
           {MENU_OPTIONS.map(opt => (
@@ -68,8 +99,8 @@ export default function Settings({
       <div style={settingBlock}>
         <strong>画面フォント：</strong>
         <select
-          value={font}
-          onChange={e => onFontChange && onFontChange(e.target.value)}
+          value={selectedFont}
+          onChange={e => handleFontChange(e.target.value)}
           style={selectStyle}
         >
           {FONT_OPTIONS.map(opt => (
@@ -81,8 +112,8 @@ export default function Settings({
       <div style={settingBlock}>
         <strong>配色テーマ：</strong>
         <select
-          value={theme}
-          onChange={e => onThemeChange && onThemeChange(e.target.value)}
+          value={selectedTheme}
+          onChange={e => handleThemeChange(e.target.value)}
           style={selectStyle}
         >
           {THEME_OPTIONS.map(opt => (
