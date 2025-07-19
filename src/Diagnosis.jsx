@@ -13,7 +13,6 @@ export default function Diagnosis({ jsonUrl }) {
     fetch(jsonUrl)
       .then(res => res.json())
       .then(json => {
-        // 直近30回分
         const latest = json.slice(-30);
         const allNums = [];
 
@@ -25,12 +24,18 @@ export default function Diagnosis({ jsonUrl }) {
           maxNum = 37; recommendCount = 7; numKeys = 7;
         }
 
-        // 本数字のみ抽出
+        // --- 本数字のみ抽出 ---
         latest.forEach(row => {
           for (let i = 1; i <= numKeys; i++) {
             const key = `第${i}数字`;
-            if (row[key]) {
-              const val = Number(row[key]);
+            const valRaw = row[key];
+            if (
+              valRaw !== undefined &&
+              valRaw !== null &&
+              typeof valRaw === "string" &&
+              valRaw.trim() !== ""
+            ) {
+              const val = Number(valRaw.trim());
               if (!isNaN(val) && val > 0) {
                 allNums.push(val);
               }
@@ -68,9 +73,7 @@ export default function Diagnosis({ jsonUrl }) {
   );
 }
 
-// ▼ スタイル群はそのまま
-
-// ▼ スタイル群
+// ▼ スタイル群（省略：これまで通り）
 const outerStyle = {
   width: '100%',
   padding: '0 12px',
