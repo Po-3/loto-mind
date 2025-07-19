@@ -18,28 +18,37 @@ export default function Prediction({ lotoType }) {
   }[lotoType];
 
   return (
-    <div>
-      <h2 style={{ fontSize: '1.10em' }}>となりのズバリ予想</h2>
-      <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: 8, marginBottom: 8 }}>
-        <thead>
-          <tr>
-            <th style={{ border: '1px solid #bbb', padding: 4 }}>タイプ</th>
-            <th style={{ border: '1px solid #bbb', padding: 4 }}>予想数字</th>
-            <th style={{ border: '1px solid #bbb', padding: 4 }}>軸数字</th>
-            <th style={{ border: '1px solid #bbb', padding: 4 }}>特徴と狙い</th>
-          </tr>
-        </thead>
-        <tbody>
-          {dummy.map((row, idx) => (
-            <tr key={idx}>
-              <td style={{ border: '1px solid #ddd', padding: 4 }}>{row.type}</td>
-              <td style={{ border: '1px solid #ddd', padding: 4 }}>{row.nums.join('・')}</td>
-              <td style={{ border: '1px solid #ddd', padding: 4, fontWeight: 700 }}>{row.axis}</td>
-              <td style={{ border: '1px solid #ddd', padding: 4 }}>{row.feature}</td>
+    <div style={{ width: '100%', boxSizing: 'border-box' }}>
+      <h2 style={{ fontSize: '1.10em', margin: '8px 0' }}>となりのズバリ予想</h2>
+      <div style={{ overflowX: 'auto', width: '100%' }}>
+        <table style={{
+          width: '100%',
+          minWidth: 440,
+          borderCollapse: 'collapse',
+          marginTop: 8,
+          marginBottom: 8,
+          background: '#fff'
+        }}>
+          <thead>
+            <tr>
+              <th style={{ border: '1px solid #bbb', padding: 4, background: '#f4f8fd' }}>タイプ</th>
+              <th style={{ border: '1px solid #bbb', padding: 4, background: '#f4f8fd' }}>予想数字</th>
+              <th style={{ border: '1px solid #bbb', padding: 4, background: '#f4f8fd' }}>軸数字</th>
+              <th style={{ border: '1px solid #bbb', padding: 4, background: '#f4f8fd' }}>特徴と狙い</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {dummy.map((row, idx) => (
+              <tr key={idx}>
+                <td style={{ border: '1px solid #ddd', padding: 4 }}>{row.type}</td>
+                <td style={{ border: '1px solid #ddd', padding: 4 }}>{row.nums.join('・')}</td>
+                <td style={{ border: '1px solid #ddd', padding: 4, fontWeight: 700 }}>{row.axis}</td>
+                <td style={{ border: '1px solid #ddd', padding: 4 }}>{row.feature}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
       <div style={{ fontSize: '0.95em', color: '#444' }}>※ 本番はブログ記事から自動取得可能</div>
     </div>
   );

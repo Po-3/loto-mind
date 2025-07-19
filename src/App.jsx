@@ -25,11 +25,11 @@ export default function App() {
   return (
     <div style={{
       fontFamily: 'sans-serif',
-      minWidth: 640,
-      maxWidth: 940,
       width: '100%',
+      maxWidth: 940,
+      minWidth: 0, // ← ここを0に
       margin: '24px auto',
-      padding: 24,
+      padding: '5vw 2vw 4vw 2vw', // スマホでも余白自動調整
       boxSizing: 'border-box',
       background: '#f9f9fd',
       borderRadius: 12,
@@ -50,7 +50,7 @@ export default function App() {
           gap: 12
         }}>
           <span style={{
-            fontSize: 34,
+            fontSize: '7vw', // スマホでも自動調整
             fontWeight: 800,
             color: '#337be8',
             letterSpacing: '0.08em',
@@ -60,8 +60,10 @@ export default function App() {
             src="/tonari.png"
             alt="となりアイコン"
             style={{
-              width: 76,
-              height: 76,
+              width: '15vw',
+              maxWidth: 76,
+              height: '15vw',
+              maxHeight: 76,
               borderRadius: '50%',
               boxShadow: '0 4px 18px #2222',
               objectFit: 'cover',
@@ -69,7 +71,7 @@ export default function App() {
             }}
           />
           <span style={{
-            fontSize: 34,
+            fontSize: '7vw',
             fontWeight: 800,
             color: '#337be8',
             letterSpacing: '0.08em',
@@ -101,15 +103,16 @@ export default function App() {
               background: selectedTab === tab.key ? '#ededed' : '#fff',
               border: '1px solid #888',
               borderRadius: 8,
-              padding: '8px 20px',
+              padding: '2vw 3vw',
               cursor: 'pointer',
               flex: 1,
-              minWidth: 0
+              minWidth: 0,
+              fontSize: '1em'
             }}
           >{tab.label}</button>
         )}
       </div>
-      {/* 機能タブ（ラベル風・2行対応） */}
+      {/* 機能タブ */}
       <div
         style={{
           display: 'flex',
@@ -132,7 +135,7 @@ export default function App() {
               border: 'none',
               borderBottom: feature === f.key ? '3.5px solid #225bb7' : '3.5px solid #e3e3e3',
               fontWeight: feature === f.key ? 700 : 500,
-              fontSize: '1.01em',
+              fontSize: '1em',
               cursor: 'pointer',
               padding: '12px 0 9px 0',
               minWidth: 0,
@@ -156,7 +159,7 @@ export default function App() {
         {feature === 'prediction' && <Prediction lotoType={selectedTab} />}
         {feature === 'settings' && <Settings />}
       </div>
-      <div style={{ textAlign: 'right', marginTop: 36, opacity: 0.5 }}>
+      <div style={{ textAlign: 'right', marginTop: 36, opacity: 0.5, fontSize: '0.97em' }}>
         <span>数字くん👦がいつも応援中！</span>
       </div>
     </div>
