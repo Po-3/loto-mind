@@ -134,7 +134,7 @@ export default function App() {
   stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
   style={{ display: 'block', margin: 'auto' }}>
   <path d="M3 12a9 9 0 1 1 8 8" />
-  <polyline points="5 7 3 12 8 12" />
+  <polyline points="7 7 3 12 8 12" />
 </svg>
           </button>
         </div>
