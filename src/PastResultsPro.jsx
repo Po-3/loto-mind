@@ -1,45 +1,32 @@
 import { useEffect, useState } from 'react';
 
-// ロト6特徴ラベル
-const labels = ['連番あり', '奇数多め', '偶数多め', '下一桁かぶり', '合計小さめ', '合計大きめ', 'キャリーあり'];
-
-// ボーナス数字名
-const bonusName = 'BONUS数字';
-
-// ページネーション設定
-const PAGE_SIZE = 50;
-
-// CSV出力関数
-function toCSV(arr) {
-  const rows = arr.map(row =>
-    labels.map(label => row[label] || '').join(',') // 特徴ラベル部分
-      + ',' +
-      [
-        row['開催回'], row['日付'],
-        ...Array(6).fill(0).map((_, i) => row[`第${i + 1}数字`]),
-        row[bonusName] || '', row['特徴'] || ''
-      ].join(',')
-  );
-  return [
-    '特徴1,特徴2,特徴3,特徴4,特徴5,特徴6,特徴7,開催回,日付,第1数字,第2数字,第3数字,第4数字,第5数字,第6数字,BONUS,特徴',
-    ...rows
-  ].join('\n');
-}
-
-// 数字出現回数ランキング
-function getRanking(data) {
-  const count = Array(43 + 1).fill(0);
-  data.forEach(row => {
-    for (let i = 1; i <= 6; ++i) {
-      const n = Number(row[`第${i + 1}数字`]);
-      if (n) count[n]++;
-    }
-  });
-  return count
-    .map((c, n) => n === 0 ? null : { n, c })
-    .filter(v => v)
-    .sort((a, b) => b.c - a.c);
-}
+// ロト種別ごとの設定
+const lotoConfig = {
+  loto6: {
+    main: 6,
+    bonus: 1,
+    bonusNames: ['ボーナス数字'], // 日本語
+    labels: ['連番あり', '奇数多め', '偶数多め', '下一桁かぶり', '合計小さめ', '合計大きめ', 'キャリーあり'],
+    min: 1,
+    max: 43,
+  },
+  miniloto: {
+    main: 5,
+    bonus: 1,
+    bonusNames: ['ボーナス数字'], // 日本語
+    labels: ['連番', '奇数多め', '偶数多め', 'バランス型', '下一桁かぶり', '合計小さめ', '合計大きめ'],
+    min: 1,
+    max: 31,
+  },
+  loto7: {
+    main: 7,
+    bonus: 2,
+    bonusNames: ['BONUS数字1', 'BONUS数字2'], // 英語
+    labels: ['連番あり', '奇数多め', '偶数多め', '下一桁かぶり', '合計小さめ', '合計大きめ', 'キャリーあり'],
+    min: 1,
+    max: 37,
+  }
+};
 
 // sticky用
 const stickyLeftStyle = {
@@ -49,66 +36,108 @@ const stickyLeftStyle = {
   background: '#f7faff'
 };
 
-export default function PastResultsPro({ jsonUrl }) {
+export default function PastResultsPro({ jsonUrl, lotoType }) {
   const [data, setData] = useState([]);
   const [filter, setFilter] = useState({
     number: '', label: '', minSum: '', maxSum: '', odd: '', even: ''
   });
   const [page, setPage] = useState(1);
 
+  // 設定自動選択
+  const config = lotoConfig[lotoType] || lotoConfig.loto6;
+
   // フィルタ適用
   const filtered = data.filter(row => {
     if (filter.label && !(row['特徴'] || '').includes(filter.label)) return false;
     if (filter.number) {
       let found = false;
-      for (let i = 1; i <= 6; ++i) if (row[`第${i}数字`] == filter.number) found = true;
+      for (let i = 1; i <= config.main; ++i) if (row[`第${i}数字`] == filter.number) found = true;
       if (!found) return false;
     }
     if (filter.minSum && sumMain(row) < Number(filter.minSum)) return false;
     if (filter.maxSum && sumMain(row) > Number(filter.maxSum)) return false;
     if (filter.odd) {
       const odds = mainNums(row).filter(n => n % 2 === 1).length;
-      if (filter.odd === '多め' && odds <= 3) return false;
-      if (filter.odd === '少なめ' && odds >= 3) return false;
+      if (filter.odd === '多め' && odds <= Math.floor(config.main / 2)) return false;
+      if (filter.odd === '少なめ' && odds >= Math.ceil(config.main / 2)) return false;
     }
     if (filter.even) {
       const evens = mainNums(row).filter(n => n % 2 === 0).length;
-      if (filter.even === '多め' && evens <= 3) return false;
-      if (filter.even === '少なめ' && evens >= 3) return false;
+      if (filter.even === '多め' && evens <= Math.floor(config.main / 2)) return false;
+      if (filter.even === '少なめ' && evens >= Math.ceil(config.main / 2)) return false;
     }
     return true;
   });
 
   // ページ切替
+  const PAGE_SIZE = 50;
   const paged = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
   const pages = Math.ceil(filtered.length / PAGE_SIZE);
 
   // CSV出力
+  function toCSV(arr) {
+    const rows = arr.map(row =>
+      config.labels.map(label => row[label] || '').join(',') +
+      ',' +
+      [
+        row['開催回'],
+        row['日付'],
+        ...Array(config.main).fill(0).map((_, i) => row[`第${i + 1}数字`]),
+        ...config.bonusNames.map(b => row[b] || ''),
+        row['特徴'] || ''
+      ].join(',')
+    );
+    return [
+      [
+        ...config.labels,
+        '開催回',
+        '日付',
+        ...Array(config.main).fill(0).map((_, i) => `第${i + 1}数字`),
+        ...config.bonusNames,
+        '特徴'
+      ].join(','),
+      ...rows
+    ].join('\n');
+  }
+
   function handleCSV() {
     const blob = new Blob([toCSV(filtered)], { type: 'text/csv' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
-    a.href = url; a.download = 'loto6_results.csv';
+    a.href = url; a.download = `${lotoType}_results.csv`;
     a.click(); URL.revokeObjectURL(url);
   }
 
-  // 数字抽出系
+  // 数字出現回数ランキング
+  function getRanking(data) {
+    const count = Array(config.max + 1).fill(0);
+    data.forEach(row => {
+      for (let i = 1; i <= config.main; ++i) {
+        const n = Number(row[`第${i}数字`]);
+        if (n) count[n]++;
+      }
+    });
+    return count
+      .map((c, n) => n === 0 ? null : { n, c })
+      .filter(v => v)
+      .sort((a, b) => b.c - a.c);
+  }
+
   function mainNums(row) {
-    return Array(6).fill(0).map((_, i) => Number(row[`第${i + 1}数字`]));
+    return Array(config.main).fill(0).map((_, i) => Number(row[`第${i + 1}数字`]));
   }
   function sumMain(row) {
     return mainNums(row).reduce((a, b) => a + b, 0);
   }
 
-  // ★ここを降順に修正！
+  // データ読み込み時、開催回降順に
   useEffect(() => {
     fetch(jsonUrl).then(res => res.json()).then(json => {
-      json.sort((a, b) => Number(b['開催回']) - Number(a['開催回'])); // ←ここ！
+      json.sort((a, b) => Number(b['開催回']) - Number(a['開催回']));
       setData(json);
     });
   }, [jsonUrl]);
 
-  // 出現数ランキング
   const ranking = getRanking(filtered);
 
   return (
@@ -168,15 +197,15 @@ export default function PastResultsPro({ jsonUrl }) {
             <label>特徴</label><br />
             <select value={filter.label} onChange={e => setFilter(f => ({ ...f, label: e.target.value }))}>
               <option value="">すべて</option>
-              {labels.map(l => <option key={l}>{l}</option>)}
+              {config.labels.map(l => <option key={l}>{l}</option>)}
             </select>
           </div>
           <div>
             <label>含む数字</label><br />
             <input
-              style={{ width: 50 }} placeholder="例:7"
+              style={{ width: 50 }} placeholder={`例:${config.min}`}
               value={filter.number} onChange={e => setFilter(f => ({ ...f, number: e.target.value }))}
-              type="number" min={1} max={43}
+              type="number" min={config.min} max={config.max}
             />
           </div>
           <div>
@@ -233,13 +262,17 @@ export default function PastResultsPro({ jsonUrl }) {
 
         {/* 結果テーブル */}
         <div style={{ overflowX: 'auto', border: '1px solid #ccd', background: '#fff', borderRadius: 8, marginBottom: 10 }}>
-          <table style={{ borderCollapse: 'collapse', width: '100%', fontSize: '0.96em', minWidth: 750 }}>
+          <table style={{ borderCollapse: 'collapse', width: '100%', fontSize: '0.96em', minWidth: 650 }}>
             <thead style={{ background: '#f2f7ff', position: 'sticky', top: 0, zIndex: 2 }}>
               <tr>
                 <th style={{ ...thStyle, ...stickyLeftStyle }}>回</th>
                 <th style={thStyle}>日付</th>
-                {[1,2,3,4,5,6].map(i => <th key={i} style={thStyle}>本数字{i}</th>)}
-                <th style={thStyle}>B数字</th>
+                {Array(config.main).fill(0).map((_, i) =>
+                  <th key={i} style={thStyle}>本数字{i + 1}</th>
+                )}
+                {config.bonusNames.map((name, i) =>
+                  <th key={name} style={thStyle}>B数字{i + 1}</th>
+                )}
                 <th style={thStyle}>特徴</th>
                 <th style={thStyle}>合計</th>
               </tr>
@@ -249,10 +282,12 @@ export default function PastResultsPro({ jsonUrl }) {
                 <tr key={row['開催回']}>
                   <td style={{ ...tdStyle, ...stickyLeftStyle, fontWeight: 700 }}>{row['開催回']}</td>
                   <td style={tdStyle}>{row['日付']}</td>
-                  {mainNums(row).map((n, i) =>
-                    <td key={i} style={{ ...tdStyle, color: '#1767a7', fontWeight: 600 }}>{n}</td>
+                  {Array(config.main).fill(0).map((_, i) =>
+                    <td key={i} style={{ ...tdStyle, color: '#1767a7', fontWeight: 600 }}>{row[`第${i + 1}数字`]}</td>
                   )}
-                  <td style={{ ...tdStyle, color: '#fa5', fontWeight: 600 }}>{row[bonusName]}</td>
+                  {config.bonusNames.map((name, i) =>
+                    <td key={name} style={{ ...tdStyle, color: '#fa5', fontWeight: 600 }}>{row[name]}</td>
+                  )}
                   <td style={{ ...tdStyle, color: '#286', fontSize: '0.98em' }}>{row['特徴']}</td>
                   <td style={{ ...tdStyle, color: '#135', fontWeight: 600 }}>{sumMain(row)}</td>
                 </tr>
