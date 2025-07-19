@@ -30,7 +30,7 @@ export default function Diagnosis({ jsonUrl }) {
   }, [jsonUrl]);
 
   return (
-    <div>
+    <div style={{ maxWidth: 520, margin: '0 auto' }}>
       <h2 style={{ fontSize: '1.10em' }}>数字くん診断</h2>
       {result ? (
         <>
