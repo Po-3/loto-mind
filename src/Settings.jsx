@@ -204,9 +204,8 @@ export default function Settings({
       <ul style={{ fontSize: '0.98em', marginTop: 8, paddingLeft: 18, marginBottom: 0, color: '#222' }}>
         <li>最新のロト抽せん結果・出現傾向は自動で取得・反映されます。</li>
         <li>「となり流ズバリ予想」「構成タイプ判定」など独自機能をすべて無料で利用可能です。</li>
-        <li>はてなブログ・note・X（旧Twitter）と今後も連携＆情報拡張を予定。</li>
         <li>すべて広告表示なし、アカウント登録も不要。どなたでも安心して使えます。</li>
-        <li>当サイトの各種データ・分析結果は実際の公式CSVと照合済み、正確性を最優先しています。</li>
+        <li>当アプリの各種データ・分析結果は公式サイトから取得した過去結果一覧のCSVと照合済み、正確性を最優先しています。</li>
       </ul>
       <div style={{ marginTop: 16, fontSize: '0.97em' }}>
         <a href="https://www.kujitonari.net/" target="_blank" rel="noopener noreferrer">
