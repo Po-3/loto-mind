@@ -28,7 +28,7 @@ function App() {
         ))}
       </div>
 
-      {/* 表示モード切替タブ */}
+      {/* 4メニューの切替タブ（ここが本題！） */}
       <div style={tabContainerStyle}>
         <button
           style={activeTab === 'past' ? activeTabStyle : tabStyle}
@@ -70,7 +70,7 @@ function App() {
         </label>
       </div>
 
-      {/* 表示中のタブに応じたコンポーネントを切り替え表示 */}
+      {/* タブ切替表示 */}
       {activeTab === 'prediction' && <Prediction lotoType={lotoType} drawNo={drawNo} />}
       {activeTab === 'diagnosis' && <Diagnosis jsonUrl={`/api/${lotoType}.json`} />}
       {activeTab === 'past' && <PastResults lotoType={lotoType} />}
