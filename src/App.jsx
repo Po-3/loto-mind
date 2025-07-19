@@ -24,7 +24,7 @@ function getLocalStorage(key, fallback) {
 }
 
 export default function App() {
-  // 初期値（localStorage→なければデフォルト）
+  // 初期値
   const [selectedTab, setSelectedTab] = useState(getLocalStorage('defaultLotoType', 'loto6'));
   const [feature, setFeature] = useState(getLocalStorage('defaultMenu', 'past'));
   const [font, setFont] = useState(getLocalStorage('font', 'system-ui, Avenir, Helvetica, Arial, sans-serif'));
@@ -33,17 +33,18 @@ export default function App() {
   // タブのクリックで画面切り替え
   const handleFeatureChange = (menu) => {
     setFeature(menu);
-    // localStorage.setItem('lastFeature', menu); ←不要ならコメントアウト
   };
 
-  // 設定画面用：デフォルト値設定のみ（今の画面を変えない）
-  const handleDefaultMenuChange = (menu) => {
-    localStorage.setItem('defaultMenu', menu);
-    // setFeature(menu); ←呼ばないので画面は切り替わらない！
-  };
+  // 設定画面用：デフォルト値設定のみ
+  // デフォルトロト種別
   const handleDefaultLotoChange = (type) => {
     localStorage.setItem('defaultLotoType', type);
     setSelectedTab(type);
+  };
+  // デフォルトメニュー（即時画面とプルダウン両方反映！）
+  const handleDefaultMenuChange = (menu) => {
+    localStorage.setItem('defaultMenu', menu);
+    setFeature(menu); // ← ここで即時featureも更新！
   };
   const handleFontChange = (fontVal) => {
     setFont(fontVal);
@@ -133,9 +134,9 @@ export default function App() {
             onThemeChange={handleThemeChange}
             onFontChange={handleFontChange}
             onDefaultLotoChange={handleDefaultLotoChange}
-            onDefaultMenuChange={handleDefaultMenuChange} // ←修正
+            onDefaultMenuChange={handleDefaultMenuChange} // ←ここで渡す
             defaultLotoType={selectedTab}
-            defaultMenu={getLocalStorage('defaultMenu', 'past')} // ←ここはlocalStorage直読みに
+            defaultMenu={feature} // ←stateを直接渡すことでプルダウンもリアルタイム反映
             theme={theme}
             font={font}
           />
