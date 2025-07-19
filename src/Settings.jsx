@@ -1,3 +1,5 @@
+import { useEffect, useState } from 'react';
+
 const FONT_OPTIONS = [
   { label: '標準（system）', value: 'system-ui, Avenir, Helvetica, Arial, sans-serif' },
   { label: 'ゴシック（Noto Sans）', value: '"Noto Sans JP", sans-serif' },
@@ -31,17 +33,29 @@ export default function Settings({
   onDefaultLotoChange,
   onDefaultMenuChange,
   onFontChange,
-  onThemeChange
+  onThemeChange,
 }) {
-  // useStateで"現在の設定値"を内部管理し、変更時に即表示を更新する
-  // ここではuseStateを使うことで、propsから初期化し、onChange時に値がすぐ変わる
-
+  // 初期値をpropsから受けて、props変化時にも追従
   const [selectedLoto, setSelectedLoto] = useState(defaultLotoType || 'loto6');
   const [selectedMenu, setSelectedMenu] = useState(defaultMenu || 'past');
   const [selectedFont, setSelectedFont] = useState(font || FONT_OPTIONS[0].value);
   const [selectedTheme, setSelectedTheme] = useState(theme || 'tonari');
 
-  // プルダウン変更時：ローカル値＋親へ通知
+  // propsが変わったら同期（必要！）
+  useEffect(() => {
+    setSelectedLoto(defaultLotoType || 'loto6');
+  }, [defaultLotoType]);
+  useEffect(() => {
+    setSelectedMenu(defaultMenu || 'past');
+  }, [defaultMenu]);
+  useEffect(() => {
+    setSelectedFont(font || FONT_OPTIONS[0].value);
+  }, [font]);
+  useEffect(() => {
+    setSelectedTheme(theme || 'tonari');
+  }, [theme]);
+
+  // プルダウン変更時
   const handleLotoChange = (val) => {
     setSelectedLoto(val);
     onDefaultLotoChange && onDefaultLotoChange(val);
@@ -59,12 +73,15 @@ export default function Settings({
     onThemeChange && onThemeChange(val);
   };
 
-  // props変更時にも反映（例：親でデフォルトが変わった場合）
-  // ※なくても問題ないが、初期値厳密に反映したい場合は↓
-  // useEffect(() => { setSelectedLoto(defaultLotoType || 'loto6'); }, [defaultLotoType]);
-  // useEffect(() => { setSelectedMenu(defaultMenu || 'past'); }, [defaultMenu]);
-  // useEffect(() => { setSelectedFont(font || FONT_OPTIONS[0].value); }, [font]);
-  // useEffect(() => { setSelectedTheme(theme || 'tonari'); }, [theme]);
+  // いずれかが未定義ならローディング防止（念のため）
+  if (
+    typeof selectedLoto === 'undefined' ||
+    typeof selectedMenu === 'undefined' ||
+    typeof selectedFont === 'undefined' ||
+    typeof selectedTheme === 'undefined'
+  ) {
+    return <div>設定を読み込み中…</div>;
+  }
 
   return (
     <div style={{ width: '100%', boxSizing: 'border-box' }}>
