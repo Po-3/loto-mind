@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import PastResultsPro from './PastResultsPro';
-import PastResults from './PastResults';
 import Diagnosis from './Diagnosis';
 import Prediction from './Prediction';
 import Settings from './Settings';
@@ -146,7 +145,7 @@ export default function App() {
       <div style={{ width: '100%' }}>
         {feature === 'past' && (
           <div style={{
-            margin: '-20px -24px 0 -24px', // 親divの余白をキャンセルしてワイドに
+            margin: '-20px -24px 0 -24px',
             maxWidth: 'none'
           }}>
             <PastResultsPro jsonUrl={selectedUrl} lotoType={selectedTab} />

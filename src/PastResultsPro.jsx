@@ -5,7 +5,7 @@ const lotoConfig = {
   loto6: {
     main: 6,
     bonus: 1,
-    bonusNames: ['ボーナス数字'], // 日本語
+    bonusNames: ['ボーナス数字'],
     labels: ['連番あり', '奇数多め', '偶数多め', '下一桁かぶり', '合計小さめ', '合計大きめ', 'キャリーあり'],
     min: 1,
     max: 43,
@@ -13,7 +13,7 @@ const lotoConfig = {
   miniloto: {
     main: 5,
     bonus: 1,
-    bonusNames: ['ボーナス数字'], // 日本語
+    bonusNames: ['ボーナス数字'],
     labels: ['連番', '奇数多め', '偶数多め', 'バランス型', '下一桁かぶり', '合計小さめ', '合計大きめ'],
     min: 1,
     max: 31,
@@ -21,7 +21,7 @@ const lotoConfig = {
   loto7: {
     main: 7,
     bonus: 2,
-    bonusNames: ['BONUS数字1', 'BONUS数字2'], // 英語
+    bonusNames: ['BONUS数字1', 'BONUS数字2'],
     labels: ['連番あり', '奇数多め', '偶数多め', '下一桁かぶり', '合計小さめ', '合計大きめ', 'キャリーあり'],
     min: 1,
     max: 37,
