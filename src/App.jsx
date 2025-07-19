@@ -1,21 +1,30 @@
 import { useState } from 'react';
 import Diagnosis from './Diagnosis';
 import Prediction from './Prediction';
-import PastResults from './PastResults'; // 仮：過去検索コンポーネント
-import Settings from './Settings';       // 仮：設定コンポーネント
+import PastResults from './PastResults';
+import Settings from './Settings';
 
 function App() {
-  const [lotoType, setLotoType] = useState('loto6'); // ロト種別
-  const [drawNo, setDrawNo] = useState('');          // 抽せん回入力
-  const [activeTab, setActiveTab] = useState('prediction'); // 表示タブ
+  const [lotoType, setLotoType] = useState('loto6');
+  const [drawNo, setDrawNo] = useState('');
+  const [activeTab, setActiveTab] = useState('prediction');
 
   const handleDrawChange = (e) => setDrawNo(e.target.value);
 
   return (
     <div style={containerStyle}>
-      <h1 style={titleStyle}>ロト検索＆予想アプリ</h1>
+      {/* --- TOPヘッダー --- */}
+      <div style={headerStyle}>
+        <img src="/tonari.png" alt="tonari" style={iconStyle} />
+        <span style={appNameStyle}>
+          Loto <span style={{ color: '#1767a7' }}>Mind</span>
+        </span>
+      </div>
+      <div style={{ textAlign: 'center', fontSize: '1em', marginBottom: 10, color: '#888' }}>
+        by tonari
+      </div>
 
-      {/* ロト種別切替タブ */}
+      {/* --- ロト種別タブ --- */}
       <div style={tabContainerStyle}>
         {['miniloto', 'loto6', 'loto7'].map((type) => (
           <button
@@ -28,7 +37,7 @@ function App() {
         ))}
       </div>
 
-      {/* 4メニューの切替タブ（ここが本題！） */}
+      {/* --- 4メニュー --- */}
       <div style={tabContainerStyle}>
         <button
           style={activeTab === 'past' ? activeTabStyle : tabStyle}
@@ -56,7 +65,7 @@ function App() {
         </button>
       </div>
 
-      {/* 抽せん回の入力フォーム（共通） */}
+      {/* --- 抽せん回入力 --- */}
       <div style={formStyle}>
         <label style={labelStyle}>
           抽せん回（数字のみ）：
@@ -70,63 +79,90 @@ function App() {
         </label>
       </div>
 
-      {/* タブ切替表示 */}
+      {/* --- メイン表示エリア --- */}
       {activeTab === 'prediction' && <Prediction lotoType={lotoType} drawNo={drawNo} />}
       {activeTab === 'diagnosis' && <Diagnosis jsonUrl={`/api/${lotoType}.json`} />}
       {activeTab === 'past' && <PastResults lotoType={lotoType} />}
       {activeTab === 'settings' && <Settings />}
+
+      {/* --- フッター・ガイド文 --- */}
+      <div style={guideStyle}>
+        <strong>設定・ガイド</strong>
+        <ul style={{ margin: '10px 0 10px 1.4em', padding: 0, fontSize: '1em' }}>
+          <li>最新データはネットから自動取得</li>
+          <li>「となり流」の予想構成や切り替えも同時可</li>
+          <li>note・ブログ・Xとも連携予定</li>
+          <li>広告なし・全機能無料！</li>
+        </ul>
+        <a
+          href="https://www.kujitonari.net/"
+          target="_blank"
+          rel="noopener"
+          style={{ color: '#1767a7', textDecoration: 'underline', fontWeight: 600 }}
+        >
+          宝くじのとなりブログ
+        </a>
+      </div>
+      <div style={{ textAlign: 'center', fontSize: '0.98em', color: '#be9000', marginTop: 8 }}>
+        数字くん🧑‍💻がいつも応援中！
+      </div>
     </div>
   );
 }
 
 export default App;
 
-// --- スタイル定義 ---
+// --- スタイル全定義 ---
 const containerStyle = {
   width: '100%',
-  maxWidth: 640,
+  maxWidth: 420,
   margin: '0 auto',
-  padding: '16px 12px',
+  padding: '24px 8px 10px 8px',
   boxSizing: 'border-box',
-  fontSize: '16px'
+  fontSize: '16px',
+  background: '#fafcff',
+  borderRadius: 16,
+  border: '1px solid #e0e8f3',
+  marginTop: 36,
+  boxShadow: '0 6px 24px #d2e4fa22',
 };
-
-const titleStyle = {
-  fontSize: '1.8em',
-  marginBottom: '1em',
-  textAlign: 'center'
-};
-
-const formStyle = {
+const headerStyle = {
   display: 'flex',
-  flexDirection: 'column',
-  gap: '1em',
-  marginBottom: '1.5em'
+  alignItems: 'center',
+  justifyContent: 'center',
+  gap: 16,
+  marginBottom: 2,
+  marginTop: -14,
 };
-
-const labelStyle = {
-  fontWeight: 600,
+const appNameStyle = {
+  fontSize: '2.1em',
+  fontWeight: '700',
+  fontFamily: 'sans-serif',
+  letterSpacing: 0.5,
+  userSelect: 'none',
+};
+const iconStyle = {
+  width: 52,
+  height: 52,
+  borderRadius: '50%',
+  boxShadow: '0 2px 12px #bbb5',
+};
+const guideStyle = {
+  background: '#f8fafd',
+  borderRadius: 12,
+  border: '1px solid #eef1f7',
+  margin: '32px 0 8px 0',
+  padding: '15px 20px 5px 20px',
   fontSize: '1em',
-  display: 'flex',
-  flexDirection: 'column',
-  gap: '4px'
 };
-
-const inputStyle = {
-  padding: '8px 10px',
-  fontSize: '1em',
-  borderRadius: '6px',
-  border: '1px solid #ccc'
-};
-
+// --- 4メニュー・ロト種別タブなど ---
 const tabContainerStyle = {
   display: 'flex',
   justifyContent: 'center',
   gap: '10px',
   flexWrap: 'wrap',
-  marginBottom: '20px'
+  marginBottom: '20px',
 };
-
 const tabStyle = {
   padding: '10px 16px',
   borderRadius: '8px',
@@ -134,12 +170,36 @@ const tabStyle = {
   backgroundColor: '#f0f0f0',
   color: '#333',
   fontWeight: 'bold',
-  cursor: 'pointer'
+  cursor: 'pointer',
+  fontSize: '1em',
 };
-
 const activeTabStyle = {
   ...tabStyle,
   backgroundColor: '#1767a7',
   color: '#fff',
-  border: '1px solid #1767a7'
+  border: '1px solid #1767a7',
+};
+// --- 抽せん回入力 ---
+const formStyle = {
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '1em',
+  marginBottom: '1.5em',
+  alignItems: 'center',
+};
+const labelStyle = {
+  fontWeight: 600,
+  fontSize: '1em',
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '4px',
+  width: '100%',
+  maxWidth: 250,
+};
+const inputStyle = {
+  padding: '8px 10px',
+  fontSize: '1em',
+  borderRadius: '6px',
+  border: '1px solid #ccc',
+  marginTop: '4px',
 };
