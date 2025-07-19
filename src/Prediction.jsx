@@ -47,12 +47,7 @@ export default function Prediction({ lotoType, drawNo }) {
   if (!rows.length) return <div>ズバリ予想が取得できませんでした。</div>;
 
   return (
-    <div style={{
-      width: '100%',
-      boxSizing: 'border-box',
-      padding: '0', // ← ここで余白を極力なくす（親コンテナが余白持つなら0でもOK）
-      margin: 0
-    }}>
+    <div style={{ width: '100%', boxSizing: 'border-box' }}>
       <h2 style={{ fontSize: '1.10em', margin: '8px 0' }}>となりのズバリ予想</h2>
       {/* 横スクロール可能でスマホで幅ピッタリ */}
       <div style={{
