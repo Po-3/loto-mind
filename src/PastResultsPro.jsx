@@ -133,9 +133,54 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
 
   return (
     <>
-      <div style={{ position: 'fixed', bottom: 22, right: 16, zIndex: 90, display: 'flex', flexDirection: 'column', gap: 9 }}>
-        <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} style={{ background: '#337be8', color: '#fff', border: 'none', borderRadius: 32, width: 44, height: 44, fontSize: 24, boxShadow: '0 2px 8px #337be822', cursor: 'pointer', outline: 'none' }} title="最上段へ">↑</button>
-        <button onClick={() => window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })} style={{ background: '#337be8', color: '#fff', border: 'none', borderRadius: 32, width: 44, height: 44, fontSize: 24, boxShadow: '0 2px 8px #337be822', cursor: 'pointer', outline: 'none' }} title="最下段へ">↓</button>
+      {/* ↓ここがスクロールボタン中央寄せ済み */}
+      <div style={{
+        position: 'fixed',
+        bottom: 22,
+        right: 16,
+        zIndex: 90,
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 9
+      }}>
+        <button
+          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          style={{
+            background: '#337be8',
+            color: '#fff',
+            border: 'none',
+            borderRadius: 32,
+            width: 44,
+            height: 44,
+            fontSize: 24,
+            boxShadow: '0 2px 8px #337be822',
+            cursor: 'pointer',
+            outline: 'none',
+            display: 'flex',            // 追加！
+            alignItems: 'center',       // 追加！
+            justifyContent: 'center'    // 追加！
+          }}
+          title="最上段へ"
+        >↑</button>
+        <button
+          onClick={() => window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })}
+          style={{
+            background: '#337be8',
+            color: '#fff',
+            border: 'none',
+            borderRadius: 32,
+            width: 44,
+            height: 44,
+            fontSize: 24,
+            boxShadow: '0 2px 8px #337be822',
+            cursor: 'pointer',
+            outline: 'none',
+            display: 'flex',            // 追加！
+            alignItems: 'center',       // 追加！
+            justifyContent: 'center'    // 追加！
+          }}
+          title="最下段へ"
+        >↓</button>
       </div>
       <div style={{ background: '#f9f9fd', border: '1px solid #cde', borderRadius: 12, boxShadow: '0 1px 16px #eef3ff44', width: '100%', margin: '0 auto', padding: '4vw 2vw 3vw 2vw', boxSizing: 'border-box' }}>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, marginBottom: 15, alignItems: 'flex-end' }}></div>
