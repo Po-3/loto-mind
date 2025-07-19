@@ -27,8 +27,12 @@ function getLocalStorage(key, fallback) {
 // デフォルト背景色
 const DEFAULT_BG_COLOR = '#fafcff';
 
-// キャッシュクリアしてリロード
-const forceReload = () => {
+// --- 修正済み！ページ判定付きで再読込 ---
+const forceReload = (currentFeature) => {
+  // 診断ページでのみ、localStorageのdefaultMenuを書き換え
+  if (currentFeature === 'diagnosis') {
+    localStorage.setItem('defaultMenu', 'diagnosis');
+  }
   if ('caches' in window) {
     caches.keys().then(names => {
       for (let name of names) caches.delete(name);
@@ -120,18 +124,18 @@ export default function App() {
           )}
           {/* 再読込（どちらのページでも必ず一番下） */}
           <button
-            onClick={forceReload}
+            onClick={() => forceReload(feature)}
             style={scrollCircleButtonStyle}
             title="アプリを再読込（更新）"
             aria-label="アプリ再読込"
             type="button"
           >
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none"
-     stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
-     style={{ display: 'block', margin: 'auto' }}>
-  <polyline points="23 4 23 10 17 10" />
-  <path d="M20.49 15A9 9 0 1 1 5 5.3" />
-</svg>
+              stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
+              style={{ display: 'block', margin: 'auto' }}>
+              <polyline points="23 4 23 10 17 10" />
+              <path d="M20.49 15A9 9 0 1 1 5 5.3" />
+            </svg>
           </button>
         </div>
       )}
