@@ -28,37 +28,11 @@ const lotoConfig = {
   }
 };
 
-// sticky用
+// sticky用（開催回のみ）
 const stickyLeftStyle = {
   position: 'sticky',
   left: 0,
-  zIndex: 5,
-  background: '#f7faff'
-};
-const stickyLeftStyle2 = {
-  position: 'sticky',
-  left: 74, // 1列目の幅に合わせて調整（px）
-  zIndex: 5,
-  background: '#f7faff'
-};
-const stickyTopStyle = {
-  position: 'sticky',
-  top: 0,
   zIndex: 4,
-  background: '#f7faff'
-};
-const stickyTopLeftStyle = {
-  position: 'sticky',
-  top: 0,
-  left: 0,
-  zIndex: 10,
-  background: '#f7faff'
-};
-const stickyTopLeftStyle2 = {
-  position: 'sticky',
-  top: 0,
-  left: 74, // 1列目の幅
-  zIndex: 10,
   background: '#f7faff'
 };
 
@@ -71,6 +45,7 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
 
   const config = lotoConfig[lotoType] || lotoConfig.loto6;
 
+  // フィルタ適用
   const filtered = data.filter(row => {
     if (filter.label && !(row['特徴'] || '').includes(filter.label)) return false;
     if (filter.number) {
@@ -93,10 +68,12 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
     return true;
   });
 
+  // ページ切替
   const PAGE_SIZE = 50;
   const paged = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
   const pages = Math.ceil(filtered.length / PAGE_SIZE);
 
+  // CSV出力
   function toCSV(arr) {
     const rows = arr.map(row =>
       config.labels.map(label => row[label] || '').join(',') +
@@ -130,6 +107,7 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
     a.click(); URL.revokeObjectURL(url);
   }
 
+  // 数字出現回数ランキング
   function getRanking(data) {
     const count = Array(config.max + 1).fill(0);
     data.forEach(row => {
@@ -151,6 +129,7 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
     return mainNums(row).reduce((a, b) => a + b, 0);
   }
 
+  // データ読み込み時、開催回降順に
   useEffect(() => {
     fetch(jsonUrl).then(res => res.json()).then(json => {
       json.sort((a, b) => Number(b['開催回']) - Number(a['開催回']));
@@ -162,6 +141,7 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
 
   return (
     <>
+      {/* 固定の上下スクロールボタン */}
       <div style={{
         position: 'fixed',
         bottom: 22,
@@ -208,14 +188,14 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
         background: '#f9f9fd', border: '1px solid #cde', borderRadius: 12,
         boxShadow: '0 1px 16px #eef3ff44', maxWidth: 940, margin: '0 auto', padding: 18
       }}>
-        {/* 検索パネル（省略、元のまま） */}
+        {/* 検索パネル */}
         <div style={{
           display: 'flex', flexWrap: 'wrap', gap: 12, marginBottom: 15, alignItems: 'flex-end'
         }}>
-          {/* ...フィルター系UIは元のまま */}
-          {/* ...ここも省略可 */}
+          {/* ...フィルターUIは省略 ... */}
         </div>
 
+        {/* 統計 */}
         <div style={{ fontSize: '0.97em', marginBottom: 9 }}>
           検索結果：<b>{filtered.length}</b>件　
           <span style={{ color: '#357' }}>
@@ -233,39 +213,31 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
           <table style={{ borderCollapse: 'collapse', width: '100%', fontSize: '0.96em', minWidth: 650 }}>
             <thead>
               <tr>
-                {/* 開催回ヘッダー */}
-                <th style={{ ...thStyle, ...stickyTopLeftStyle, width: 74 }}>回</th>
-                {/* 日付ヘッダー */}
-                <th style={{ ...thStyle, ...stickyTopLeftStyle2, width: 88 }}>日付</th>
-                {/* 本数字ヘッダー */}
+                {/* 開催回のみsticky */}
+                <th style={{ ...thStyle, ...stickyLeftStyle }}>回</th>
+                <th style={thStyle}>日付</th>
                 {Array(config.main).fill(0).map((_, i) =>
-                  <th key={i} style={{ ...thStyle, ...stickyTopStyle }}>{`本数字${i + 1}`}</th>
+                  <th key={i} style={thStyle}>本数字{i + 1}</th>
                 )}
-                {/* ボーナスヘッダー */}
                 {config.bonusNames.map((name, i) =>
-                  <th key={name} style={{ ...thStyle, ...stickyTopStyle }}>{`B数字${i + 1}`}</th>
+                  <th key={name} style={thStyle}>B数字{i + 1}</th>
                 )}
-                {/* 特徴/合計 */}
-                <th style={{ ...thStyle, ...stickyTopStyle }}>特徴</th>
-                <th style={{ ...thStyle, ...stickyTopStyle }}>合計</th>
+                <th style={thStyle}>特徴</th>
+                <th style={thStyle}>合計</th>
               </tr>
             </thead>
             <tbody>
               {paged.map(row => (
                 <tr key={row['開催回']}>
-                  {/* 開催回（列固定） */}
-                  <td style={{ ...tdStyle, ...stickyLeftStyle, fontWeight: 700, width: 74 }}>{row['開催回']}</td>
-                  {/* 日付（列固定） */}
-                  <td style={{ ...tdStyle, ...stickyLeftStyle2, width: 88 }}>{row['日付']}</td>
-                  {/* 本数字 */}
+                  {/* 開催回だけsticky */}
+                  <td style={{ ...tdStyle, ...stickyLeftStyle, fontWeight: 700 }}>{row['開催回']}</td>
+                  <td style={tdStyle}>{row['日付']}</td>
                   {Array(config.main).fill(0).map((_, i) =>
                     <td key={i} style={{ ...tdStyle, color: '#1767a7', fontWeight: 600 }}>{row[`第${i + 1}数字`]}</td>
                   )}
-                  {/* ボーナス */}
                   {config.bonusNames.map((name, i) =>
                     <td key={name} style={{ ...tdStyle, color: '#fa5', fontWeight: 600 }}>{row[name]}</td>
                   )}
-                  {/* 特徴/合計 */}
                   <td style={{ ...tdStyle, color: '#286', fontSize: '0.98em' }}>{row['特徴']}</td>
                   <td style={{ ...tdStyle, color: '#135', fontWeight: 600 }}>{sumMain(row)}</td>
                 </tr>
@@ -273,7 +245,7 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
             </tbody>
           </table>
         </div>
-        {/* ページネーション（省略） */}
+        {/* ページネーション */}
         {pages > 1 && (
           <div style={{ textAlign: 'center', margin: '10px 0 4px 0' }}>
             {Array.from({ length: pages }, (_, i) =>
