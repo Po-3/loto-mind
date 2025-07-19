@@ -129,15 +129,15 @@ export default function App() {
             aria-label="アプリ再読込"
             type="button"
           >
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none"
-  stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none"
+  stroke="#fff" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round"
   style={{ display: 'block', margin: 'auto' }}>
-  {/* 右回り矢印（→） */}
-  <polyline points="16 3 21 3 21 8" />
-  <line x1="21" y1="3" x2="12" y2="12" />
-  {/* 左回り矢印（←） */}
-  <polyline points="8 21 3 21 3 16" />
-  <line x1="3" y1="21" x2="12" y2="12" />
+  {/* 上段の右向き矢印 */}
+  <line x1="8" y1="10" x2="24" y2="10" />
+  <polyline points="20 6 24 10 20 14" />
+  {/* 下段の左向き矢印 */}
+  <line x1="24" y1="22" x2="8" y2="22" />
+  <polyline points="12 18 8 22 12 26" />
 </svg>
           </button>
         </div>
