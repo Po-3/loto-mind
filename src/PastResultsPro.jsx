@@ -242,26 +242,7 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
           onClick={hidePopup}
         >{popup.text}</div>
       )}
-      {/* スクロール＆更新ボタン */}
-      <div style={{
-        position: 'fixed',
-        bottom: 22,
-        right: 16,
-        zIndex: 99,
-        display: 'flex',
-        flexDirection: 'column',
-        gap: 9
-      }}>
-        <ScrollUpButton />
-        <ScrollDownButton />
-        <ReloadIcon onClick={() => {
-          fetch(jsonUrl).then(res => res.json()).then(json => {
-            json.sort((a, b) => Number(b['開催回']) - Number(a['開催回']));
-            setData(json);
-            setPage(1);
-          });
-        }} />
-      </div>
+
 
       <div style={{
         background: '#f9f9fd',
