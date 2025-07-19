@@ -27,8 +27,11 @@ function getLocalStorage(key, fallback) {
 // デフォルト背景色
 const DEFAULT_BG_COLOR = '#fafcff';
 
-// --- ページ遷移なしで再読込する ---
-const forceReload = () => {
+// ページ遷移なしで再読込する
+const forceReload = (selectedTab, feature) => {
+  // ★直前の状態を保存してリロード
+  localStorage.setItem('defaultLotoType', selectedTab);
+  localStorage.setItem('defaultMenu', feature);
   if ('caches' in window) {
     caches.keys().then(names => {
       for (let name of names) caches.delete(name);
@@ -49,8 +52,14 @@ export default function App() {
   const [showScrollBtns, setShowScrollBtns] = useState(true);
 
   // タブ・設定切替
-  const handleTabChange = (tabKey) => setSelectedTab(tabKey);
-  const handleFeatureChange = (menu) => setFeature(menu);
+  const handleTabChange = (tabKey) => {
+    setSelectedTab(tabKey);
+    localStorage.setItem('defaultLotoType', tabKey);
+  };
+  const handleFeatureChange = (menu) => {
+    setFeature(menu);
+    localStorage.setItem('defaultMenu', menu);
+  };
   const handleDefaultLotoChange = (type) => localStorage.setItem('defaultLotoType', type);
   const handleDefaultMenuChange = (menu) => localStorage.setItem('defaultMenu', menu);
   const handleFontChange = (fontVal) => { setFont(fontVal); localStorage.setItem('font', fontVal); };
@@ -58,12 +67,6 @@ export default function App() {
 
   useEffect(() => { document.body.style.fontFamily = font; }, [font]);
   useEffect(() => { document.body.style.backgroundColor = themeColor || DEFAULT_BG_COLOR; }, [themeColor]);
-
-  // ページ状態は初期化しない
-  // useEffect(() => {
-  //   setSelectedTab(getLocalStorage('defaultLotoType', 'loto6'));
-  //   setFeature(getLocalStorage('defaultMenu', 'past'));
-  // }, []);
 
   // スクロールで一番下判定してボタン制御
   useEffect(() => {
@@ -123,22 +126,22 @@ export default function App() {
           )}
           {/* 再読込（どちらのページでも） */}
           <button
-            onClick={forceReload}
+            onClick={() => forceReload(selectedTab, feature)}
             style={scrollCircleButtonStyle}
             title="アプリを再読込（更新）"
             aria-label="アプリ再読込"
             type="button"
           >
             <svg width="32" height="32" viewBox="0 0 32 32" fill="none"
-  stroke="#fff" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round"
-  style={{ display: 'block', margin: 'auto' }}>
-  {/* 上段の右向き矢印 */}
-  <line x1="8" y1="10" x2="24" y2="10" />
-  <polyline points="20 6 24 10 20 14" />
-  {/* 下段の左向き矢印 */}
-  <line x1="24" y1="22" x2="8" y2="22" />
-  <polyline points="12 18 8 22 12 26" />
-</svg>
+              stroke="#fff" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round"
+              style={{ display: 'block', margin: 'auto' }}>
+              {/* 上段の右向き矢印 */}
+              <line x1="8" y1="10" x2="24" y2="10" />
+              <polyline points="20 6 24 10 20 14" />
+              {/* 下段の左向き矢印 */}
+              <line x1="24" y1="22" x2="8" y2="22" />
+              <polyline points="12 18 8 22 12 26" />
+            </svg>
           </button>
         </div>
       )}
