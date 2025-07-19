@@ -44,7 +44,17 @@ export default function App() {
         />
       </div>
       {/* タイトル */}
-      <h1 style={{ textAlign: 'center', marginBottom: 12 }}>LotoMind by tonari</h1>
+      <h1 style={{ textAlign: 'center', marginBottom: 12 }}>
+  LotoMind<br />
+  <span style={{
+    fontSize: '0.42em',
+    color: '#888',
+    fontWeight: 400,
+    letterSpacing: '0.06em'
+  }}>
+    by tonari
+  </span>
+</h1>
       {/* ロト種別タブ */}
       <div style={{ display: 'flex', gap: 10, justifyContent: 'center', marginBottom: 20 }}>
         {tabs.map(tab =>
