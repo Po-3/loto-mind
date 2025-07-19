@@ -1,13 +1,11 @@
 import { useEffect, useState } from 'react';
 
-// ロト種別→記事URLパターン生成
+// ロト種別→記事URLパターン生成（このまま）
 function getPredictionUrl(lotoType, drawNo) {
-  // minilotoだけ表記に注意
   const prefix = lotoType === 'miniloto' ? 'miniloto' : lotoType;
   return `https://www.kujitonari.net/entry/${prefix}-${drawNo}-prediction-tonari`;
 }
 
-// drawNoはpropsやグローバルで取得（最新回番号を自動で割り出す仕組み推奨）
 export default function Prediction({ lotoType, drawNo }) {
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -15,11 +13,9 @@ export default function Prediction({ lotoType, drawNo }) {
   useEffect(() => {
     if (!lotoType || !drawNo) return;
     const url = getPredictionUrl(lotoType, drawNo);
-    // RSS/Feed/API推奨。下はCORS制限のある直接fetch例
     fetch(url)
       .then(res => res.text())
       .then(html => {
-        // HTML本文から「最初の<table>」を抜き出してパース
         const doc = new DOMParser().parseFromString(html, 'text/html');
         const table = doc.querySelector('table');
         if (!table) {
@@ -51,16 +47,28 @@ export default function Prediction({ lotoType, drawNo }) {
   if (!rows.length) return <div>ズバリ予想が取得できませんでした。</div>;
 
   return (
-    <div style={{ width: '100%', boxSizing: 'border-box' }}>
+    <div style={{
+      width: '100%',
+      boxSizing: 'border-box',
+      padding: '0', // ← ここで余白を極力なくす（親コンテナが余白持つなら0でもOK）
+      margin: 0
+    }}>
       <h2 style={{ fontSize: '1.10em', margin: '8px 0' }}>となりのズバリ予想</h2>
-      <div style={{ overflowX: 'auto', width: '100%' }}>
+      {/* 横スクロール可能でスマホで幅ピッタリ */}
+      <div style={{
+        width: '100%',
+        overflowX: 'auto',
+        margin: 0,
+        padding: 0
+      }}>
         <table style={{
           width: '100%',
           minWidth: 440,
           borderCollapse: 'collapse',
           marginTop: 8,
           marginBottom: 8,
-          background: '#fff'
+          background: '#fff',
+          fontSize: '0.98em'
         }}>
           <thead>
             <tr>
@@ -76,7 +84,7 @@ export default function Prediction({ lotoType, drawNo }) {
                 <td style={{ border: '1px solid #ddd', padding: 4 }}>{row.type}</td>
                 <td style={{ border: '1px solid #ddd', padding: 4 }}>{row.nums}</td>
                 <td style={{ border: '1px solid #ddd', padding: 4, fontWeight: 700 }}>{row.axis}</td>
-                <td style={{ border: '1px solid #ddd', padding: 4 }}>{row.feature}</td>
+                <td style={{ border: '1px solid #ddd', padding: 4, textAlign: 'left' }}>{row.feature}</td>
               </tr>
             ))}
           </tbody>
