@@ -95,15 +95,32 @@ export default function App() {
           宝くじのとなりブログ
         </a>
       </div>
-      <div style={{
-        textAlign: 'right',
-        fontSize: '0.98em',
-        color: '#be9000',
-        marginTop: 8,
-        opacity: 0.72
-      }}>
-        となり🧑‍💻がいつも応援中！
-      </div>
+ <div style={{
+  textAlign: 'right',
+  fontSize: '0.98em',
+  color: '#be9000',
+  marginTop: 8,
+  opacity: 0.72,
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'flex-end',
+  gap: 4
+}}>
+  <span>となり</span>
+  <img
+    src="/tonari.png"
+    alt="となりくん"
+    style={{
+      width: 22,
+      height: 22,
+      marginLeft: 2,
+      verticalAlign: 'middle',
+      borderRadius: '50%',
+      boxShadow: '0 1px 4px #bbb8'
+    }}
+  />
+  <span style={{ fontSize: '0.90em', marginLeft: 2 }}>がいつも応援中！</span>
+</div>
     </div>
   );
 }
