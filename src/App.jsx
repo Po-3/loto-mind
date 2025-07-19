@@ -24,7 +24,6 @@ function getLocalStorage(key, fallback) {
   return localStorage.getItem(key) || fallback;
 }
 
-// デフォルト背景色
 const DEFAULT_BG_COLOR = '#fafcff';
 
 // キャッシュクリアしてリロード
@@ -45,6 +44,8 @@ export default function App() {
   const [feature, setFeature] = useState(() => getLocalStorage('defaultMenu', 'past'));
   const [font, setFont] = useState(getLocalStorage('font', 'system-ui, Avenir, Helvetica, Arial, sans-serif'));
   const [themeColor, setThemeColor] = useState(getLocalStorage('themeColor', DEFAULT_BG_COLOR));
+  // 診断リセット用のkey（再マウントで初期化するため）
+  const [diagnosisKey, setDiagnosisKey] = useState(Date.now());
 
   // タブ・設定切替
   const handleTabChange = (tabKey) => setSelectedTab(tabKey);
@@ -63,14 +64,23 @@ export default function App() {
 
   const selectedUrl = tabs.find(t => t.key === selectedTab).url;
 
-  // 右下ボタン群の出し分け
+  // 右下ボタンの出し分け
   const showPastScrollBtns = feature === 'past';
-  const showOnlyReloadBtn = feature === 'diagnosis';
+  const showDiagnosisReload = feature === 'diagnosis';
+
+  // 再読込ボタンの中身(svg)を統一
+  const ReloadSvg = (
+    <svg width="25" height="25" viewBox="0 0 24 24" style={{ display: 'block', margin: 'auto' }}>
+      <polyline points="1 4 1 10 7 10" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" />
+      <polyline points="23 20 23 14 17 14" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" />
+      <path d="M3.51 15a9 9 0 0 0 14.85-3.5" fill="none" stroke="#fff" strokeWidth="2.5" />
+    </svg>
+  );
 
   return (
     <div style={containerStyle}>
       {/* --- 右下：スクロール＋再読込ボタン群 --- */}
-      {(showPastScrollBtns || showOnlyReloadBtn) && (
+      {(showPastScrollBtns || showDiagnosisReload) && (
         <div style={scrollButtonContainer}>
           {showPastScrollBtns && (
             <>
@@ -82,9 +92,9 @@ export default function App() {
                 aria-label="最上段へ"
                 type="button"
               >
-                <svg width="22" height="22" viewBox="0 0 24 24" style={{ display: 'block', margin: 'auto' }}>
-                  <polyline points="12 6 12 18" fill="none" stroke="#fff" strokeWidth="2.8" strokeLinecap="round" />
-                  <polyline points="6 12 12 6 18 12" fill="none" stroke="#fff" strokeWidth="2.8" strokeLinejoin="round" />
+                <svg width="23" height="23" viewBox="0 0 24 24" style={{ display: 'block', margin: 'auto' }}>
+                  <polyline points="12 6 12 18" fill="none" stroke="#fff" strokeWidth="2.6" strokeLinecap="round" />
+                  <polyline points="6 12 12 6 18 12" fill="none" stroke="#fff" strokeWidth="2.6" strokeLinejoin="round" />
                 </svg>
               </button>
               {/* 下へ */}
@@ -95,27 +105,35 @@ export default function App() {
                 aria-label="最下段へ"
                 type="button"
               >
-                <svg width="22" height="22" viewBox="0 0 24 24" style={{ display: 'block', margin: 'auto' }}>
-                  <polyline points="12 18 12 6" fill="none" stroke="#fff" strokeWidth="2.8" strokeLinecap="round" />
-                  <polyline points="6 12 12 18 18 12" fill="none" stroke="#fff" strokeWidth="2.8" strokeLinejoin="round" />
+                <svg width="23" height="23" viewBox="0 0 24 24" style={{ display: 'block', margin: 'auto' }}>
+                  <polyline points="12 18 12 6" fill="none" stroke="#fff" strokeWidth="2.6" strokeLinecap="round" />
+                  <polyline points="6 12 12 18 18 12" fill="none" stroke="#fff" strokeWidth="2.6" strokeLinejoin="round" />
                 </svg>
+              </button>
+              {/* 再読込（全体リロード） */}
+              <button
+                onClick={forceReload}
+                style={scrollCircleButtonStyle}
+                title="アプリを再読込（更新）"
+                aria-label="アプリ再読込"
+                type="button"
+              >
+                {ReloadSvg}
               </button>
             </>
           )}
-          {/* 再読込（どちらのページでも必ず一番下） */}
-          <button
-            onClick={forceReload}
-            style={scrollCircleButtonStyle}
-            title="アプリを再読込（更新）"
-            aria-label="アプリ再読込"
-            type="button"
-          >
-            <svg width="25" height="25" viewBox="0 0 24 24" style={{ display: 'block', margin: 'auto' }}>
-              <polyline points="1 4 1 10 7 10" fill="none" stroke="#fff" strokeWidth="2.6" strokeLinecap="round" />
-              <polyline points="23 20 23 14 17 14" fill="none" stroke="#fff" strokeWidth="2.6" strokeLinecap="round" />
-              <path d="M3.51 15a9 9 0 0 0 14.85-3.5" fill="none" stroke="#fff" strokeWidth="2.6" />
-            </svg>
-          </button>
+          {/* 診断ページのみリセットボタン（診断のみ再マウント） */}
+          {showDiagnosisReload && (
+            <button
+              onClick={() => setDiagnosisKey(Date.now())}
+              style={scrollCircleButtonStyle}
+              title="診断リセット"
+              aria-label="診断リセット"
+              type="button"
+            >
+              {ReloadSvg}
+            </button>
+          )}
         </div>
       )}
 
@@ -169,7 +187,9 @@ export default function App() {
             <PastResultsPro jsonUrl={selectedUrl} lotoType={selectedTab} />
           </div>
         )}
-        {feature === 'diagnosis' && <Diagnosis jsonUrl={selectedUrl} lotoType={selectedTab} />}
+        {feature === 'diagnosis' && (
+          <Diagnosis key={diagnosisKey} jsonUrl={selectedUrl} lotoType={selectedTab} />
+        )}
         {feature === 'prediction' && <Prediction lotoType={selectedTab} />}
         {feature === 'settings' && (
           <Settings
@@ -250,7 +270,7 @@ const scrollButtonContainer = {
   zIndex: 90,
   display: 'flex',
   flexDirection: 'column',
-  gap: 12,
+  gap: 14,
 };
 
 const scrollCircleButtonStyle = {
