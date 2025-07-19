@@ -1,15 +1,27 @@
 import { useEffect, useState } from 'react';
 
+// フォント選択肢を拡大
 const FONT_OPTIONS = [
   { label: '標準（system）', value: 'system-ui, Avenir, Helvetica, Arial, sans-serif' },
-  { label: 'ゴシック（Noto Sans）', value: '"Noto Sans JP", sans-serif' },
+  { label: 'メイリオ', value: 'Meiryo, "メイリオ", sans-serif' },
+  { label: '游ゴシック', value: '"Yu Gothic", YuGothic, "游ゴシック体", "YuGothic", sans-serif' },
+  { label: 'Noto Sans JP', value: '"Noto Sans JP", sans-serif' },
+  { label: 'BIZ UDゴシック', value: '"BIZ UD Gothic", "BIZ UDGothic", sans-serif' },
+  { label: 'Roboto', value: 'Roboto, Arial, sans-serif' },
+  { label: 'Inter', value: 'Inter, Arial, sans-serif' },
+  { label: 'M PLUS Rounded', value: '"M PLUS Rounded 1c", sans-serif' },
+  { label: 'BIZ UD明朝', value: '"BIZ UDMincho", serif' },
   { label: '明朝（Noto Serif）', value: '"Noto Serif JP", serif' }
 ];
 
-const THEME_OPTIONS = [
-  { label: 'となりカラー', value: 'tonari' },
-  { label: 'シンプルグレー', value: 'gray' },
-  { label: 'アイボリー', value: 'ivory' }
+// カラーパレット（プリセット＋カスタム対応）
+const COLOR_PRESETS = [
+  { name: 'となりカラー', value: '#fafcff' },
+  { name: 'アイボリー', value: '#f9f6ee' },
+  { name: 'シンプルグレー', value: '#eeeeee' },
+  { name: '桜ピンク', value: '#ffe4e1' },
+  { name: 'ライトブルー', value: '#d1f0ff' },
+  { name: 'ホワイト', value: '#ffffff' },
 ];
 
 const LOTO_OPTIONS = [
@@ -29,19 +41,22 @@ export default function Settings({
   defaultLotoType,
   defaultMenu,
   font,
-  theme,
+  themeColor, // ← 追加: 文字色ではなく背景カラー
   onDefaultLotoChange,
   onDefaultMenuChange,
   onFontChange,
-  onThemeChange,
+  onThemeColorChange,
 }) {
-  // 初期値をpropsから受けて、props変化時にも追従
+  // 内部状態
   const [selectedLoto, setSelectedLoto] = useState(defaultLotoType || 'loto6');
   const [selectedMenu, setSelectedMenu] = useState(defaultMenu || 'past');
   const [selectedFont, setSelectedFont] = useState(font || FONT_OPTIONS[0].value);
-  const [selectedTheme, setSelectedTheme] = useState(theme || 'tonari');
+  const [selectedColor, setSelectedColor] = useState(themeColor || '#fafcff');
 
-  // propsが変わったら同期（必要！）
+  // カスタムカラー
+  const [customColor, setCustomColor] = useState('');
+
+  // props変化で追従
   useEffect(() => {
     setSelectedLoto(defaultLotoType || 'loto6');
   }, [defaultLotoType]);
@@ -52,10 +67,11 @@ export default function Settings({
     setSelectedFont(font || FONT_OPTIONS[0].value);
   }, [font]);
   useEffect(() => {
-    setSelectedTheme(theme || 'tonari');
-  }, [theme]);
+    setSelectedColor(themeColor || '#fafcff');
+    setCustomColor('');
+  }, [themeColor]);
 
-  // プルダウン変更時
+  // 各種ハンドラ
   const handleLotoChange = (val) => {
     setSelectedLoto(val);
     onDefaultLotoChange && onDefaultLotoChange(val);
@@ -68,17 +84,23 @@ export default function Settings({
     setSelectedFont(val);
     onFontChange && onFontChange(val);
   };
-  const handleThemeChange = (val) => {
-    setSelectedTheme(val);
-    onThemeChange && onThemeChange(val);
+  const handlePresetColor = (color) => {
+    setSelectedColor(color);
+    setCustomColor('');
+    onThemeColorChange && onThemeColorChange(color);
+  };
+  const handleCustomColor = (color) => {
+    setSelectedColor(color);
+    setCustomColor(color);
+    onThemeColorChange && onThemeColorChange(color);
   };
 
-  // いずれかが未定義ならローディング防止（念のため）
+  // いずれかが未定義ならローディング防止
   if (
     typeof selectedLoto === 'undefined' ||
     typeof selectedMenu === 'undefined' ||
     typeof selectedFont === 'undefined' ||
-    typeof selectedTheme === 'undefined'
+    typeof selectedColor === 'undefined'
   ) {
     return <div>設定を読み込み中…</div>;
   }
@@ -113,6 +135,7 @@ export default function Settings({
         </select>
       </div>
 
+      {/* フォント選択 */}
       <div style={settingBlock}>
         <strong>画面フォント：</strong>
         <select
@@ -124,19 +147,37 @@ export default function Settings({
             <option key={opt.value} value={opt.value}>{opt.label}</option>
           ))}
         </select>
+        <span style={{
+          marginLeft: 12, fontSize: '0.93em',
+          fontFamily: selectedFont, borderBottom: '1px dotted #bbb'
+        }}>
+          {FONT_OPTIONS.find(f => f.value === selectedFont)?.label || ''}
+        </span>
       </div>
 
+      {/* カラーパレット＋カラーピッカー */}
       <div style={settingBlock}>
-        <strong>配色テーマ：</strong>
-        <select
-          value={selectedTheme}
-          onChange={e => handleThemeChange(e.target.value)}
-          style={selectStyle}
-        >
-          {THEME_OPTIONS.map(opt => (
-            <option key={opt.value} value={opt.value}>{opt.label}</option>
-          ))}
-        </select>
+        <strong>背景カラー：</strong>
+        <span style={{ display: 'inline-flex', gap: 4, verticalAlign: 'middle' }}>
+          {COLOR_PRESETS.map(c =>
+            <button
+              key={c.value}
+              title={c.name}
+              style={{
+                width: 28, height: 28, borderRadius: '50%', border: selectedColor === c.value ? '2px solid #333' : '1px solid #ccc',
+                background: c.value, cursor: 'pointer', marginRight: 2
+              }}
+              onClick={() => handlePresetColor(c.value)}
+            />
+          )}
+          <input
+            type="color"
+            value={customColor || selectedColor}
+            onChange={e => handleCustomColor(e.target.value)}
+            style={{ width: 34, height: 28, border: 'none', background: 'none', cursor: 'pointer', verticalAlign: 'middle' }}
+          />
+        </span>
+        <span style={{ marginLeft: 10, fontSize: '0.93em', color: '#888' }}>{selectedColor}</span>
       </div>
 
       {/* ↓ガイド文・リンク群はそのまま残す */}
