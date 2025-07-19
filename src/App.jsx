@@ -130,14 +130,14 @@ export default function App() {
             type="button"
           >
             <svg width="32" height="32" viewBox="0 0 24 24" fill="none"
-  stroke="#fff" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"
+  stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
   style={{ display: 'block', margin: 'auto' }}>
-  {/* 上の円弧と矢印 */}
-  <path d="M17 1.8A10 10 0 1 1 2 12" />
-  <polyline points="17 4 17 1.8 19.2 1.8" />
-  {/* 下の円弧と矢印 */}
-  <path d="M7 22.2A10 10 0 1 0 22 12" />
-  <polyline points="7 20 7 22.2 4.8 22.2" />
+  {/* 右回り矢印（→） */}
+  <polyline points="16 3 21 3 21 8" />
+  <line x1="21" y1="3" x2="12" y2="12" />
+  {/* 左回り矢印（←） */}
+  <polyline points="8 21 3 21 3 16" />
+  <line x1="3" y1="21" x2="12" y2="12" />
 </svg>
           </button>
         </div>
