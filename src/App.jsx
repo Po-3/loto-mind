@@ -79,14 +79,6 @@ export default function App() {
   return (
     <div style={containerStyle}>
       {/* 明示的な再読込ボタン（完全丸形＋刷新アイコン） */}
-      <button
-        onClick={() => window.location.reload()}
-        style={reloadButtonStyle}
-        title="アプリを再読込（更新）"
-        aria-label="アプリ再読込"
-        onMouseEnter={e => e.currentTarget.style.boxShadow = '0 4px 14px #1767a7cc'}
-        onMouseLeave={e => e.currentTarget.style.boxShadow = '0 2px 10px #337be823'}
-      >
         <svg
           width="24"
           height="24"
