@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-// 豊富なフォント選択肢（追加歓迎！）
+// 豊富なフォント選択肢
 const FONT_OPTIONS = [
   { label: '標準（system）', value: 'system-ui, Avenir, Helvetica, Arial, sans-serif' },
   { label: 'メイリオ', value: 'Meiryo, "メイリオ", sans-serif' },
@@ -14,7 +14,7 @@ const FONT_OPTIONS = [
   { label: '明朝（Noto Serif）', value: '"Noto Serif JP", serif' }
 ];
 
-// カラーパレット（プリセット＋カスタム対応）
+// プリセットカラー
 const COLOR_PRESETS = [
   { name: 'となりカラー', value: '#fafcff' },
   { name: 'アイボリー', value: '#f9f6ee' },
@@ -24,21 +24,8 @@ const COLOR_PRESETS = [
   { name: 'ホワイト', value: '#ffffff' }
 ];
 
-const LOTO_OPTIONS = [
-  { label: 'ミニロト', value: 'miniloto' },
-  { label: 'ロト6', value: 'loto6' },
-  { label: 'ロト7', value: 'loto7' }
-];
-
-const MENU_OPTIONS = [
-  { label: '過去検索', value: 'past' },
-  { label: 'となり診断', value: 'diagnosis' },
-  { label: 'ズバリ予想', value: 'prediction' },
-  { label: '設定', value: 'settings' }
-];
-
-// シンプルなSVGパレットアイコン（Reactコンポーネント化）
-const PaletteIcon = ({ size = 22 }) => (
+// Paletteアイコン（SVG）
+const PaletteIcon = ({ size = 27 }) => (
   <svg width={size} height={size} viewBox="0 0 22 22" style={{ verticalAlign: 'middle', marginRight: 2 }}>
     <circle cx="11" cy="11" r="10" fill="#f7c873" stroke="#be9000" strokeWidth="1.2"/>
     <circle cx="7.5" cy="8" r="1.5" fill="#ed3a45"/>
@@ -53,18 +40,17 @@ export default function Settings({
   defaultLotoType,
   defaultMenu,
   font,
-  themeColor, // ← 背景色hex値
+  themeColor, // 背景色
   onDefaultLotoChange,
   onDefaultMenuChange,
   onFontChange,
   onThemeColorChange,
 }) {
-  // 内部状態（propsから初期値で、props変化時は追従）
+  // 内部状態（props反映あり）
   const [selectedLoto, setSelectedLoto] = useState(defaultLotoType || 'loto6');
   const [selectedMenu, setSelectedMenu] = useState(defaultMenu || 'past');
   const [selectedFont, setSelectedFont] = useState(font || FONT_OPTIONS[0].value);
   const [selectedColor, setSelectedColor] = useState(themeColor || '#fafcff');
-  // カスタム選択色（プリセット選択時は空に戻す）
   const [customColor, setCustomColor] = useState('');
 
   useEffect(() => { setSelectedLoto(defaultLotoType || 'loto6'); }, [defaultLotoType]);
@@ -75,7 +61,6 @@ export default function Settings({
     setCustomColor('');
   }, [themeColor]);
 
-  // ハンドラ
   const handleLotoChange = (val) => {
     setSelectedLoto(val);
     onDefaultLotoChange && onDefaultLotoChange(val);
@@ -99,7 +84,7 @@ export default function Settings({
     onThemeColorChange && onThemeColorChange(color);
   };
 
-  // 安全ガード
+  // ローディングガード
   if (
     typeof selectedLoto === 'undefined' ||
     typeof selectedMenu === 'undefined' ||
@@ -120,7 +105,11 @@ export default function Settings({
           onChange={e => handleLotoChange(e.target.value)}
           style={selectStyle}
         >
-          {LOTO_OPTIONS.map(opt => (
+          {[
+            { label: 'ミニロト', value: 'miniloto' },
+            { label: 'ロト6', value: 'loto6' },
+            { label: 'ロト7', value: 'loto7' }
+          ].map(opt => (
             <option key={opt.value} value={opt.value}>{opt.label}</option>
           ))}
         </select>
@@ -133,7 +122,12 @@ export default function Settings({
           onChange={e => handleMenuChange(e.target.value)}
           style={selectStyle}
         >
-          {MENU_OPTIONS.map(opt => (
+          {[
+            { label: '過去検索', value: 'past' },
+            { label: 'となり診断', value: 'diagnosis' },
+            { label: 'ズバリ予想', value: 'prediction' },
+            { label: '設定', value: 'settings' }
+          ].map(opt => (
             <option key={opt.value} value={opt.value}>{opt.label}</option>
           ))}
         </select>
@@ -159,11 +153,12 @@ export default function Settings({
         </span>
       </div>
 
-      {/* カラーパレット＋カラーピッカー */}
+      {/* カラーパレット */}
       <div style={settingBlock}>
         <strong>背景カラー：</strong>
-        <span style={{ display: 'inline-flex', gap: 4, verticalAlign: 'middle', alignItems: 'center' }}>
-          <PaletteIcon />
+        <span style={{
+          display: 'inline-flex', gap: 4, verticalAlign: 'middle', alignItems: 'center'
+        }}>
           {COLOR_PRESETS.map(c =>
             <button
               key={c.value}
@@ -176,16 +171,37 @@ export default function Settings({
               onClick={() => handlePresetColor(c.value)}
             />
           )}
-          <input
-            type="color"
-            value={customColor || selectedColor}
-            onChange={e => handleCustomColor(e.target.value)}
-            style={{
-              width: 34, height: 28, border: 'none', background: 'none',
-              cursor: 'pointer', verticalAlign: 'middle', marginLeft: 3
-            }}
-            aria-label="カスタムカラー"
-          />
+          {/* Paletteアイコン付きカラーピッカー */}
+          <label style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            cursor: 'pointer',
+            border: customColor ? '2px solid #333' : '1.4px solid #aaa',
+            borderRadius: 7,
+            padding: '2px 6px',
+            marginLeft: 4,
+            background: '#fff',
+            transition: 'border .13s'
+          }}>
+            <PaletteIcon size={22} />
+            <input
+              type="color"
+              value={customColor || selectedColor}
+              onChange={e => handleCustomColor(e.target.value)}
+              style={{
+                width: 24,
+                height: 22,
+                border: 'none',
+                background: 'none',
+                marginLeft: -4,
+                cursor: 'pointer',
+                opacity: 0, // ←アイコンクリックで開く
+                position: 'absolute'
+              }}
+              aria-label="カスタムカラー"
+            />
+          </label>
         </span>
         <span style={{ marginLeft: 10, fontSize: '0.93em', color: '#888' }}>{selectedColor}</span>
       </div>
