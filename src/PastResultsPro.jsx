@@ -13,7 +13,14 @@ const lotoConfig = {
       { label: '奇数6・偶数0', value: '6-0' }, { label: '奇数5・偶数1', value: '5-1' }, { label: '奇数4・偶数2', value: '4-2' },
       { label: '奇数3・偶数3', value: '3-3' }, { label: '奇数2・偶数4', value: '2-4' }, { label: '奇数1・偶数5', value: '1-5' }, { label: '奇数0・偶数6', value: '0-6' }
     ],
-    sumRange: [21, 258]
+    sumRange: [21, 258],
+    ranks: [
+      { rank: '1等', countKey: '1等口数', prizeKey: '1等賞金' },
+      { rank: '2等', countKey: '2等口数', prizeKey: '2等賞金' },
+      { rank: '3等', countKey: '3等口数', prizeKey: '3等賞金' },
+      { rank: '4等', countKey: '4等口数', prizeKey: '4等賞金' },
+      { rank: '5等', countKey: '5等口数', prizeKey: '5等賞金' },
+    ],
   },
   miniloto: {
     main: 5,
@@ -26,7 +33,13 @@ const lotoConfig = {
       { label: '奇数5・偶数0', value: '5-0' }, { label: '奇数4・偶数1', value: '4-1' }, { label: '奇数3・偶数2', value: '3-2' },
       { label: '奇数2・偶数3', value: '2-3' }, { label: '奇数1・偶数4', value: '1-4' }, { label: '奇数0・偶数5', value: '0-5' }
     ],
-    sumRange: [15, 145]
+    sumRange: [15, 145],
+    ranks: [
+      { rank: '1等', countKey: '1等口数', prizeKey: '1等賞金' },
+      { rank: '2等', countKey: '2等口数', prizeKey: '2等賞金' },
+      { rank: '3等', countKey: '3等口数', prizeKey: '3等賞金' },
+      { rank: '4等', countKey: '4等口数', prizeKey: '4等賞金' },
+    ],
   },
   loto7: {
     main: 7,
@@ -39,7 +52,15 @@ const lotoConfig = {
       { label: '奇数7・偶数0', value: '7-0' }, { label: '奇数6・偶数1', value: '6-1' }, { label: '奇数5・偶数2', value: '5-2' }, { label: '奇数4・偶数3', value: '4-3' },
       { label: '奇数3・偶数4', value: '3-4' }, { label: '奇数2・偶数5', value: '2-5' }, { label: '奇数1・偶数6', value: '1-6' }, { label: '奇数0・偶数7', value: '0-7' }
     ],
-    sumRange: [28, 273]
+    sumRange: [28, 273],
+    ranks: [
+      { rank: '1等', countKey: '1等口数', prizeKey: '1等賞金' },
+      { rank: '2等', countKey: '2等口数', prizeKey: '2等賞金' },
+      { rank: '3等', countKey: '3等口数', prizeKey: '3等賞金' },
+      { rank: '4等', countKey: '4等口数', prizeKey: '4等賞金' },
+      { rank: '5等', countKey: '5等口数', prizeKey: '5等賞金' },
+      { rank: '6等', countKey: '6等口数', prizeKey: '6等賞金' },
+    ],
   }
 };
 
@@ -160,17 +181,16 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
     const head = [
       '開催回', '日付',
       ...Array(config.main).fill(0).map((_, i) => `第${i + 1}数字`),
-      ...config.bonusNames, '特徴', '1等口数', '1等賞金', '2等口数', '2等賞金'
+      ...config.bonusNames, '特徴',
+      // 末等まで追加
+      ...config.ranks.flatMap(rank => [rank.countKey, rank.prizeKey])
     ];
     const rows = arr.map(row => [
       row['開催回'], row['日付'],
       ...Array(config.main).fill(0).map((_, i) => row[`第${i + 1}数字`]),
       ...config.bonusNames.map(b => row[b] || ''),
       row['特徴'] || '',
-      row['1等口数'] || '',
-      row['1等賞金'] || '',
-      row['2等口数'] || '',
-      row['2等賞金'] || ''
+      ...config.ranks.flatMap(rank => [row[rank.countKey] || '', row[rank.prizeKey] || ''])
     ]);
     return [head, ...rows].map(row => row.join(',')).join('\n');
   }
@@ -232,69 +252,15 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
         flexDirection: 'column',
         gap: 9
       }}>
-        <button
-          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-          style={{
-            background: '#337be8',
-            color: '#fff',
-            border: 'none',
-            borderRadius: '50%',
-            width: 40,
-            height: 40,
-            fontSize: 24,
-            boxShadow: '0 2px 8px #337be822',
-            cursor: 'pointer',
-            outline: 'none',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center'
-          }}
-          title="最上段へ"
-        >↑</button>
-        <button
-          onClick={() => window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })}
-          style={{
-            background: '#337be8',
-            color: '#fff',
-            border: 'none',
-            borderRadius: '50%',
-            width: 40,
-            height: 40,
-            fontSize: 24,
-            boxShadow: '0 2px 8px #337be822',
-            cursor: 'pointer',
-            outline: 'none',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center'
-          }}
-          title="最下段へ"
-        >↓</button>
-        <button
-          onClick={() => {
-            fetch(jsonUrl).then(res => res.json()).then(json => {
-              json.sort((a, b) => Number(b['開催回']) - Number(a['開催回']));
-              setData(json);
-              setPage(1);
-            });
-          }}
-          title="更新"
-          style={{
-            background: '#337be8',
-            color: '#fff',
-            border: 'none',
-            borderRadius: '50%',
-            width: 40,
-            height: 40,
-            fontSize: 24,
-            boxShadow: '0 2px 8px #337be822',
-            cursor: 'pointer',
-            outline: 'none',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center'
-          }}
-        >⟳</button>
+        <ScrollUpButton />
+        <ScrollDownButton />
+        <ReloadIcon onClick={() => {
+          fetch(jsonUrl).then(res => res.json()).then(json => {
+            json.sort((a, b) => Number(b['開催回']) - Number(a['開催回']));
+            setData(json);
+            setPage(1);
+          });
+        }} />
       </div>
 
       <div style={{
@@ -394,7 +360,6 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
           }} style={resetBtnStyle}><i className="fa fa-rotate-right"></i> リセット</button>
           <button onClick={handleCSV} style={csvBtnStyle}><i className="fa fa-file-csv"></i> CSV出力</button>
         </div>
-
         {/* 検索結果・ランキング */}
         <div style={{ fontSize: '0.97em', margin: '8px 0' }}>
           検索結果：<b>{filtered.length}</b>件　
@@ -427,10 +392,12 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
               <th style={thStyle}>特徴</th>
               <th style={thStyle}>合計</th>
               {/* 口数・賞金列追加 */}
-              <th style={thStyle}>1等口数</th>
-              <th style={thStyle}>1等賞金</th>
-              <th style={thStyle}>2等口数</th>
-              <th style={thStyle}>2等賞金</th>
+              {config.ranks.map(({ rank }) => (
+                <th key={rank} style={thStyle}>{rank}口数</th>
+              ))}
+              {config.ranks.map(({ rank }) => (
+                <th key={rank + '_prize'} style={thStyle}>{rank}賞金</th>
+              ))}
             </tr>
           </thead>
           <tbody>
@@ -447,10 +414,12 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
                 <td style={{ ...tdStyle, color: '#286', fontSize: '0.98em' }}>{row['特徴']}</td>
                 <td style={{ ...tdStyle, color: '#135', fontWeight: 600 }}>{sumMain(row)}</td>
                 {/* 口数・賞金列表示 */}
-                <td style={tdStyle}>{row['1等口数'] || ''}</td>
-                <td style={tdStyle}>{row['1等賞金'] || ''}</td>
-                <td style={tdStyle}>{row['2等口数'] || ''}</td>
-                <td style={tdStyle}>{row['2等賞金'] || ''}</td>
+                {config.ranks.map(({ countKey, prizeKey }) => (
+                  <td key={countKey} style={tdStyle}>{row[countKey] || ''}</td>
+                ))}
+                {config.ranks.map(({ countKey, prizeKey }) => (
+                  <td key={prizeKey} style={tdStyle}>{row[prizeKey] || ''}</td>
+                ))}
               </tr>
             ))}
           </tbody>
