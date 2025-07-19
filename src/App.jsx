@@ -27,6 +27,19 @@ function getLocalStorage(key, fallback) {
 // デフォルト背景色（COLOR_PRESETSと揃える）
 const DEFAULT_BG_COLOR = '#fafcff';
 
+// キャッシュクリアして確実にリロードする関数
+const forceReload = () => {
+  if ('caches' in window) {
+    caches.keys().then(names => {
+      for (let name of names) caches.delete(name);
+    }).finally(() => {
+      window.location.reload();
+    });
+  } else {
+    window.location.reload();
+  }
+};
+
 export default function App() {
   const [selectedTab, setSelectedTab] = useState(() => getLocalStorage('defaultLotoType', 'loto6'));
   const [feature, setFeature] = useState(() => getLocalStorage('defaultMenu', 'past'));
@@ -74,17 +87,23 @@ export default function App() {
     <div style={containerStyle}>
       {/* 明示的な再読込ボタン（丸形アイコン＋矢印） */}
       <button
-        onClick={() => {
-          // 強制的に再読み込み（キャッシュクリア含む場合は以下）
-          // window.location.reload(true);
-          window.location.reload();
-        }}
+        onClick={forceReload}
         style={reloadButtonStyle}
         title="アプリを再読込（更新）"
         aria-label="アプリ再読込"
         type="button"
       >
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#337be8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ display: 'block', margin: 'auto' }}>
+        <svg
+          width="28"
+          height="28"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="#337be8"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          style={{ display: 'block', margin: 'auto' }}
+        >
           <polyline points="1 4 1 10 7 10" />
           <polyline points="23 20 23 14 17 14" />
           <path d="M3.51 15a9 9 0 0 0 14.85-3.5" />
@@ -95,41 +114,43 @@ export default function App() {
       <div style={headerStyle}>
         <img src="/tonari.png" alt="となりアイコン" style={iconStyle} />
         <div style={titleBlockStyle}>
-          <span style={appNameStyle}>Loto <span style={{ color: '#1767a7' }}>Mind</span></span>
+          <span style={appNameStyle}>
+            Loto <span style={{ color: '#1767a7' }}>Mind</span>
+          </span>
           <span style={byTonariStyle}>by tonari</span>
         </div>
       </div>
 
       {/* ロト種別タブ */}
       <div style={tabRowStyle}>
-        {tabs.map(tab =>
+        {tabs.map((tab) => (
           <button
             key={tab.key}
             onClick={() => handleTabChange(tab.key)}
             style={{
               ...tabStyle,
-              ...(selectedTab === tab.key ? activeTabStyle : {})
+              ...(selectedTab === tab.key ? activeTabStyle : {}),
             }}
-          >{tab.label}</button>
-        )}
+          >
+            {tab.label}
+          </button>
+        ))}
       </div>
 
       {/* 機能タブ */}
       <div style={featureTabRowStyle}>
-        {features.map(f =>
+        {features.map((f) => (
           <button
             key={f.key}
             onClick={() => handleFeatureChange(f.key)}
             style={{
               ...featureTabStyle,
-              ...(feature === f.key ? activeFeatureTabStyle : {})
+              ...(feature === f.key ? activeFeatureTabStyle : {}),
             }}
           >
-            <span style={{ whiteSpace: 'pre-line', lineHeight: 1.15 }}>
-              {f.label}
-            </span>
+            <span style={{ whiteSpace: 'pre-line', lineHeight: 1.15 }}>{f.label}</span>
           </button>
-        )}
+        ))}
       </div>
 
       {/* メイン表示エリア */}
@@ -159,16 +180,18 @@ export default function App() {
         )}
 
         {feature === 'past' && (
-          <div style={{
-            margin: '-12px -18px 0 -18px',
-            maxWidth: 'none'
-          }}>
+          <div
+            style={{
+              margin: '-12px -18px 0 -18px',
+              maxWidth: 'none',
+            }}
+          >
             <PastResultsPro jsonUrl={selectedUrl} lotoType={selectedTab} />
           </div>
         )}
         {feature === 'diagnosis' && <Diagnosis jsonUrl={selectedUrl} lotoType={selectedTab} />}
         {feature === 'prediction' && <Prediction lotoType={selectedTab} />}
-        {feature === 'settings' &&
+        {feature === 'settings' && (
           <Settings
             onThemeColorChange={handleThemeColorChange}
             onFontChange={handleFontChange}
@@ -179,7 +202,7 @@ export default function App() {
             themeColor={themeColor}
             font={font}
           />
-        }
+        )}
       </div>
 
       {/* ガイド文＆リンク */}
@@ -193,17 +216,19 @@ export default function App() {
           宝くじのとなりブログ
         </a>
       </div>
-      <div style={{
-        textAlign: 'right',
-        fontSize: '0.98em',
-        color: '#be9000',
-        marginTop: 8,
-        opacity: 0.72,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'flex-end',
-        gap: 4
-      }}>
+      <div
+        style={{
+          textAlign: 'right',
+          fontSize: '0.98em',
+          color: '#be9000',
+          marginTop: 8,
+          opacity: 0.72,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'flex-end',
+          gap: 4,
+        }}
+      >
         <span>となり</span>
         <img
           src="/tonari.png"
@@ -214,7 +239,7 @@ export default function App() {
             marginLeft: 2,
             verticalAlign: 'middle',
             borderRadius: '50%',
-            boxShadow: '0 1px 4px #bbb8'
+            boxShadow: '0 1px 4px #bbb8',
           }}
         />
         <span style={{ fontSize: '0.90em', marginLeft: 2 }}>がいつも応援中！</span>
@@ -255,7 +280,7 @@ const reloadButtonStyle = {
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  transition: 'box-shadow 0.15s'
+  transition: 'box-shadow 0.15s',
 };
 
 const scrollButtonContainer = {
@@ -265,8 +290,9 @@ const scrollButtonContainer = {
   zIndex: 90,
   display: 'flex',
   flexDirection: 'column',
-  gap: 9
+  gap: 9,
 };
+
 const scrollButtonStyle = {
   background: '#337be8',
   color: '#fff',
@@ -294,35 +320,39 @@ const headerStyle = {
   marginBottom: 6,
   marginTop: -10,
 };
+
 const titleBlockStyle = {
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'flex-start',
-  justifyContent: 'center'
+  justifyContent: 'center',
 };
+
 const appNameStyle = {
   fontSize: '2.1em',
   fontWeight: '700',
   fontFamily: 'sans-serif',
   letterSpacing: 0.5,
   userSelect: 'none',
-  lineHeight: 1.06
+  lineHeight: 1.06,
 };
+
 const byTonariStyle = {
   fontSize: '0.98em',
   color: '#888',
   fontWeight: 400,
   marginTop: 2,
   marginLeft: 1,
-  letterSpacing: '0.06em'
+  letterSpacing: '0.06em',
 };
+
 const iconStyle = {
   width: 56,
   height: 56,
   borderRadius: '50%',
   boxShadow: '0 2px 14px #bbb5',
   objectFit: 'cover',
-  background: '#fff'
+  background: '#fff',
 };
 
 const tabRowStyle = {
@@ -330,8 +360,9 @@ const tabRowStyle = {
   gap: 12,
   justifyContent: 'center',
   marginBottom: 15,
-  width: '100%'
+  width: '100%',
 };
+
 const tabStyle = {
   fontWeight: 400,
   background: '#fff',
@@ -344,6 +375,7 @@ const tabStyle = {
   fontSize: '1em',
   transition: 'all 0.14s',
 };
+
 const activeTabStyle = {
   background: '#ededed',
   fontWeight: 700,
@@ -358,8 +390,9 @@ const featureTabRowStyle = {
   width: '100%',
   maxWidth: 440,
   marginLeft: 'auto',
-  marginRight: 'auto'
+  marginRight: 'auto',
 };
+
 const featureTabStyle = {
   flex: 1,
   background: '#f7f7f7',
@@ -375,6 +408,7 @@ const featureTabStyle = {
   boxShadow: 'none',
   transition: 'all 0.12s',
 };
+
 const activeFeatureTabStyle = {
   background: '#337be8',
   color: '#fff',
