@@ -89,8 +89,6 @@ export default function App() {
         <strong>設定・ガイド</strong>
         <ul style={{ margin: '10px 0 10px 1.4em', padding: 0, fontSize: '1em' }}>
           <li>最新データはネットから自動取得</li>
-          <li>「となり流」の予想構成や切り替えも同時可</li>
-          <li>note・ブログ・Xとも連携予定</li>
           <li>広告なし・全機能無料！</li>
         </ul>
         <a
@@ -109,7 +107,7 @@ export default function App() {
         marginTop: 8,
         opacity: 0.72
       }}>
-        数字くん🧑‍💻がいつも応援中！
+        となり🧑‍💻がいつも応援中！
       </div>
     </div>
   );
