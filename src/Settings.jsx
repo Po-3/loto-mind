@@ -2,16 +2,9 @@ import { useEffect, useState } from 'react';
 
 // 豊富なフォント選択肢
 const FONT_OPTIONS = [
-  { label: '標準（system）', value: 'system-ui, Avenir, Helvetica, Arial, sans-serif' },
-  { label: 'メイリオ', value: 'Meiryo, "メイリオ", sans-serif' },
-  { label: '游ゴシック', value: '"Yu Gothic", YuGothic, "游ゴシック体", "YuGothic", sans-serif' },
-  { label: 'Noto Sans JP', value: '"Noto Sans JP", sans-serif' },
-  { label: 'BIZ UDゴシック', value: '"BIZ UD Gothic", "BIZ UDGothic", sans-serif' },
-  { label: 'Roboto', value: 'Roboto, Arial, sans-serif' },
-  { label: 'Inter', value: 'Inter, Arial, sans-serif' },
-  { label: 'M PLUS Rounded', value: '"M PLUS Rounded 1c", sans-serif' },
-  { label: 'BIZ UD明朝', value: '"BIZ UDMincho", serif' },
-  { label: '明朝（Noto Serif）', value: '"Noto Serif JP", serif' }
+  { label: '標準（推奨・全端末対応）', value: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, "Noto Sans JP", sans-serif' },
+  { label: '明朝体（標準）', value: 'serif, "Times New Roman", "Noto Serif JP", "YuMincho", "ヒラギノ明朝 ProN", "MS P明朝"' },
+  { label: '等幅（数字・表用）', value: 'monospace, "Menlo", "Consolas", "Liberation Mono", "Courier New"' },
 ];
 
 // プリセットカラー
