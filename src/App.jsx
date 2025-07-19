@@ -24,10 +24,10 @@ function getLocalStorage(key, fallback) {
   return localStorage.getItem(key) || fallback;
 }
 
-// デフォルト背景色（COLOR_PRESETSと揃える）
+// デフォルト背景色
 const DEFAULT_BG_COLOR = '#fafcff';
 
-// キャッシュクリアして確実にリロードする関数
+// キャッシュクリアしてリロード
 const forceReload = () => {
   if ('caches' in window) {
     caches.keys().then(names => {
@@ -46,36 +46,16 @@ export default function App() {
   const [font, setFont] = useState(getLocalStorage('font', 'system-ui, Avenir, Helvetica, Arial, sans-serif'));
   const [themeColor, setThemeColor] = useState(getLocalStorage('themeColor', DEFAULT_BG_COLOR));
 
-  const handleTabChange = (tabKey) => {
-    setSelectedTab(tabKey);
-  };
+  // タブ・設定切替
+  const handleTabChange = (tabKey) => setSelectedTab(tabKey);
+  const handleFeatureChange = (menu) => setFeature(menu);
+  const handleDefaultLotoChange = (type) => localStorage.setItem('defaultLotoType', type);
+  const handleDefaultMenuChange = (menu) => localStorage.setItem('defaultMenu', menu);
+  const handleFontChange = (fontVal) => { setFont(fontVal); localStorage.setItem('font', fontVal); };
+  const handleThemeColorChange = (colorVal) => { setThemeColor(colorVal); localStorage.setItem('themeColor', colorVal); };
 
-  const handleFeatureChange = (menu) => {
-    setFeature(menu);
-  };
-
-  const handleDefaultLotoChange = (type) => {
-    localStorage.setItem('defaultLotoType', type);
-  };
-  const handleDefaultMenuChange = (menu) => {
-    localStorage.setItem('defaultMenu', menu);
-  };
-  const handleFontChange = (fontVal) => {
-    setFont(fontVal);
-    localStorage.setItem('font', fontVal);
-  };
-  const handleThemeColorChange = (colorVal) => {
-    setThemeColor(colorVal);
-    localStorage.setItem('themeColor', colorVal);
-  };
-
-  useEffect(() => {
-    document.body.style.fontFamily = font;
-  }, [font]);
-  useEffect(() => {
-    document.body.style.backgroundColor = themeColor || DEFAULT_BG_COLOR;
-  }, [themeColor]);
-
+  useEffect(() => { document.body.style.fontFamily = font; }, [font]);
+  useEffect(() => { document.body.style.backgroundColor = themeColor || DEFAULT_BG_COLOR; }, [themeColor]);
   useEffect(() => {
     setSelectedTab(getLocalStorage('defaultLotoType', 'loto6'));
     setFeature(getLocalStorage('defaultMenu', 'past'));
@@ -83,32 +63,61 @@ export default function App() {
 
   const selectedUrl = tabs.find(t => t.key === selectedTab).url;
 
+  // 右下ボタン群の出し分け
+  const showPastScrollBtns = feature === 'past';
+  const showOnlyReloadBtn = feature === 'diagnosis';
+
   return (
     <div style={containerStyle}>
-      {/* 明示的な再読込ボタン（丸形アイコン＋矢印） */}
-      <button
-        onClick={forceReload}
-        style={reloadButtonStyle}
-        title="アプリを再読込（更新）"
-        aria-label="アプリ再読込"
-        type="button"
-      >
-        <svg
-          width="28"
-          height="28"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="#337be8"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          style={{ display: 'block', margin: 'auto' }}
-        >
-          <polyline points="1 4 1 10 7 10" />
-          <polyline points="23 20 23 14 17 14" />
-          <path d="M3.51 15a9 9 0 0 0 14.85-3.5" />
-        </svg>
-      </button>
+      {/* --- 右下：スクロール＋再読込ボタン群 --- */}
+      {(showPastScrollBtns || showOnlyReloadBtn) && (
+        <div style={scrollButtonContainer}>
+          {showPastScrollBtns && (
+            <>
+              {/* 上へ */}
+              <button
+                onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                style={scrollCircleButtonStyle}
+                title="最上段へ"
+                aria-label="最上段へ"
+                type="button"
+              >
+                <svg width="22" height="22" viewBox="0 0 24 24" style={{ display: 'block', margin: 'auto' }}>
+                  <polyline points="12 6 12 18" fill="none" stroke="#fff" strokeWidth="2.8" strokeLinecap="round" />
+                  <polyline points="6 12 12 6 18 12" fill="none" stroke="#fff" strokeWidth="2.8" strokeLinejoin="round" />
+                </svg>
+              </button>
+              {/* 下へ */}
+              <button
+                onClick={() => window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })}
+                style={scrollCircleButtonStyle}
+                title="最下段へ"
+                aria-label="最下段へ"
+                type="button"
+              >
+                <svg width="22" height="22" viewBox="0 0 24 24" style={{ display: 'block', margin: 'auto' }}>
+                  <polyline points="12 18 12 6" fill="none" stroke="#fff" strokeWidth="2.8" strokeLinecap="round" />
+                  <polyline points="6 12 12 18 18 12" fill="none" stroke="#fff" strokeWidth="2.8" strokeLinejoin="round" />
+                </svg>
+              </button>
+            </>
+          )}
+          {/* 再読込（どちらのページでも必ず一番下） */}
+          <button
+            onClick={forceReload}
+            style={scrollCircleButtonStyle}
+            title="アプリを再読込（更新）"
+            aria-label="アプリ再読込"
+            type="button"
+          >
+            <svg width="25" height="25" viewBox="0 0 24 24" style={{ display: 'block', margin: 'auto' }}>
+              <polyline points="1 4 1 10 7 10" fill="none" stroke="#fff" strokeWidth="2.6" strokeLinecap="round" />
+              <polyline points="23 20 23 14 17 14" fill="none" stroke="#fff" strokeWidth="2.6" strokeLinecap="round" />
+              <path d="M3.51 15a9 9 0 0 0 14.85-3.5" fill="none" stroke="#fff" strokeWidth="2.6" />
+            </svg>
+          </button>
+        </div>
+      )}
 
       {/* アイコン＋見出し */}
       <div style={headerStyle}>
@@ -155,37 +164,8 @@ export default function App() {
 
       {/* メイン表示エリア */}
       <div style={{ width: '100%', position: 'relative' }}>
-        {/* ↑↓ スクロールボタン（右下）: 「過去検索」のみ表示 */}
         {feature === 'past' && (
-          <div style={scrollButtonContainer}>
-            <button
-              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-              style={scrollButtonStyle}
-              title="最上段へ"
-              aria-label="最上段へ"
-              type="button"
-            >
-              ↑
-            </button>
-            <button
-              onClick={() => window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })}
-              style={scrollButtonStyle}
-              title="最下段へ"
-              aria-label="最下段へ"
-              type="button"
-            >
-              ↓
-            </button>
-          </div>
-        )}
-
-        {feature === 'past' && (
-          <div
-            style={{
-              margin: '-12px -18px 0 -18px',
-              maxWidth: 'none',
-            }}
-          >
+          <div style={{ margin: '-12px -18px 0 -18px', maxWidth: 'none' }}>
             <PastResultsPro jsonUrl={selectedUrl} lotoType={selectedTab} />
           </div>
         )}
@@ -263,26 +243,6 @@ const containerStyle = {
   boxShadow: '0 6px 24px #d2e4fa22',
 };
 
-const reloadButtonStyle = {
-  position: 'fixed',
-  top: 16,
-  right: 16,
-  zIndex: 200,
-  background: '#fff',
-  border: '2px solid #337be8',
-  color: '#337be8',
-  borderRadius: '50%',
-  width: 44,
-  height: 44,
-  boxShadow: '0 2px 10px #337be823',
-  cursor: 'pointer',
-  fontSize: 22,
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  transition: 'box-shadow 0.15s',
-};
-
 const scrollButtonContainer = {
   position: 'fixed',
   bottom: 22,
@@ -290,26 +250,27 @@ const scrollButtonContainer = {
   zIndex: 90,
   display: 'flex',
   flexDirection: 'column',
-  gap: 9,
+  gap: 12,
 };
 
-const scrollButtonStyle = {
+const scrollCircleButtonStyle = {
   background: '#337be8',
   color: '#fff',
   border: 'none',
   borderRadius: '50%',
-  width: 44,
-  height: 44,
-  minWidth: 44,
-  minHeight: 44,
-  fontSize: 24,
-  boxShadow: '0 2px 8px #337be822',
+  width: 54,
+  height: 54,
+  minWidth: 54,
+  minHeight: 54,
+  fontSize: 26,
+  boxShadow: '0 2px 10px #337be822',
   cursor: 'pointer',
   outline: 'none',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
   flexShrink: 0,
+  padding: 0,
 };
 
 const headerStyle = {
