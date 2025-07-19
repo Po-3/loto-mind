@@ -83,25 +83,26 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
-/* 🔧 テーブル基本スタイル（どちらのモードでも共通） */
+/* テーブル共通スタイル（ライト） */
 table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 1em;
+  background-color: #fff;
+  color: #213547;
+  border: 1px solid #ccc;
 }
 
 th,
 td {
-  padding: 0.6em 0.4em;
-  text-align: left;
   border: 1px solid #ccc;
+  padding: 8px 10px;
+  text-align: left;
   background-color: #f8f8f8;
-  color: #213547;
 }
 
 thead {
-  background-color: #e5efff;
-  font-weight: bold;
+  background-color: #e0e0e0;
+  color: #213547;
 }
 
 /* 🌙 ダークモード対応 */
@@ -127,7 +128,6 @@ thead {
     color: #ffffff;
   }
 
-  /* 🔧 ダークモード用のテーブル調整 */
   table {
     background-color: #1e1e1e;
     color: #ffffff;
@@ -143,5 +143,6 @@ thead {
 
   thead {
     background-color: #333;
+    color: #ffffff;
   }
 }
