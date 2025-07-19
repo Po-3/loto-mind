@@ -27,12 +27,8 @@ function getLocalStorage(key, fallback) {
 // デフォルト背景色
 const DEFAULT_BG_COLOR = '#fafcff';
 
-// --- 修正済み！ページ判定付きで再読込 ---
-const forceReload = (currentFeature) => {
-  // 診断ページでのみ、localStorageのdefaultMenuを書き換え
-  if (currentFeature === 'diagnosis') {
-    localStorage.setItem('defaultMenu', 'diagnosis');
-  }
+// --- ページ遷移なしで再読込する ---
+const forceReload = () => {
   if ('caches' in window) {
     caches.keys().then(names => {
       for (let name of names) caches.delete(name);
@@ -45,11 +41,12 @@ const forceReload = (currentFeature) => {
 };
 
 export default function App() {
+  // 初回だけlocalStorageから
   const [selectedTab, setSelectedTab] = useState(() => getLocalStorage('defaultLotoType', 'loto6'));
   const [feature, setFeature] = useState(() => getLocalStorage('defaultMenu', 'past'));
   const [font, setFont] = useState(getLocalStorage('font', 'system-ui, Avenir, Helvetica, Arial, sans-serif'));
   const [themeColor, setThemeColor] = useState(getLocalStorage('themeColor', DEFAULT_BG_COLOR));
-  const [showScrollBtns, setShowScrollBtns] = useState(true); // ← スクロール監視用
+  const [showScrollBtns, setShowScrollBtns] = useState(true);
 
   // タブ・設定切替
   const handleTabChange = (tabKey) => setSelectedTab(tabKey);
@@ -61,15 +58,17 @@ export default function App() {
 
   useEffect(() => { document.body.style.fontFamily = font; }, [font]);
   useEffect(() => { document.body.style.backgroundColor = themeColor || DEFAULT_BG_COLOR; }, [themeColor]);
-  useEffect(() => {
-    setSelectedTab(getLocalStorage('defaultLotoType', 'loto6'));
-    setFeature(getLocalStorage('defaultMenu', 'past'));
-  }, []);
 
-  // ↓↓↓ スクロールで一番下判定してボタン制御
+  // ページ状態は初期化しない
+  // useEffect(() => {
+  //   setSelectedTab(getLocalStorage('defaultLotoType', 'loto6'));
+  //   setFeature(getLocalStorage('defaultMenu', 'past'));
+  // }, []);
+
+  // スクロールで一番下判定してボタン制御
   useEffect(() => {
     if (feature !== 'past') {
-      setShowScrollBtns(true); // 他ページでは無効化
+      setShowScrollBtns(true);
       return;
     }
     const handleScroll = () => {
@@ -77,7 +76,7 @@ export default function App() {
       setShowScrollBtns(!nearBottom);
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll(); // 初期化
+    handleScroll();
     return () => window.removeEventListener('scroll', handleScroll);
   }, [feature]);
 
@@ -122,20 +121,20 @@ export default function App() {
               </button>
             </>
           )}
-          {/* 再読込（どちらのページでも必ず一番下） */}
+          {/* 再読込（どちらのページでも） */}
           <button
-            onClick={() => forceReload(feature)}
+            onClick={forceReload}
             style={scrollCircleButtonStyle}
             title="アプリを再読込（更新）"
             aria-label="アプリ再読込"
             type="button"
           >
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none"
-  stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
-  style={{ display: 'block', margin: 'auto' }}>
-  <path d="M3 12a9 9 0 1 1 8 8" />
-  <polyline points="0 6 3 12 8 12" />
-</svg>
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none"
+              stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
+              style={{ display: 'block', margin: 'auto' }}>
+              <path d="M3 12a9 9 0 1 1 8 8" />
+              <polyline points="3 7 3 12 8 12" />
+            </svg>
           </button>
         </div>
       )}
