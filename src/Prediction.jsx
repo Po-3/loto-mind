@@ -75,17 +75,19 @@ export default function Prediction({ lotoType, drawNo }) {
   );
 }
 
-// 設定ページと全く同じ感覚で全幅100%、余白最小化
+// ===== スタイル定義 =====
+
 const outerStyle = {
   width: '100%',
   boxSizing: 'border-box',
-  padding: 0,
+  padding: '0 12px',
   margin: 0
 };
 
 const titleStyle = {
   fontSize: '1.10em',
-  margin: '8px 0'
+  margin: '8px 0',
+  fontWeight: 600
 };
 
 const scrollStyle = {
@@ -97,7 +99,7 @@ const scrollStyle = {
 
 const tableStyle = {
   width: '100%',
-  minWidth: 440,
+  minWidth: 480,
   borderCollapse: 'collapse',
   marginTop: 8,
   marginBottom: 8,
@@ -107,7 +109,7 @@ const tableStyle = {
 
 const thStyle = {
   border: '1px solid #bbb',
-  padding: 4,
+  padding: 6,
   background: '#f4f8fd',
   fontWeight: 600,
   textAlign: 'center'
@@ -115,7 +117,7 @@ const thStyle = {
 
 const tdStyle = {
   border: '1px solid #ddd',
-  padding: 4,
+  padding: 6,
   fontWeight: 400,
   textAlign: 'center'
 };
