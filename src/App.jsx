@@ -28,19 +28,23 @@ function getLocalStorage(key, fallback) {
 const DEFAULT_BG_COLOR = '#fafcff';
 
 export default function App() {
+  // 初回レンダリング時のみdefaultMenu/defaultLotoTypeで初期化
   const [selectedTab, setSelectedTab] = useState(() => getLocalStorage('defaultLotoType', 'loto6'));
   const [feature, setFeature] = useState(() => getLocalStorage('defaultMenu', 'past'));
   const [font, setFont] = useState(getLocalStorage('font', 'system-ui, Avenir, Helvetica, Arial, sans-serif'));
   const [themeColor, setThemeColor] = useState(getLocalStorage('themeColor', DEFAULT_BG_COLOR));
 
+  // 「タブ（ロト種別）」変更 → 画面と設定も即保存
   const handleTabChange = (tabKey) => {
     setSelectedTab(tabKey);
   };
 
+  // 「機能タブ」変更
   const handleFeatureChange = (menu) => {
     setFeature(menu);
   };
 
+  // 設定ページ用（設定値のみ保存。画面は切り替えない）
   const handleDefaultLotoChange = (type) => {
     localStorage.setItem('defaultLotoType', type);
   };
@@ -56,14 +60,15 @@ export default function App() {
     localStorage.setItem('themeColor', colorVal);
   };
 
+  // フォント・背景色即時反映
   useEffect(() => {
     document.body.style.fontFamily = font;
   }, [font]);
-
   useEffect(() => {
     document.body.style.backgroundColor = themeColor || DEFAULT_BG_COLOR;
   }, [themeColor]);
 
+  // 「設定変更後の反映」ではなく、「起動時は必ずデフォルトで起動」ロジック
   useEffect(() => {
     setSelectedTab(getLocalStorage('defaultLotoType', 'loto6'));
     setFeature(getLocalStorage('defaultMenu', 'past'));
@@ -73,25 +78,18 @@ export default function App() {
 
   return (
     <div style={containerStyle}>
-      {/* 明示的な再読込ボタン */}
-      <button
-        onClick={() => window.location.reload()}
-        style={reloadButtonStyle}
-        title="アプリを再読込（更新）"
-        aria-label="アプリ再読込"
-        onMouseEnter={e => e.currentTarget.style.boxShadow = '0 4px 14px #1767a7cc'}
-        onMouseLeave={e => e.currentTarget.style.boxShadow = '0 2px 10px #337be823'}
-      >
+      {/* 明示的な再読込ボタン（丸形アイコン＋矢印） */}
+
         <svg
-          width="24"
-          height="24"
+          width="28"
+          height="28"
           viewBox="0 0 24 24"
           fill="none"
-          stroke="white"
-          strokeWidth="2"
+          stroke="#337be8"
+          strokeWidth="2.5"
           strokeLinecap="round"
           strokeLinejoin="round"
-          style={{ userSelect: 'none' }}
+          style={{ display: 'block', margin: 'auto' }}
         >
           <polyline points="1 4 1 10 7 10" />
           <polyline points="23 20 23 14 17 14" />
@@ -142,7 +140,7 @@ export default function App() {
 
       {/* メイン表示エリア */}
       <div style={{ width: '100%', position: 'relative' }}>
-        {/* 「過去検索」機能の時だけ表示 */}
+        {/* ↑↓ スクロールボタン（右下） 過去検索タブのみ表示 */}
         {feature === 'past' && (
           <div style={scrollButtonContainer}>
             <button
@@ -249,9 +247,9 @@ const reloadButtonStyle = {
   top: 16,
   right: 16,
   zIndex: 200,
-  background: '#337be8',
-  border: 'none',
-  color: '#fff',
+  background: '#fff',
+  border: '2px solid #337be8',
+  color: '#337be8',
   borderRadius: '50%',
   width: 44,
   height: 44,
@@ -277,7 +275,7 @@ const scrollButtonStyle = {
   background: '#337be8',
   color: '#fff',
   border: 'none',
-  borderRadius: 32,
+  borderRadius: '50%',
   width: 44,
   height: 44,
   fontSize: 24,
