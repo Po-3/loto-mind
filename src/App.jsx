@@ -25,10 +25,16 @@ export default function App() {
   return (
     <div style={{
       fontFamily: 'sans-serif',
-      maxWidth: 520,
+      minWidth: 640,
+      maxWidth: 940,
+      width: '100%',
       margin: '24px auto',
       padding: 24,
-      boxSizing: 'border-box'
+      boxSizing: 'border-box',
+      background: '#f9f9fd',
+      borderRadius: 12,
+      border: '1px solid #cde',
+      boxShadow: '0 1px 16px #eef3ff44'
     }}>
       {/* ロゴ＆タイトル */}
       <div style={{
@@ -144,12 +150,7 @@ export default function App() {
       {/* メイン画面切り替え */}
       <div style={{ width: '100%' }}>
         {feature === 'past' && (
-          <div style={{
-            margin: '-20px -24px 0 -24px',
-            maxWidth: 'none'
-          }}>
-            <PastResultsPro jsonUrl={selectedUrl} lotoType={selectedTab} />
-          </div>
+          <PastResultsPro jsonUrl={selectedUrl} lotoType={selectedTab} />
         )}
         {feature === 'diagnosis' && <Diagnosis jsonUrl={selectedUrl} />}
         {feature === 'prediction' && <Prediction lotoType={selectedTab} />}
