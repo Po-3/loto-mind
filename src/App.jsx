@@ -1,91 +1,90 @@
 import { useState } from 'react';
+import PastResultsPro from './PastResultsPro'; // 新しい過去検索コンポーネント
 import Diagnosis from './Diagnosis';
 import Prediction from './Prediction';
-import PastResults from './PastResults';
 import Settings from './Settings';
 
-function App() {
-  const [lotoType, setLotoType] = useState('loto6');
-  const [drawNo, setDrawNo] = useState('');
-  const [activeTab, setActiveTab] = useState('prediction');
+// ロト種別タブ（ラベル＆データURLなど管理）
+const tabs = [
+  { key: 'miniloto', label: 'ミニロト', url: 'https://po-3.github.io/miniloto-data/miniloto.json' },
+  { key: 'loto6', label: 'ロト6', url: 'https://po-3.github.io/loto6-data/loto6.json' },
+  { key: 'loto7', label: 'ロト7', url: 'https://po-3.github.io/loto7-data/loto7.json' },
+];
 
-  const handleDrawChange = (e) => setDrawNo(e.target.value);
+// 機能タブ
+const features = [
+  { key: 'past', label: '過去検索' },
+  { key: 'diagnosis', label: '数字くん\n診断' },
+  { key: 'prediction', label: 'ズバリ予想' },
+  { key: 'settings', label: '設定' }
+];
+
+export default function App() {
+  const [selectedTab, setSelectedTab] = useState('loto6');
+  const [feature, setFeature] = useState('past');
+
+  // jsonUrlはロト種別ごとに管理（Diagnosis等で使用）
+  const selectedUrl = tabs.find(t => t.key === selectedTab).url;
 
   return (
     <div style={containerStyle}>
-      {/* --- TOPヘッダー --- */}
+      {/* アイコン＋見出し */}
       <div style={headerStyle}>
-        <img src="/tonari.png" alt="tonari" style={iconStyle} />
-        <span style={appNameStyle}>
-          Loto <span style={{ color: '#1767a7' }}>Mind</span>
-        </span>
+        <img src="/tonari.png" alt="となりアイコン" style={iconStyle} />
+        <div style={titleBlockStyle}>
+          <span style={appNameStyle}>Loto <span style={{ color: '#1767a7' }}>Mind</span></span>
+          <span style={byTonariStyle}>by tonari</span>
+        </div>
       </div>
-      <div style={{ textAlign: 'center', fontSize: '1em', marginBottom: 10, color: '#888' }}>
-        by tonari
-      </div>
-
-      {/* --- ロト種別タブ --- */}
-      <div style={tabContainerStyle}>
-        {['miniloto', 'loto6', 'loto7'].map((type) => (
+      
+      {/* ロト種別タブ */}
+      <div style={tabRowStyle}>
+        {tabs.map(tab =>
           <button
-            key={type}
-            style={lotoType === type ? activeTabStyle : tabStyle}
-            onClick={() => setLotoType(type)}
+            key={tab.key}
+            onClick={() => setSelectedTab(tab.key)}
+            style={{
+              ...tabStyle,
+              ...(selectedTab === tab.key ? activeTabStyle : {})
+            }}
+          >{tab.label}</button>
+        )}
+      </div>
+
+      {/* 機能タブ（2行ラベル対応） */}
+      <div style={featureTabRowStyle}>
+        {features.map(f =>
+          <button
+            key={f.key}
+            onClick={() => setFeature(f.key)}
+            style={{
+              ...featureTabStyle,
+              ...(feature === f.key ? activeFeatureTabStyle : {})
+            }}
           >
-            {type === 'miniloto' ? 'ミニロト' : type === 'loto6' ? 'ロト6' : 'ロト7'}
+            <span style={{ whiteSpace: 'pre-line', lineHeight: 1.15 }}>
+              {f.label}
+            </span>
           </button>
-        ))}
+        )}
       </div>
 
-      {/* --- 4メニュー --- */}
-      <div style={tabContainerStyle}>
-        <button
-          style={activeTab === 'past' ? activeTabStyle : tabStyle}
-          onClick={() => setActiveTab('past')}
-        >
-          過去検索
-        </button>
-        <button
-          style={activeTab === 'diagnosis' ? activeTabStyle : tabStyle}
-          onClick={() => setActiveTab('diagnosis')}
-        >
-          数字くん診断
-        </button>
-        <button
-          style={activeTab === 'prediction' ? activeTabStyle : tabStyle}
-          onClick={() => setActiveTab('prediction')}
-        >
-          ズバリ予想
-        </button>
-        <button
-          style={activeTab === 'settings' ? activeTabStyle : tabStyle}
-          onClick={() => setActiveTab('settings')}
-        >
-          設定
-        </button>
+      {/* メイン表示エリア */}
+      <div style={{ width: '100%' }}>
+        {feature === 'past' && (
+          <div style={{
+            margin: '-12px -18px 0 -18px', // わずかに横幅拡張
+            maxWidth: 'none'
+          }}>
+            <PastResultsPro jsonUrl={selectedUrl} lotoType={selectedTab} />
+          </div>
+        )}
+        {feature === 'diagnosis' && <Diagnosis jsonUrl={selectedUrl} lotoType={selectedTab} />}
+        {feature === 'prediction' && <Prediction lotoType={selectedTab} />}
+        {feature === 'settings' && <Settings />}
       </div>
-
-      {/* --- 抽せん回入力 --- */}
-      <div style={formStyle}>
-        <label style={labelStyle}>
-          抽せん回（数字のみ）：
-          <input
-            type="number"
-            value={drawNo}
-            onChange={handleDrawChange}
-            placeholder="例：2018"
-            style={inputStyle}
-          />
-        </label>
-      </div>
-
-      {/* --- メイン表示エリア --- */}
-      {activeTab === 'prediction' && <Prediction lotoType={lotoType} drawNo={drawNo} />}
-      {activeTab === 'diagnosis' && <Diagnosis jsonUrl={`/api/${lotoType}.json`} />}
-      {activeTab === 'past' && <PastResults lotoType={lotoType} />}
-      {activeTab === 'settings' && <Settings />}
-
-      {/* --- フッター・ガイド文 --- */}
+      
+      {/* ガイド文＆リンク */}
       <div style={guideStyle}>
         <strong>設定・ガイド</strong>
         <ul style={{ margin: '10px 0 10px 1.4em', padding: 0, fontSize: '1em' }}>
@@ -103,36 +102,47 @@ function App() {
           宝くじのとなりブログ
         </a>
       </div>
-      <div style={{ textAlign: 'center', fontSize: '0.98em', color: '#be9000', marginTop: 8 }}>
+      <div style={{
+        textAlign: 'right',
+        fontSize: '0.98em',
+        color: '#be9000',
+        marginTop: 8,
+        opacity: 0.72
+      }}>
         数字くん🧑‍💻がいつも応援中！
       </div>
     </div>
   );
 }
 
-export default App;
-
 // --- スタイル全定義 ---
 const containerStyle = {
   width: '100%',
-  maxWidth: 420,
+  maxWidth: 470,
   margin: '0 auto',
-  padding: '24px 8px 10px 8px',
+  padding: '20px 8px 10px 8px',
   boxSizing: 'border-box',
   fontSize: '16px',
   background: '#fafcff',
   borderRadius: 16,
   border: '1px solid #e0e8f3',
-  marginTop: 36,
+  marginTop: 32,
   boxShadow: '0 6px 24px #d2e4fa22',
 };
+
 const headerStyle = {
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  gap: 16,
-  marginBottom: 2,
-  marginTop: -14,
+  gap: 18,
+  marginBottom: 6,
+  marginTop: -10,
+};
+const titleBlockStyle = {
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'flex-start',
+  justifyContent: 'center'
 };
 const appNameStyle = {
   fontSize: '2.1em',
@@ -140,13 +150,83 @@ const appNameStyle = {
   fontFamily: 'sans-serif',
   letterSpacing: 0.5,
   userSelect: 'none',
+  lineHeight: 1.06
+};
+const byTonariStyle = {
+  fontSize: '0.98em',
+  color: '#888',
+  fontWeight: 400,
+  marginTop: 2,
+  marginLeft: 1,
+  letterSpacing: '0.06em'
 };
 const iconStyle = {
-  width: 52,
-  height: 52,
+  width: 56,
+  height: 56,
   borderRadius: '50%',
-  boxShadow: '0 2px 12px #bbb5',
+  boxShadow: '0 2px 14px #bbb5',
+  objectFit: 'cover',
+  background: '#fff'
 };
+
+const tabRowStyle = {
+  display: 'flex',
+  gap: 12,
+  justifyContent: 'center',
+  marginBottom: 15,
+  width: '100%'
+};
+const tabStyle = {
+  fontWeight: 400,
+  background: '#fff',
+  border: '1px solid #888',
+  borderRadius: 8,
+  padding: '8px 20px',
+  cursor: 'pointer',
+  flex: 1,
+  minWidth: 0,
+  fontSize: '1em',
+  transition: 'all 0.14s',
+};
+const activeTabStyle = {
+  background: '#ededed',
+  fontWeight: 700,
+  border: '1.5px solid #1767a7',
+  color: '#1767a7',
+};
+
+const featureTabRowStyle = {
+  display: 'flex',
+  justifyContent: 'space-between',
+  marginBottom: 16,
+  width: '100%',
+  maxWidth: 440,
+  marginLeft: 'auto',
+  marginRight: 'auto'
+};
+const featureTabStyle = {
+  flex: 1,
+  background: '#f7f7f7',
+  color: '#444',
+  border: 'none',
+  borderBottom: '3.5px solid #e3e3e3',
+  fontWeight: 500,
+  fontSize: '1.05em',
+  cursor: 'pointer',
+  padding: '12px 0 9px 0',
+  minWidth: 0,
+  outline: 'none',
+  boxShadow: 'none',
+  transition: 'all 0.12s',
+};
+const activeFeatureTabStyle = {
+  background: '#337be8',
+  color: '#fff',
+  borderBottom: '3.5px solid #225bb7',
+  fontWeight: 700,
+  boxShadow: '0 2px 8px #337be811',
+};
+
 const guideStyle = {
   background: '#f8fafd',
   borderRadius: 12,
@@ -154,50 +234,4 @@ const guideStyle = {
   margin: '32px 0 8px 0',
   padding: '15px 20px 5px 20px',
   fontSize: '1em',
-};
-const tabContainerStyle = {
-  display: 'flex',
-  justifyContent: 'center',
-  gap: '10px',
-  flexWrap: 'wrap',
-  marginBottom: '20px',
-};
-const tabStyle = {
-  padding: '10px 16px',
-  borderRadius: '8px',
-  border: '1px solid #ccc',
-  backgroundColor: '#f0f0f0',
-  color: '#333',
-  fontWeight: 'bold',
-  cursor: 'pointer',
-  fontSize: '1em',
-};
-const activeTabStyle = {
-  ...tabStyle,
-  backgroundColor: '#1767a7',
-  color: '#fff',
-  border: '1px solid #1767a7',
-};
-const formStyle = {
-  display: 'flex',
-  flexDirection: 'column',
-  gap: '1em',
-  marginBottom: '1.5em',
-  alignItems: 'center',
-};
-const labelStyle = {
-  fontWeight: 600,
-  fontSize: '1em',
-  display: 'flex',
-  flexDirection: 'column',
-  gap: '4px',
-  width: '100%',
-  maxWidth: 250,
-};
-const inputStyle = {
-  padding: '8px 10px',
-  fontSize: '1em',
-  borderRadius: '6px',
-  border: '1px solid #ccc',
-  marginTop: '4px',
 };
