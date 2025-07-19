@@ -11,10 +11,10 @@ const tabs = [
 ];
 
 const features = [
-  { key: 'past', label: '過去検索', icon: '🔍' },
-  { key: 'diagnosis', label: '数字くん診断', icon: '🧠' },
-  { key: 'prediction', label: 'ズバリ予想', icon: '📊' },
-  { key: 'settings', label: '設定', icon: '⚙️' }
+  { key: 'past', label: '過去検索' },
+  { key: 'diagnosis', label: '数字くん診断' },
+  { key: 'prediction', label: 'ズバリ予想' },
+  { key: 'settings', label: '設定' }
 ];
 
 export default function App() {
@@ -44,17 +44,18 @@ export default function App() {
         />
       </div>
       {/* タイトル */}
-      <h1 style={{ textAlign: 'center', marginBottom: 12 }}>
-  LotoMind<br />
-  <span style={{
-    fontSize: '0.42em',
-    color: '#888',
-    fontWeight: 400,
-    letterSpacing: '0.06em'
-  }}>
-    by tonari
-  </span>
-</h1>
+      <h1 style={{ textAlign: 'center', marginBottom: 12, lineHeight: 1.2 }}>
+        LotoMind
+        <br />
+        <span style={{
+          fontSize: '0.44em',
+          color: '#888',
+          fontWeight: 400,
+          letterSpacing: '0.06em'
+        }}>
+          by tonari
+        </span>
+      </h1>
       {/* ロト種別タブ */}
       <div style={{ display: 'flex', gap: 10, justifyContent: 'center', marginBottom: 20 }}>
         {tabs.map(tab =>
@@ -67,27 +68,42 @@ export default function App() {
               border: '1px solid #888',
               borderRadius: 8,
               padding: '8px 20px',
-              cursor: 'pointer'
+              cursor: 'pointer',
+              flex: 1,
+              minWidth: 0
             }}
           >{tab.label}</button>
         )}
       </div>
-      {/* 機能タブ */}
-      <div style={{ display: 'flex', gap: 10, justifyContent: 'center', marginBottom: 18 }}>
-        {features.map(f =>
+      {/* 機能タブ（4分割＆レスポンシブ対応） */}
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          marginBottom: 18,
+          width: '100%',
+          maxWidth: 440,
+          marginLeft: 'auto',
+          marginRight: 'auto'
+        }}
+      >
+        {features.map((f, idx) =>
           <button
             key={f.key}
             onClick={() => setFeature(f.key)}
             style={{
+              flex: 1,
               background: feature === f.key ? '#f0f0f0' : '#fff',
               border: '1px solid #bbb',
-              borderRadius: 8,
-              padding: '7px 14px',
+              borderLeft: idx === 0 ? '1px solid #bbb' : 'none',
+              borderRadius: 0,
               fontWeight: feature === f.key ? 700 : 400,
-              fontSize: '1em',
-              cursor: 'pointer'
+              fontSize: '1.03em',
+              cursor: 'pointer',
+              padding: '11px 0',
+              minWidth: 0
             }}
-          >{f.icon} {f.label}</button>
+          >{f.label}</button>
         )}
       </div>
       {/* メイン画面切り替え */}
