@@ -1,21 +1,54 @@
-export default function Prediction({ lotoType }) {
-  const dummy = {
-    miniloto: [
-      { type: '万能型', nums: [5, 11, 19, 25, 30], axis: 19, feature: '直近偏り型からバランス回帰狙い' },
-      { type: '堅実型', nums: [2, 8, 15, 23, 29], axis: 23, feature: '低位ゾーン強調・保守的構成' },
-      { type: '勝負型', nums: [7, 13, 21, 27, 31], axis: 27, feature: '連番＋高位勝負型' }
-    ],
-    loto6: [
-      { type: '万能型', nums: [3, 13, 21, 24, 32, 40], axis: 21, feature: '安定バランス重視' },
-      { type: '堅実型', nums: [7, 8, 15, 23, 34, 37], axis: 8, feature: '偶数多め＋中位型' },
-      { type: '勝負型', nums: [6, 18, 29, 33, 38, 43], axis: 33, feature: '高位＋奇数寄せで一発狙い' }
-    ],
-    loto7: [
-      { type: '万能型', nums: [6, 8, 13, 21, 29, 34, 37], axis: 21, feature: 'バランス型・王道' },
-      { type: '堅実型', nums: [4, 12, 17, 20, 25, 28, 32], axis: 20, feature: '安定感重視構成' },
-      { type: '勝負型', nums: [2, 9, 15, 22, 27, 30, 35], axis: 27, feature: '極端構成で高配当狙い' }
-    ]
-  }[lotoType];
+import { useEffect, useState } from 'react';
+
+// ロト種別→記事URLパターン生成
+function getPredictionUrl(lotoType, drawNo) {
+  // minilotoだけ表記に注意
+  const prefix = lotoType === 'miniloto' ? 'miniloto' : lotoType;
+  return `https://www.kujitonari.net/entry/${prefix}-${drawNo}-prediction-tonari`;
+}
+
+// drawNoはpropsやグローバルで取得（最新回番号を自動で割り出す仕組み推奨）
+export default function Prediction({ lotoType, drawNo }) {
+  const [rows, setRows] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!lotoType || !drawNo) return;
+    const url = getPredictionUrl(lotoType, drawNo);
+    // RSS/Feed/API推奨。下はCORS制限のある直接fetch例
+    fetch(url)
+      .then(res => res.text())
+      .then(html => {
+        // HTML本文から「最初の<table>」を抜き出してパース
+        const doc = new DOMParser().parseFromString(html, 'text/html');
+        const table = doc.querySelector('table');
+        if (!table) {
+          setRows([]);
+          setLoading(false);
+          return;
+        }
+        const trs = table.querySelectorAll('tbody tr');
+        const arr = [];
+        trs.forEach(tr => {
+          const tds = Array.from(tr.children);
+          arr.push({
+            type: tds[0]?.textContent.trim(),
+            nums: tds[1]?.textContent.trim(),
+            axis: tds[2]?.textContent.replace(/[^\d]/g, ''), // <strong>を除去
+            feature: tds[3]?.textContent.trim()
+          });
+        });
+        setRows(arr);
+        setLoading(false);
+      })
+      .catch(() => {
+        setRows([]);
+        setLoading(false);
+      });
+  }, [lotoType, drawNo]);
+
+  if (loading) return <div>読み込み中…</div>;
+  if (!rows.length) return <div>ズバリ予想が取得できませんでした。</div>;
 
   return (
     <div style={{ width: '100%', boxSizing: 'border-box' }}>
@@ -38,10 +71,10 @@ export default function Prediction({ lotoType }) {
             </tr>
           </thead>
           <tbody>
-            {dummy.map((row, idx) => (
+            {rows.map((row, idx) => (
               <tr key={idx}>
                 <td style={{ border: '1px solid #ddd', padding: 4 }}>{row.type}</td>
-                <td style={{ border: '1px solid #ddd', padding: 4 }}>{row.nums.join('・')}</td>
+                <td style={{ border: '1px solid #ddd', padding: 4 }}>{row.nums}</td>
                 <td style={{ border: '1px solid #ddd', padding: 4, fontWeight: 700 }}>{row.axis}</td>
                 <td style={{ border: '1px solid #ddd', padding: 4 }}>{row.feature}</td>
               </tr>
@@ -49,7 +82,6 @@ export default function Prediction({ lotoType }) {
           </tbody>
         </table>
       </div>
-      <div style={{ fontSize: '0.95em', color: '#444' }}>※ 本番はブログ記事から自動取得可能</div>
     </div>
   );
 }
