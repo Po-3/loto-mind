@@ -24,23 +24,26 @@ function getLocalStorage(key, fallback) {
 }
 
 export default function App() {
-  // デフォルト値をlocalStorageから（初回のみ）
+  // 初期値（localStorage→なければデフォルト）
   const [selectedTab, setSelectedTab] = useState(getLocalStorage('defaultLotoType', 'loto6'));
   const [feature, setFeature] = useState(getLocalStorage('defaultMenu', 'past'));
   const [font, setFont] = useState(getLocalStorage('font', 'system-ui, Avenir, Helvetica, Arial, sans-serif'));
   const [theme, setTheme] = useState(getLocalStorage('theme', 'tonari'));
 
-  // ロトデータURL
-  const selectedUrl = tabs.find(t => t.key === selectedTab).url;
-
-  // 設定ページからの変更で「今の画面」も必ず即切り替え！
-  const handleLotoTypeChange = (type) => {
-    setSelectedTab(type);
-    localStorage.setItem('defaultLotoType', type);
-  };
+  // タブのクリックで画面切り替え
   const handleFeatureChange = (menu) => {
     setFeature(menu);
+    // localStorage.setItem('lastFeature', menu); ←不要ならコメントアウト
+  };
+
+  // 設定画面用：デフォルト値設定のみ（今の画面を変えない）
+  const handleDefaultMenuChange = (menu) => {
     localStorage.setItem('defaultMenu', menu);
+    // setFeature(menu); ←呼ばないので画面は切り替わらない！
+  };
+  const handleDefaultLotoChange = (type) => {
+    localStorage.setItem('defaultLotoType', type);
+    setSelectedTab(type);
   };
   const handleFontChange = (fontVal) => {
     setFont(fontVal);
@@ -65,6 +68,8 @@ export default function App() {
     }
   }, [theme]);
 
+  const selectedUrl = tabs.find(t => t.key === selectedTab).url;
+
   return (
     <div style={containerStyle}>
       {/* アイコン＋見出し */}
@@ -81,7 +86,10 @@ export default function App() {
         {tabs.map(tab =>
           <button
             key={tab.key}
-            onClick={() => handleLotoTypeChange(tab.key)}
+            onClick={() => {
+              setSelectedTab(tab.key);
+              localStorage.setItem('defaultLotoType', tab.key);
+            }}
             style={{
               ...tabStyle,
               ...(selectedTab === tab.key ? activeTabStyle : {})
@@ -124,14 +132,10 @@ export default function App() {
           <Settings
             onThemeChange={handleThemeChange}
             onFontChange={handleFontChange}
-            onDefaultLotoChange={(val) => {
-              handleLotoTypeChange(val);
-            }}
-            onDefaultMenuChange={(val) => {
-              handleFeatureChange(val);
-            }}
+            onDefaultLotoChange={handleDefaultLotoChange}
+            onDefaultMenuChange={handleDefaultMenuChange} // ←修正
             defaultLotoType={selectedTab}
-            defaultMenu={feature}
+            defaultMenu={getLocalStorage('defaultMenu', 'past')} // ←ここはlocalStorage直読みに
             theme={theme}
             font={font}
           />
@@ -179,7 +183,7 @@ export default function App() {
   );
 }
 
-// --- スタイル全定義（省略なし） ---
+// --- スタイル全定義 ---
 const containerStyle = {
   width: '100%',
   maxWidth: 470,
