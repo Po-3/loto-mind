@@ -17,9 +17,17 @@ export default function Diagnosis({ jsonUrl }) {
         const latest = json.slice(-30);
         const allNums = [];
 
+        // ロト種別判定
+        let maxNum = 43, recommendCount = 6, numKeys = 6;
+        if (jsonUrl.includes('miniloto')) {
+          maxNum = 31; recommendCount = 5; numKeys = 5;
+        } else if (jsonUrl.includes('loto7')) {
+          maxNum = 37; recommendCount = 7; numKeys = 7;
+        }
+
         // 本数字のみ抽出
         latest.forEach(row => {
-          for (let i = 1; i <= 6; i++) {
+          for (let i = 1; i <= numKeys; i++) {
             const key = `第${i}数字`;
             if (row[key]) {
               const val = Number(row[key]);
@@ -30,20 +38,8 @@ export default function Diagnosis({ jsonUrl }) {
           }
         });
 
-        // ロト種別判定
-        let maxNum = 43, recommendCount = 6;
-        if (jsonUrl.includes('miniloto')) {
-          maxNum = 31; recommendCount = 5;
-        } else if (jsonUrl.includes('loto7')) {
-          maxNum = 37; recommendCount = 7;
-        }
         const all = Array.from({ length: maxNum }, (_, i) => i + 1);
-
-        // 出ていない数字
         const notAppear = all.filter(n => !allNums.includes(n));
-
-        // デバッグ用
-        // console.log({ allNums, notAppear, all, recommendCount });
 
         setResult({
           recommend: getRandomNums(
@@ -71,6 +67,8 @@ export default function Diagnosis({ jsonUrl }) {
     </div>
   );
 }
+
+// ▼ スタイル群はそのまま
 
 // ▼ スタイル群
 const outerStyle = {
