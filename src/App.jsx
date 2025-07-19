@@ -133,8 +133,8 @@ export default function App() {
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none"
   stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
   style={{ display: 'block', margin: 'auto' }}>
-  <path d="M3 12a9 9 0 1 1 8 8" />
-  <polyline points="3 7 3 12 8 12" />
+  <path d="M21 12A9 9 0 1 0 5 7" />
+  <polyline points="5 7 5 12 10 12" />
 </svg>
           </button>
         </div>
