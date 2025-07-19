@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import PastResultsPro from './PastResultsPro'; // ← 新しい過去検索コンポーネント
-import PastResults from './PastResults';       // ※従来版（残してもOK）
+import PastResultsPro from './PastResultsPro';
+import PastResults from './PastResults';
 import Diagnosis from './Diagnosis';
 import Prediction from './Prediction';
 import Settings from './Settings';
@@ -21,8 +21,6 @@ const features = [
 export default function App() {
   const [selectedTab, setSelectedTab] = useState('loto6');
   const [feature, setFeature] = useState('past');
-
-  // 検索URL（loto6, miniloto, loto7で切り替え）
   const selectedUrl = tabs.find(t => t.key === selectedTab).url;
 
   return (
@@ -33,39 +31,54 @@ export default function App() {
       padding: 24,
       boxSizing: 'border-box'
     }}>
-      {/* アイコン */}
+      {/* ロゴ＆タイトル */}
       <div style={{
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        marginBottom: 4
+        marginBottom: 14,
+        userSelect: 'none'
       }}>
-        <img
-          src="/tonari.png"
-          alt="となりアイコン"
-          style={{
-            width: 84,
-            height: 84,
-            borderRadius: '50%',
-            boxShadow: '0 4px 18px #2222',
-            objectFit: 'cover',
-            background: '#fff'
-          }}
-        />
-      </div>
-      {/* タイトル */}
-      <h1 style={{ textAlign: 'center', marginBottom: 12, lineHeight: 1.2 }}>
-        LotoMind
-        <br />
-        <span style={{
-          fontSize: '0.44em',
-          color: '#888',
-          fontWeight: 400,
-          letterSpacing: '0.06em'
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 12
         }}>
-          by tonari
-        </span>
-      </h1>
+          <span style={{
+            fontSize: 34,
+            fontWeight: 800,
+            color: '#337be8',
+            letterSpacing: '0.08em',
+            fontFamily: 'sans-serif'
+          }}>Loto</span>
+          <img
+            src="/tonari.png"
+            alt="となりアイコン"
+            style={{
+              width: 76,
+              height: 76,
+              borderRadius: '50%',
+              boxShadow: '0 4px 18px #2222',
+              objectFit: 'cover',
+              background: '#fff'
+            }}
+          />
+          <span style={{
+            fontSize: 34,
+            fontWeight: 800,
+            color: '#337be8',
+            letterSpacing: '0.08em',
+            fontFamily: 'sans-serif'
+          }}>Mind</span>
+        </div>
+        <span style={{
+          fontSize: '1.01em',
+          color: '#888',
+          fontWeight: 500,
+          letterSpacing: '0.09em',
+          marginTop: 7
+        }}>by tonari</span>
+      </div>
       {/* ロト種別タブ */}
       <div style={{
         display: 'flex',
@@ -136,7 +149,7 @@ export default function App() {
             margin: '-20px -24px 0 -24px', // 親divの余白をキャンセルしてワイドに
             maxWidth: 'none'
           }}>
-            <PastResultsPro jsonUrl={selectedUrl} />
+            <PastResultsPro jsonUrl={selectedUrl} lotoType={selectedTab} />
           </div>
         )}
         {feature === 'diagnosis' && <Diagnosis jsonUrl={selectedUrl} />}
