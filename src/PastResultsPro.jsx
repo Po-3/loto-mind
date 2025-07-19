@@ -334,9 +334,3 @@ const tdStyle = {
   borderBottom: '1px solid #eef',
   textAlign: 'center'
 };
-const stickyLeftStyle = {
-  position: 'sticky',
-  left: 0,
-  zIndex: 4,
-  background: '#f7faff'
-};
