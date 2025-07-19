@@ -109,11 +109,13 @@ const thStyle = {
   border: '1px solid #bbb',
   padding: 4,
   background: '#f4f8fd',
-  fontWeight: 600
+  fontWeight: 600,
+  textAlign: 'center'
 };
 
 const tdStyle = {
   border: '1px solid #ddd',
   padding: 4,
-  fontWeight: 400
+  fontWeight: 400,
+  textAlign: 'center'
 };
