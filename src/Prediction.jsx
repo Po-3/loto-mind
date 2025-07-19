@@ -96,20 +96,25 @@ export default function Prediction({ lotoType }) {
         </div>
       )}
       {!searched && (
-  <div style={{ color: '#888', fontSize: '0.98em', marginTop: 14 }}>
-    開催回を入力すると自動で取得します。<br />
-    <span style={{ color: '#d0323a', fontWeight: 700 }}>
-      ※現在「{lotoType === 'miniloto'
-        ? 'ミニロト'
-        : lotoType === 'loto6'
-        ? 'ロト6'
-        : lotoType === 'loto7'
-        ? 'ロト7'
-        : lotoType}」が選択されています。<br />
-      必ず対象ロトの開催回を入力してください。
-    </span>
-  </div>
-)}
+        <div style={{ color: '#888', fontSize: '0.98em', marginTop: 14 }}>
+          開催回を入力すると自動で取得します。
+          <br />
+          <span style={{ color: '#d0323a', fontWeight: 700 }}>
+            ※現在「{lotoType === 'miniloto'
+              ? 'ミニロト'
+              : lotoType === 'loto6'
+              ? 'ロト6'
+              : lotoType === 'loto7'
+              ? 'ロト7'
+              : lotoType}」が選択されています。
+            <br />
+            必ず対象ロトの開催回を入力してください。
+          </span>
+        </div>
+      )}
+    </div>
+  );
+}
 
 // ===== スタイル定義 =====
 
