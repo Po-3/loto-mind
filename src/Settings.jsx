@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-// フォント選択肢を拡大
+// 豊富なフォント選択肢（追加歓迎！）
 const FONT_OPTIONS = [
   { label: '標準（system）', value: 'system-ui, Avenir, Helvetica, Arial, sans-serif' },
   { label: 'メイリオ', value: 'Meiryo, "メイリオ", sans-serif' },
@@ -21,7 +21,7 @@ const COLOR_PRESETS = [
   { name: 'シンプルグレー', value: '#eeeeee' },
   { name: '桜ピンク', value: '#ffe4e1' },
   { name: 'ライトブルー', value: '#d1f0ff' },
-  { name: 'ホワイト', value: '#ffffff' },
+  { name: 'ホワイト', value: '#ffffff' }
 ];
 
 const LOTO_OPTIONS = [
@@ -37,41 +37,45 @@ const MENU_OPTIONS = [
   { label: '設定', value: 'settings' }
 ];
 
+// シンプルなSVGパレットアイコン（Reactコンポーネント化）
+const PaletteIcon = ({ size = 22 }) => (
+  <svg width={size} height={size} viewBox="0 0 22 22" style={{ verticalAlign: 'middle', marginRight: 2 }}>
+    <circle cx="11" cy="11" r="10" fill="#f7c873" stroke="#be9000" strokeWidth="1.2"/>
+    <circle cx="7.5" cy="8" r="1.5" fill="#ed3a45"/>
+    <circle cx="11.5" cy="6.8" r="1.2" fill="#42c6ff"/>
+    <circle cx="15.1" cy="9.3" r="1.2" fill="#74e088"/>
+    <circle cx="13.8" cy="13.4" r="1.2" fill="#fff78d"/>
+    <circle cx="8.3" cy="14.1" r="1.2" fill="#e883d3"/>
+  </svg>
+);
+
 export default function Settings({
   defaultLotoType,
   defaultMenu,
   font,
-  themeColor, // ← 追加: 文字色ではなく背景カラー
+  themeColor, // ← 背景色hex値
   onDefaultLotoChange,
   onDefaultMenuChange,
   onFontChange,
   onThemeColorChange,
 }) {
-  // 内部状態
+  // 内部状態（propsから初期値で、props変化時は追従）
   const [selectedLoto, setSelectedLoto] = useState(defaultLotoType || 'loto6');
   const [selectedMenu, setSelectedMenu] = useState(defaultMenu || 'past');
   const [selectedFont, setSelectedFont] = useState(font || FONT_OPTIONS[0].value);
   const [selectedColor, setSelectedColor] = useState(themeColor || '#fafcff');
-
-  // カスタムカラー
+  // カスタム選択色（プリセット選択時は空に戻す）
   const [customColor, setCustomColor] = useState('');
 
-  // props変化で追従
-  useEffect(() => {
-    setSelectedLoto(defaultLotoType || 'loto6');
-  }, [defaultLotoType]);
-  useEffect(() => {
-    setSelectedMenu(defaultMenu || 'past');
-  }, [defaultMenu]);
-  useEffect(() => {
-    setSelectedFont(font || FONT_OPTIONS[0].value);
-  }, [font]);
+  useEffect(() => { setSelectedLoto(defaultLotoType || 'loto6'); }, [defaultLotoType]);
+  useEffect(() => { setSelectedMenu(defaultMenu || 'past'); }, [defaultMenu]);
+  useEffect(() => { setSelectedFont(font || FONT_OPTIONS[0].value); }, [font]);
   useEffect(() => {
     setSelectedColor(themeColor || '#fafcff');
     setCustomColor('');
   }, [themeColor]);
 
-  // 各種ハンドラ
+  // ハンドラ
   const handleLotoChange = (val) => {
     setSelectedLoto(val);
     onDefaultLotoChange && onDefaultLotoChange(val);
@@ -95,7 +99,7 @@ export default function Settings({
     onThemeColorChange && onThemeColorChange(color);
   };
 
-  // いずれかが未定義ならローディング防止
+  // 安全ガード
   if (
     typeof selectedLoto === 'undefined' ||
     typeof selectedMenu === 'undefined' ||
@@ -158,13 +162,15 @@ export default function Settings({
       {/* カラーパレット＋カラーピッカー */}
       <div style={settingBlock}>
         <strong>背景カラー：</strong>
-        <span style={{ display: 'inline-flex', gap: 4, verticalAlign: 'middle' }}>
+        <span style={{ display: 'inline-flex', gap: 4, verticalAlign: 'middle', alignItems: 'center' }}>
+          <PaletteIcon />
           {COLOR_PRESETS.map(c =>
             <button
               key={c.value}
               title={c.name}
               style={{
-                width: 28, height: 28, borderRadius: '50%', border: selectedColor === c.value ? '2px solid #333' : '1px solid #ccc',
+                width: 28, height: 28, borderRadius: '50%',
+                border: selectedColor === c.value ? '2px solid #333' : '1px solid #ccc',
                 background: c.value, cursor: 'pointer', marginRight: 2
               }}
               onClick={() => handlePresetColor(c.value)}
@@ -174,7 +180,11 @@ export default function Settings({
             type="color"
             value={customColor || selectedColor}
             onChange={e => handleCustomColor(e.target.value)}
-            style={{ width: 34, height: 28, border: 'none', background: 'none', cursor: 'pointer', verticalAlign: 'middle' }}
+            style={{
+              width: 34, height: 28, border: 'none', background: 'none',
+              cursor: 'pointer', verticalAlign: 'middle', marginLeft: 3
+            }}
+            aria-label="カスタムカラー"
           />
         </span>
         <span style={{ marginLeft: 10, fontSize: '0.93em', color: '#888' }}>{selectedColor}</span>

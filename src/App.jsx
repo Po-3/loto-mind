@@ -24,23 +24,26 @@ function getLocalStorage(key, fallback) {
   return localStorage.getItem(key) || fallback;
 }
 
+// デフォルト背景色（COLOR_PRESETSと揃える）
+const DEFAULT_BG_COLOR = '#fafcff';
+
 export default function App() {
   // 初回レンダリング時のみdefaultMenu/defaultLotoTypeで初期化
   const [selectedTab, setSelectedTab] = useState(() => getLocalStorage('defaultLotoType', 'loto6'));
   const [feature, setFeature] = useState(() => getLocalStorage('defaultMenu', 'past'));
   const [font, setFont] = useState(getLocalStorage('font', 'system-ui, Avenir, Helvetica, Arial, sans-serif'));
-  const [theme, setTheme] = useState(getLocalStorage('theme', 'tonari'));
+  const [themeColor, setThemeColor] = useState(getLocalStorage('themeColor', DEFAULT_BG_COLOR));
 
   // 「タブ（ロト種別）」変更 → 画面と設定も即保存
   const handleTabChange = (tabKey) => {
     setSelectedTab(tabKey);
-    // localStorage.setItem('defaultLotoType', tabKey); ← 画面操作と設定を分離するならここはコメントアウト
+    // localStorage.setItem('defaultLotoType', tabKey); ← デフォルト設定変更は設定画面のみ
   };
 
   // 「機能タブ」変更
   const handleFeatureChange = (menu) => {
     setFeature(menu);
-    // localStorage.setItem('defaultMenu', menu); ← 画面操作と設定を分離するならここはコメントアウト
+    // localStorage.setItem('defaultMenu', menu); ← デフォルト設定変更は設定画面のみ
   };
 
   // 設定ページ用（設定値のみ保存。画面は切り替えない）
@@ -54,28 +57,21 @@ export default function App() {
     setFont(fontVal);
     localStorage.setItem('font', fontVal);
   };
-  const handleThemeChange = (themeVal) => {
-    setTheme(themeVal);
-    localStorage.setItem('theme', themeVal);
+  const handleThemeColorChange = (colorVal) => {
+    setThemeColor(colorVal);
+    localStorage.setItem('themeColor', colorVal);
   };
 
-  // フォント・テーマ即時反映
+  // フォント・背景色即時反映
   useEffect(() => {
     document.body.style.fontFamily = font;
   }, [font]);
   useEffect(() => {
-    if (theme === 'gray') {
-      document.body.style.backgroundColor = '#eeeeee';
-    } else if (theme === 'ivory') {
-      document.body.style.backgroundColor = '#f9f6ee';
-    } else {
-      document.body.style.backgroundColor = '#fafcff';
-    }
-  }, [theme]);
+    document.body.style.backgroundColor = themeColor || DEFAULT_BG_COLOR;
+  }, [themeColor]);
 
   // 「設定変更後の反映」ではなく、「起動時は必ずデフォルトで起動」ロジック
   useEffect(() => {
-    // mount時のみ「デフォルト設定」で強制上書き
     setSelectedTab(getLocalStorage('defaultLotoType', 'loto6'));
     setFeature(getLocalStorage('defaultMenu', 'past'));
     // ※リロード・PWA再起動時にも必ずデフォルト設定で開く
@@ -140,13 +136,13 @@ export default function App() {
         {feature === 'prediction' && <Prediction lotoType={selectedTab} />}
         {feature === 'settings' &&
           <Settings
-            onThemeChange={handleThemeChange}
+            onThemeColorChange={handleThemeColorChange}
             onFontChange={handleFontChange}
             onDefaultLotoChange={handleDefaultLotoChange}
             onDefaultMenuChange={handleDefaultMenuChange}
             defaultLotoType={getLocalStorage('defaultLotoType', 'loto6')}
             defaultMenu={getLocalStorage('defaultMenu', 'past')}
-            theme={theme}
+            themeColor={themeColor}
             font={font}
           />
         }
@@ -201,7 +197,7 @@ const containerStyle = {
   padding: '20px 8px 10px 8px',
   boxSizing: 'border-box',
   fontSize: '16px',
-  background: '#fafcff',
+  background: 'transparent', // body背景でカバー
   borderRadius: 16,
   border: '1px solid #e0e8f3',
   marginTop: 32,
