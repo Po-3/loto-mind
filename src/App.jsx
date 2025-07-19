@@ -81,6 +81,38 @@ export default function App() {
 
   return (
     <div style={containerStyle}>
+      {/* 明示的な再読込ボタン */}
+      <button
+        onClick={() => window.location.reload()}
+        style={{
+          position: 'fixed',
+          top: 16,
+          right: 16,
+          zIndex: 200,
+          background: '#fff',
+          border: '2px solid #337be8',
+          color: '#337be8',
+          borderRadius: '50%',
+          width: 44,
+          height: 44,
+          boxShadow: '0 2px 10px #337be823',
+          cursor: 'pointer',
+          fontSize: 22,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          transition: 'box-shadow 0.15s'
+        }}
+        title="アプリを再読込（更新）"
+        aria-label="アプリ再読込"
+      >
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="#337be8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <polyline points="1 4 1 10 7 10"/>
+          <polyline points="21 20 21 14 15 14"/>
+          <path d="M3.51 15a9 9 0 0 0 14.85-3.5"/>
+        </svg>
+      </button>
+
       {/* アイコン＋見出し */}
       <div style={headerStyle}>
         <img src="/tonari.png" alt="となりアイコン" style={iconStyle} />
