@@ -126,11 +126,12 @@ export default function App() {
             aria-label="アプリ再読込"
             type="button"
           >
-            <svg width="25" height="25" viewBox="0 0 24 24" style={{ display: 'block', margin: 'auto' }}>
-              <polyline points="1 4 1 10 7 10" fill="none" stroke="#fff" strokeWidth="2.6" strokeLinecap="round" />
-              <polyline points="23 20 23 14 17 14" fill="none" stroke="#fff" strokeWidth="2.6" strokeLinecap="round" />
-              <path d="M3.51 15a9 9 0 0 0 14.85-3.5" fill="none" stroke="#fff" strokeWidth="2.6" />
-            </svg>
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none"
+       stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+       style={{ display: 'block', margin: 'auto' }}>
+    <path d="M23 4v6h-6" />
+    <path d="M20.49 9A9 9 0 1 1 5 5.3" />
+  </svg>
           </button>
         </div>
       )}
