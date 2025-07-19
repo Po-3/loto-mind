@@ -126,7 +126,7 @@ export default function App() {
             aria-label="アプリ再読込"
             type="button"
           >
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none"
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none"
        stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
        style={{ display: 'block', margin: 'auto' }}>
     <path d="M23 4v6h-6" />
