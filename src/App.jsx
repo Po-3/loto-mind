@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import PastResultsPro from './PastResultsPro'; // 新しい過去検索コンポーネント
+import { useEffect, useState } from 'react';
+import PastResultsPro from './PastResultsPro';
 import Diagnosis from './Diagnosis';
 import Prediction from './Prediction';
 import Settings from './Settings';
@@ -19,9 +19,49 @@ const features = [
   { key: 'settings', label: '設定' }
 ];
 
+function getLocalStorage(key, fallback) {
+  return localStorage.getItem(key) || fallback;
+}
+
 export default function App() {
-  const [selectedTab, setSelectedTab] = useState('loto6');
-  const [feature, setFeature] = useState('past');
+  // 設定値をlocalStorageから初期化
+  const [selectedTab, setSelectedTab] = useState(getLocalStorage('defaultLotoType', 'loto6'));
+  const [feature, setFeature] = useState(getLocalStorage('defaultMenu', 'past'));
+  const [font, setFont] = useState(getLocalStorage('font', 'system-ui, Avenir, Helvetica, Arial, sans-serif'));
+  const [theme, setTheme] = useState(getLocalStorage('theme', 'tonari'));
+
+  // 設定ページからの変更も反映
+  const handleLotoTypeChange = (type) => {
+    setSelectedTab(type);
+    localStorage.setItem('defaultLotoType', type);
+  };
+  const handleFeatureChange = (menu) => {
+    setFeature(menu);
+    localStorage.setItem('defaultMenu', menu);
+  };
+  const handleFontChange = (fontVal) => {
+    setFont(fontVal);
+    localStorage.setItem('font', fontVal);
+  };
+  const handleThemeChange = (themeVal) => {
+    setTheme(themeVal);
+    localStorage.setItem('theme', themeVal);
+  };
+
+  // フォント・テーマをbodyへ即時反映
+  useEffect(() => {
+    document.body.style.fontFamily = font;
+  }, [font]);
+
+  useEffect(() => {
+    if (theme === 'gray') {
+      document.body.style.backgroundColor = '#eeeeee';
+    } else if (theme === 'ivory') {
+      document.body.style.backgroundColor = '#f9f6ee';
+    } else {
+      document.body.style.backgroundColor = '#fafcff'; // となり標準
+    }
+  }, [theme]);
 
   // jsonUrlはロト種別ごとに管理（Diagnosis等で使用）
   const selectedUrl = tabs.find(t => t.key === selectedTab).url;
@@ -42,7 +82,7 @@ export default function App() {
         {tabs.map(tab =>
           <button
             key={tab.key}
-            onClick={() => setSelectedTab(tab.key)}
+            onClick={() => handleLotoTypeChange(tab.key)}
             style={{
               ...tabStyle,
               ...(selectedTab === tab.key ? activeTabStyle : {})
@@ -56,7 +96,7 @@ export default function App() {
         {features.map(f =>
           <button
             key={f.key}
-            onClick={() => setFeature(f.key)}
+            onClick={() => handleFeatureChange(f.key)}
             style={{
               ...featureTabStyle,
               ...(feature === f.key ? activeFeatureTabStyle : {})
@@ -81,7 +121,18 @@ export default function App() {
         )}
         {feature === 'diagnosis' && <Diagnosis jsonUrl={selectedUrl} lotoType={selectedTab} />}
         {feature === 'prediction' && <Prediction lotoType={selectedTab} />}
-        {feature === 'settings' && <Settings />}
+        {feature === 'settings' &&
+          <Settings
+            onThemeChange={handleThemeChange}
+            onFontChange={handleFontChange}
+            onDefaultLotoChange={handleLotoTypeChange}
+            onDefaultMenuChange={handleFeatureChange}
+            defaultLotoType={selectedTab}
+            defaultMenu={feature}
+            theme={theme}
+            font={font}
+          />
+        }
       </div>
       
       {/* ガイド文＆リンク */}
@@ -95,32 +146,32 @@ export default function App() {
           宝くじのとなりブログ
         </a>
       </div>
- <div style={{
-  textAlign: 'right',
-  fontSize: '0.98em',
-  color: '#be9000',
-  marginTop: 8,
-  opacity: 0.72,
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'flex-end',
-  gap: 4
-}}>
-  <span>となり</span>
-  <img
-    src="/tonari.png"
-    alt="となりくん"
-    style={{
-      width: 22,
-      height: 22,
-      marginLeft: 2,
-      verticalAlign: 'middle',
-      borderRadius: '50%',
-      boxShadow: '0 1px 4px #bbb8'
-    }}
-  />
-  <span style={{ fontSize: '0.90em', marginLeft: 2 }}>がいつも応援中！</span>
-</div>
+      <div style={{
+        textAlign: 'right',
+        fontSize: '0.98em',
+        color: '#be9000',
+        marginTop: 8,
+        opacity: 0.72,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'flex-end',
+        gap: 4
+      }}>
+        <span>となり</span>
+        <img
+          src="/tonari.png"
+          alt="となりくん"
+          style={{
+            width: 22,
+            height: 22,
+            marginLeft: 2,
+            verticalAlign: 'middle',
+            borderRadius: '50%',
+            boxShadow: '0 1px 4px #bbb8'
+          }}
+        />
+        <span style={{ fontSize: '0.90em', marginLeft: 2 }}>がいつも応援中！</span>
+      </div>
     </div>
   );
 }
