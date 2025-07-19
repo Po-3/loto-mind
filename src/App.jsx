@@ -4,7 +4,7 @@ import Diagnosis from './Diagnosis';
 import Prediction from './Prediction';
 import Settings from './Settings';
 
-// ロト種別タブ（ラベル＆データURLなど管理）
+// ロト種別タブ
 const tabs = [
   { key: 'miniloto', label: 'ミニロト', url: 'https://po-3.github.io/miniloto-data/miniloto.json' },
   { key: 'loto6', label: 'ロト6', url: 'https://po-3.github.io/loto6-data/loto6.json' },
@@ -24,19 +24,19 @@ function getLocalStorage(key, fallback) {
 }
 
 export default function App() {
-  // 設定値をlocalStorageから初期化
+  // デフォルト値をlocalStorageから（初回のみ）
   const [selectedTab, setSelectedTab] = useState(getLocalStorage('defaultLotoType', 'loto6'));
   const [feature, setFeature] = useState(getLocalStorage('defaultMenu', 'past'));
   const [font, setFont] = useState(getLocalStorage('font', 'system-ui, Avenir, Helvetica, Arial, sans-serif'));
   const [theme, setTheme] = useState(getLocalStorage('theme', 'tonari'));
 
-  // 設定ページからの変更も反映
+  // 設定ページからの変更は「現在の画面」も即書き換える
   const handleLotoTypeChange = (type) => {
-    setSelectedTab(type);
+    setSelectedTab(type); // ←画面反映（今いるタブが変わる）
     localStorage.setItem('defaultLotoType', type);
   };
   const handleFeatureChange = (menu) => {
-    setFeature(menu);
+    setFeature(menu); // ←画面反映（今いるメニューが変わる）
     localStorage.setItem('defaultMenu', menu);
   };
   const handleFontChange = (fontVal) => {
@@ -48,7 +48,7 @@ export default function App() {
     localStorage.setItem('theme', themeVal);
   };
 
-  // フォント・テーマをbodyへ即時反映
+  // フォント・テーマ即時反映
   useEffect(() => {
     document.body.style.fontFamily = font;
   }, [font]);
@@ -63,7 +63,7 @@ export default function App() {
     }
   }, [theme]);
 
-  // jsonUrlはロト種別ごとに管理（Diagnosis等で使用）
+  // ロトデータURL
   const selectedUrl = tabs.find(t => t.key === selectedTab).url;
 
   return (
@@ -76,13 +76,16 @@ export default function App() {
           <span style={byTonariStyle}>by tonari</span>
         </div>
       </div>
-      
+
       {/* ロト種別タブ */}
       <div style={tabRowStyle}>
         {tabs.map(tab =>
           <button
             key={tab.key}
-            onClick={() => handleLotoTypeChange(tab.key)}
+            onClick={() => {
+              setSelectedTab(tab.key);
+              localStorage.setItem('defaultLotoType', tab.key);
+            }}
             style={{
               ...tabStyle,
               ...(selectedTab === tab.key ? activeTabStyle : {})
@@ -91,12 +94,15 @@ export default function App() {
         )}
       </div>
 
-      {/* 機能タブ（2行ラベル対応） */}
+      {/* 機能タブ */}
       <div style={featureTabRowStyle}>
         {features.map(f =>
           <button
             key={f.key}
-            onClick={() => handleFeatureChange(f.key)}
+            onClick={() => {
+              setFeature(f.key);
+              localStorage.setItem('defaultMenu', f.key);
+            }}
             style={{
               ...featureTabStyle,
               ...(feature === f.key ? activeFeatureTabStyle : {})
@@ -113,7 +119,7 @@ export default function App() {
       <div style={{ width: '100%' }}>
         {feature === 'past' && (
           <div style={{
-            margin: '-12px -18px 0 -18px', // わずかに横幅拡張
+            margin: '-12px -18px 0 -18px',
             maxWidth: 'none'
           }}>
             <PastResultsPro jsonUrl={selectedUrl} lotoType={selectedTab} />
@@ -134,7 +140,7 @@ export default function App() {
           />
         }
       </div>
-      
+
       {/* ガイド文＆リンク */}
       <div style={guideStyle}>
         <a
@@ -176,7 +182,7 @@ export default function App() {
   );
 }
 
-// --- スタイル全定義 ---
+// --- スタイル全定義（省略なし） ---
 const containerStyle = {
   width: '100%',
   maxWidth: 470,
