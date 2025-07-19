@@ -68,7 +68,7 @@ export default function Diagnosis({ jsonUrl }) {
               <span key={n} style={numItemStyle}>{n}</span>
             ))}
           </div>
-          <p style={footerStyle}>「買ったら教えてね！」by となり</p>
+          <p style={footerStyle}>上のロト種ボタンで切替えられるよ</p>
         </>
       ) : <p>診断中…</p>}
     </div>
