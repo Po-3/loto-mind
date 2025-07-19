@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react';
 export default function Diagnosis({ jsonUrl }) {
   const [result, setResult] = useState(null);
 
-  // 指定数だけランダム抽出
   function getRandomNums(nums, count) {
     const arr = [...nums];
     arr.sort(() => Math.random() - 0.5);
@@ -14,23 +13,24 @@ export default function Diagnosis({ jsonUrl }) {
     fetch(jsonUrl)
       .then(res => res.json())
       .then(json => {
-        // 直近30回分を使用
+        // 直近30回分
         const latest = json.slice(-30);
         const allNums = [];
 
-        // すべての「第◯数字」を抽出（空値やNaNも除外）
+        // 本数字のみ抽出
         latest.forEach(row => {
-          Object.keys(row).forEach(k => {
-            if (/^第\d+数字$/.test(k)) {
-              const val = Number(row[k]);
+          for (let i = 1; i <= 6; i++) {
+            const key = `第${i}数字`;
+            if (row[key]) {
+              const val = Number(row[key]);
               if (!isNaN(val) && val > 0) {
                 allNums.push(val);
               }
             }
-          });
+          }
         });
 
-        // ロト種別ごとに最大数字を決定
+        // ロト種別判定
         let maxNum = 43, recommendCount = 6;
         if (jsonUrl.includes('miniloto')) {
           maxNum = 31; recommendCount = 5;
@@ -39,10 +39,12 @@ export default function Diagnosis({ jsonUrl }) {
         }
         const all = Array.from({ length: maxNum }, (_, i) => i + 1);
 
-        // 直近で出ていない数字
+        // 出ていない数字
         const notAppear = all.filter(n => !allNums.includes(n));
 
-        // すべて出ている場合は全体からランダム
+        // デバッグ用
+        // console.log({ allNums, notAppear, all, recommendCount });
+
         setResult({
           recommend: getRandomNums(
             notAppear.length ? notAppear : all,
