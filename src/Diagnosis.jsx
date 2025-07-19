@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 export default function Diagnosis({ jsonUrl }) {
   const [result, setResult] = useState(null);
 
+  // 指定数だけランダム抽出
   function getRandomNums(nums, count) {
     const arr = [...nums];
     arr.sort(() => Math.random() - 0.5);
@@ -13,18 +14,40 @@ export default function Diagnosis({ jsonUrl }) {
     fetch(jsonUrl)
       .then(res => res.json())
       .then(json => {
+        // 直近30回分を使用
         const latest = json.slice(-30);
         const allNums = [];
+
+        // すべての「第◯数字」を抽出（空値やNaNも除外）
         latest.forEach(row => {
           Object.keys(row).forEach(k => {
-            if (/^第\d数字$/.test(k)) allNums.push(Number(row[k]));
+            if (/^第\d+数字$/.test(k)) {
+              const val = Number(row[k]);
+              if (!isNaN(val) && val > 0) {
+                allNums.push(val);
+              }
+            }
           });
         });
-        const lotoType = jsonUrl.includes('miniloto') ? 31 : jsonUrl.includes('loto7') ? 37 : 43;
-        const all = Array.from({ length: lotoType }, (_, i) => i + 1);
+
+        // ロト種別ごとに最大数字を決定
+        let maxNum = 43, recommendCount = 6;
+        if (jsonUrl.includes('miniloto')) {
+          maxNum = 31; recommendCount = 5;
+        } else if (jsonUrl.includes('loto7')) {
+          maxNum = 37; recommendCount = 7;
+        }
+        const all = Array.from({ length: maxNum }, (_, i) => i + 1);
+
+        // 直近で出ていない数字
         const notAppear = all.filter(n => !allNums.includes(n));
+
+        // すべて出ている場合は全体からランダム
         setResult({
-          recommend: getRandomNums(notAppear.length ? notAppear : all, jsonUrl.includes('miniloto') ? 5 : jsonUrl.includes('loto7') ? 7 : 6)
+          recommend: getRandomNums(
+            notAppear.length ? notAppear : all,
+            recommendCount
+          )
         });
       });
   }, [jsonUrl]);
@@ -40,14 +63,14 @@ export default function Diagnosis({ jsonUrl }) {
               <span key={n} style={numItemStyle}>{n}</span>
             ))}
           </div>
-          <p style={footerStyle}>「買ったら教えてね！」by 数字くん</p>
+          <p style={footerStyle}>「買ったら教えてね！」by となりくん</p>
         </>
       ) : <p>診断中…</p>}
     </div>
   );
 }
 
-// ▼ スタイル群（PWA最適化済）
+// ▼ スタイル群
 const outerStyle = {
   width: '100%',
   padding: '0 12px',
