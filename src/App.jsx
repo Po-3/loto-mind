@@ -23,7 +23,29 @@ export default function App() {
 
   return (
     <div style={{ fontFamily: 'sans-serif', maxWidth: 520, margin: '24px auto', padding: 24 }}>
-      <h1 style={{ textAlign: 'center', marginBottom: 12 }}>LotoMind</h1>
+      {/* アイコン */}
+      <div style={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        marginBottom: 4
+      }}>
+        <img
+          src="/tonari.png"
+          alt="となりアイコン"
+          style={{
+            width: 84,
+            height: 84,
+            borderRadius: '50%',
+            boxShadow: '0 4px 18px #2222',
+            objectFit: 'cover',
+            background: '#fff'
+          }}
+        />
+      </div>
+      {/* タイトル */}
+      <h1 style={{ textAlign: 'center', marginBottom: 12 }}>LotoMind by tonari</h1>
+      {/* ロト種別タブ */}
       <div style={{ display: 'flex', gap: 10, justifyContent: 'center', marginBottom: 20 }}>
         {tabs.map(tab =>
           <button
@@ -40,6 +62,7 @@ export default function App() {
           >{tab.label}</button>
         )}
       </div>
+      {/* 機能タブ */}
       <div style={{ display: 'flex', gap: 10, justifyContent: 'center', marginBottom: 18 }}>
         {features.map(f =>
           <button
