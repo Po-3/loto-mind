@@ -12,7 +12,7 @@ const tabs = [
 
 const features = [
   { key: 'past', label: '過去検索' },
-  { key: 'diagnosis', label: '数字くん診断' },
+  { key: 'diagnosis', label: '数字くん\n診断' }, // ←2行表示
   { key: 'prediction', label: 'ズバリ予想' },
   { key: 'settings', label: '設定' }
 ];
@@ -75,7 +75,7 @@ export default function App() {
           >{tab.label}</button>
         )}
       </div>
-      {/* 機能タブ（4分割＆レスポンシブ対応） */}
+      {/* 機能タブ：ラベル風＋2行表示対応 */}
       <div
         style={{
           display: 'flex',
@@ -93,17 +93,24 @@ export default function App() {
             onClick={() => setFeature(f.key)}
             style={{
               flex: 1,
-              background: feature === f.key ? '#f0f0f0' : '#fff',
-              border: '1px solid #bbb',
-              borderLeft: idx === 0 ? '1px solid #bbb' : 'none',
-              borderRadius: 0,
-              fontWeight: feature === f.key ? 700 : 400,
-              fontSize: '1.03em',
+              background: feature === f.key ? '#337be8' : '#f7f7f7',
+              color: feature === f.key ? '#fff' : '#444',
+              border: 'none',
+              borderBottom: feature === f.key ? '3.5px solid #225bb7' : '3.5px solid #e3e3e3',
+              fontWeight: feature === f.key ? 700 : 500,
+              fontSize: '1.01em',
               cursor: 'pointer',
-              padding: '11px 0',
-              minWidth: 0
+              padding: '12px 0 9px 0',
+              minWidth: 0,
+              outline: 'none',
+              boxShadow: feature === f.key ? '0 2px 8px #337be811' : 'none',
+              transition: 'all 0.12s'
             }}
-          >{f.label}</button>
+          >
+            <span style={{ whiteSpace: 'pre-line', lineHeight: 1.11 }}>
+              {f.label}
+            </span>
+          </button>
         )}
       </div>
       {/* メイン画面切り替え */}
