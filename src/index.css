@@ -2,16 +2,14 @@
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
-
-  /* 🌞 ライトモードを初期設定に */
+  /* 🌞 ライトモードに完全固定！ */
   color: #213547;
   background-color: #ffffff;
-
+  color-scheme: light;  /* ←これを必ず追加 */
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-
   max-width: 100vw;
   overflow-x: hidden;
 }
@@ -22,7 +20,7 @@ body {
   min-width: 320px;
   min-height: 100vh;
   background-color: #f9f9f9;
-
+  color: #213547;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -36,6 +34,8 @@ body {
   margin: 0 auto;
   padding: 16px 12px;
   box-sizing: border-box;
+  background: none;
+  color: inherit;
 }
 
 h1 {
@@ -83,7 +83,7 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
-/* テーブル共通スタイル（ライト） */
+/* テーブル共通スタイル（ライトモード） */
 table {
   width: 100%;
   border-collapse: collapse;
@@ -105,56 +105,28 @@ thead {
   color: #213547;
 }
 
-/* 🌙 ダークモード対応 */
-@media (prefers-color-scheme: dark) {
-  :root {
-    color: rgba(255, 255, 255, 0.87);
-    background-color: #242424;
-  }
-
-  body {
-    background-color: #1a1a1a;
-  }
-
-  a {
-    color: #91b4ff;
-  }
-  a:hover {
-    color: #cbdfff;
-  }
-
-  button {
-    background-color: #333;
-    color: #ffffff;
-  }
-
-  table {
-    background-color: #1e1e1e;
-    color: #ffffff;
-    border-color: #444;
-  }
-
-  th,
-  td {
-    background-color: #2a2a2a;
-    color: #ffffff;
-    border: 1px solid #444;
-  }
-
-  thead {
-    background-color: #333;
-    color: #ffffff;
-  }
-}
-
 thead th {
   color: #213547 !important;
   background-color: #e0e0e0 !important;
 }
 
+/* ----------- */
+/* ⚠️ ここから下は全て削除 ----------- */
+
+/* 🌙 ダークモード対応（このセクションごと削除） */
+/*
 @media (prefers-color-scheme: dark) {
-  thead th {
-    color: #ffffff !important;
-    background-color: #333 !important;
-  }
+  :root { ... }
+  body { ... }
+  a { ... }
+  button { ... }
+  table { ... }
+  th, td { ... }
+  thead { ... }
 }
+@media (prefers-color-scheme: dark) {
+  thead th { ... }
+}
+*/
+
+/* ----------- */
