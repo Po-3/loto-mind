@@ -379,14 +379,14 @@ const csvBtnStyle = {
 };
 const thStyle = {
   padding: '3px 6px',
-  borderBottom: '1.5px solid #bbd',
+  borderBottom: '2px solid #bbb',    // ← 濃くした
   fontWeight: 600,
   background: '#f7faff',
   textAlign: 'center'
 };
 const tdStyle = {
   padding: '2px 5px',
-  borderBottom: '1px solid #eef',
+  borderBottom: '1.5px solid #bbb',  // ← 濃くした
   textAlign: 'center'
 };
 const stickyLeftStyle = {
