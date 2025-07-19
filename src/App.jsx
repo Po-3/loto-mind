@@ -14,7 +14,7 @@ const tabs = [
 // 機能タブ
 const features = [
   { key: 'past', label: '過去検索' },
-  { key: 'diagnosis', label: 'となりくん\n診断' },
+  { key: 'diagnosis', label: 'となり診断' },
   { key: 'prediction', label: 'ズバリ予想' },
   { key: 'settings', label: '設定' }
 ];

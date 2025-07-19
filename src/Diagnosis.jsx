@@ -59,7 +59,7 @@ export default function Diagnosis({ jsonUrl }) {
 
   return (
     <div style={outerStyle}>
-      <h2 style={titleStyle}>数字くん診断</h2>
+      <h2 style={titleStyle}>となり診断</h2>
       {result ? (
         <>
           <p style={descStyle}>直近で出ていない数字から選びました！</p>
