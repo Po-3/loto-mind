@@ -6,41 +6,40 @@ function getPredictionUrl(lotoType, drawNo) {
   return `https://www.kujitonari.net/entry/${prefix}-${drawNo}-prediction-tonari`;
 }
 
-export default function Prediction({ lotoType, drawNo }) {
+export default function Prediction({ lotoType }) {
+  const [inputDrawNo, setInputDrawNo] = useState('');
   const [rows, setRows] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [searched, setSearched] = useState(false);
 
   useEffect(() => {
-    if (!lotoType || !drawNo) return;
+    if (!lotoType || !inputDrawNo) {
+      setRows([]);
+      setSearched(false);
+      return;
+    }
     setLoading(true);
-    const url = getPredictionUrl(lotoType, drawNo);
+    setSearched(true);
+    setRows([]);
+    const url = getPredictionUrl(lotoType, inputDrawNo);
     fetch(url)
       .then(res => res.text())
       .then(html => {
-        const doc = new DOMParser().parseFromString(html, 'text/html');
+        const doc = new window.DOMParser().parseFromString(html, 'text/html');
         const table = doc.querySelector('table');
         if (!table) {
           setRows([]);
           setLoading(false);
           return;
         }
-        // tbodyがないケースにも備えてtrを取得
-        const trs = table.querySelectorAll('tbody tr').length
-          ? table.querySelectorAll('tbody tr')
-          : table.querySelectorAll('tr');
+        const trs = table.querySelectorAll('tbody tr');
         const arr = [];
         trs.forEach(tr => {
           const tds = Array.from(tr.children);
-          // 軸数字は <strong> があればその中身を優先
-          const axis = (() => {
-            const strong = tds[2]?.querySelector?.('strong');
-            if (strong) return strong.textContent.replace(/[^\d]/g, '');
-            return tds[2]?.textContent.replace(/[^\d]/g, '');
-          })();
           arr.push({
             type: tds[0]?.textContent.trim(),
             nums: tds[1]?.textContent.trim(),
-            axis,
+            axis: tds[2]?.textContent.replace(/[^\d]/g, ''),
             feature: tds[3]?.textContent.trim()
           });
         });
@@ -51,36 +50,53 @@ export default function Prediction({ lotoType, drawNo }) {
         setRows([]);
         setLoading(false);
       });
-  }, [lotoType, drawNo]);
-
-  if (loading) return <div style={outerStyle}>読み込み中…</div>;
-  if (!rows.length) return <div style={outerStyle}>ズバリ予想が取得できませんでした。</div>;
+  }, [lotoType, inputDrawNo]);
 
   return (
     <div style={outerStyle}>
       <h2 style={titleStyle}>となりのズバリ予想</h2>
-      <div style={scrollStyle}>
-        <table style={tableStyle}>
-          <thead>
-            <tr>
-              <th style={thStyle}>タイプ</th>
-              <th style={thStyle}>予想数字</th>
-              <th style={thStyle}>軸数字</th>
-              <th style={thStyle}>特徴と狙い</th>
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map((row, idx) => (
-              <tr key={idx}>
-                <td style={tdStyle}>{row.type}</td>
-                <td style={tdStyle}>{row.nums}</td>
-                <td style={{ ...tdStyle, fontWeight: 700 }}>{row.axis}</td>
-                <td style={{ ...tdStyle, textAlign: 'left' }}>{row.feature}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      <div style={searchRowStyle}>
+        <input
+          type="number"
+          value={inputDrawNo}
+          onChange={e => setInputDrawNo(e.target.value)}
+          placeholder="開催回（例：2018）"
+          style={inputStyle}
+        />
       </div>
+      {loading && <div>読み込み中…</div>}
+      {!loading && searched && !rows.length && (
+        <div>ズバリ予想が取得できませんでした。</div>
+      )}
+      {!loading && rows.length > 0 && (
+        <div style={scrollStyle}>
+          <table style={tableStyle}>
+            <thead>
+              <tr>
+                <th style={thStyle}>タイプ</th>
+                <th style={thStyle}>予想数字</th>
+                <th style={thStyle}>軸数字</th>
+                <th style={thStyle}>特徴と狙い</th>
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map((row, idx) => (
+                <tr key={idx}>
+                  <td style={tdStyle}>{row.type}</td>
+                  <td style={tdStyle}>{row.nums}</td>
+                  <td style={{ ...tdStyle, fontWeight: 700 }}>{row.axis}</td>
+                  <td style={{ ...tdStyle, textAlign: 'left' }}>{row.feature}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+      {!searched && (
+        <div style={{ color: '#888', fontSize: '0.98em', marginTop: 14 }}>
+          開催回を入力すると自動で取得します。
+        </div>
+      )}
     </div>
   );
 }
@@ -98,6 +114,22 @@ const titleStyle = {
   fontSize: '1.10em',
   margin: '8px 0',
   fontWeight: 600
+};
+
+const searchRowStyle = {
+  display: 'flex',
+  gap: 8,
+  alignItems: 'center',
+  margin: '10px 0 14px 0'
+};
+
+const inputStyle = {
+  width: 130,
+  padding: '8px 10px',
+  fontSize: '1em',
+  borderRadius: 6,
+  border: '1px solid #ccc',
+  marginRight: 6
 };
 
 const scrollStyle = {
