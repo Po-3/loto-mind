@@ -83,6 +83,27 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
+/* 🔧 テーブル基本スタイル（どちらのモードでも共通） */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1em;
+}
+
+th,
+td {
+  padding: 0.6em 0.4em;
+  text-align: left;
+  border: 1px solid #ccc;
+  background-color: #f8f8f8;
+  color: #213547;
+}
+
+thead {
+  background-color: #e5efff;
+  font-weight: bold;
+}
+
 /* 🌙 ダークモード対応 */
 @media (prefers-color-scheme: dark) {
   :root {
@@ -104,5 +125,23 @@ button:focus-visible {
   button {
     background-color: #333;
     color: #ffffff;
+  }
+
+  /* 🔧 ダークモード用のテーブル調整 */
+  table {
+    background-color: #1e1e1e;
+    color: #ffffff;
+    border-color: #444;
+  }
+
+  th,
+  td {
+    background-color: #2a2a2a;
+    color: #ffffff;
+    border: 1px solid #444;
+  }
+
+  thead {
+    background-color: #333;
   }
 }
