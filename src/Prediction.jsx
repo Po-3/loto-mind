@@ -12,6 +12,7 @@ export default function Prediction({ lotoType }) {
   const [loading, setLoading] = useState(false);
   const [searched, setSearched] = useState(false);
 
+  // inputDrawNoが変更された時に自動fetch
   useEffect(() => {
     if (!lotoType || !inputDrawNo) {
       setRows([]);
@@ -64,6 +65,8 @@ export default function Prediction({ lotoType }) {
           style={inputStyle}
         />
       </div>
+
+      {/* --- 結果表示 --- */}
       {loading && <div>読み込み中…</div>}
       {!loading && searched && !rows.length && (
         <div>ズバリ予想が取得できませんでした。</div>
