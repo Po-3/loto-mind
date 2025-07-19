@@ -37,13 +37,11 @@ export default function App() {
   // 「タブ（ロト種別）」変更 → 画面と設定も即保存
   const handleTabChange = (tabKey) => {
     setSelectedTab(tabKey);
-    // localStorage.setItem('defaultLotoType', tabKey); ← デフォルト設定変更は設定画面のみ
   };
 
   // 「機能タブ」変更
   const handleFeatureChange = (menu) => {
     setFeature(menu);
-    // localStorage.setItem('defaultMenu', menu); ← デフォルト設定変更は設定画面のみ
   };
 
   // 設定ページ用（設定値のみ保存。画面は切り替えない）
@@ -74,42 +72,23 @@ export default function App() {
   useEffect(() => {
     setSelectedTab(getLocalStorage('defaultLotoType', 'loto6'));
     setFeature(getLocalStorage('defaultMenu', 'past'));
-    // ※リロード・PWA再起動時にも必ずデフォルト設定で開く
   }, []);
 
   const selectedUrl = tabs.find(t => t.key === selectedTab).url;
 
   return (
     <div style={containerStyle}>
-      {/* 明示的な再読込ボタン */}
+      {/* 明示的な再読込ボタン（丸形アイコン＋矢印） */}
       <button
         onClick={() => window.location.reload()}
-        style={{
-          position: 'fixed',
-          top: 16,
-          right: 16,
-          zIndex: 200,
-          background: '#fff',
-          border: '2px solid #337be8',
-          color: '#337be8',
-          borderRadius: '50%',
-          width: 44,
-          height: 44,
-          boxShadow: '0 2px 10px #337be823',
-          cursor: 'pointer',
-          fontSize: 22,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          transition: 'box-shadow 0.15s'
-        }}
+        style={reloadButtonStyle}
         title="アプリを再読込（更新）"
         aria-label="アプリ再読込"
       >
-        <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="#337be8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <polyline points="1 4 1 10 7 10"/>
-          <polyline points="21 20 21 14 15 14"/>
-          <path d="M3.51 15a9 9 0 0 0 14.85-3.5"/>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#337be8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <polyline points="1 4 1 10 7 10" />
+          <polyline points="23 20 23 14 17 14" />
+          <path d="M3.51 15a9 9 0 0 0 14.85-3.5" />
         </svg>
       </button>
 
@@ -155,7 +134,27 @@ export default function App() {
       </div>
 
       {/* メイン表示エリア */}
-      <div style={{ width: '100%' }}>
+      <div style={{ width: '100%', position: 'relative' }}>
+        {/* ↑↓ スクロールボタン（右下） */}
+        <div style={scrollButtonContainer}>
+          <button
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            style={scrollButtonStyle}
+            title="最上段へ"
+            aria-label="最上段へ"
+          >
+            ↑
+          </button>
+          <button
+            onClick={() => window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })}
+            style={scrollButtonStyle}
+            title="最下段へ"
+            aria-label="最下段へ"
+          >
+            ↓
+          </button>
+        </div>
+
         {feature === 'past' && (
           <div style={{
             margin: '-12px -18px 0 -18px',
@@ -229,11 +228,56 @@ const containerStyle = {
   padding: '20px 8px 10px 8px',
   boxSizing: 'border-box',
   fontSize: '16px',
-  background: 'transparent', // body背景でカバー
+  background: 'transparent',
   borderRadius: 16,
   border: '1px solid #e0e8f3',
   marginTop: 32,
   boxShadow: '0 6px 24px #d2e4fa22',
+};
+
+const reloadButtonStyle = {
+  position: 'fixed',
+  top: 16,
+  right: 16,
+  zIndex: 200,
+  background: '#fff',
+  border: '2px solid #337be8',
+  color: '#337be8',
+  borderRadius: '50%',
+  width: 44,
+  height: 44,
+  boxShadow: '0 2px 10px #337be823',
+  cursor: 'pointer',
+  fontSize: 22,
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  transition: 'box-shadow 0.15s'
+};
+
+const scrollButtonContainer = {
+  position: 'fixed',
+  bottom: 22,
+  right: 16,
+  zIndex: 90,
+  display: 'flex',
+  flexDirection: 'column',
+  gap: 9
+};
+const scrollButtonStyle = {
+  background: '#337be8',
+  color: '#fff',
+  border: 'none',
+  borderRadius: 32,
+  width: 44,
+  height: 44,
+  fontSize: 24,
+  boxShadow: '0 2px 8px #337be822',
+  cursor: 'pointer',
+  outline: 'none',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
 };
 
 const headerStyle = {
