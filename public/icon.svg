@@ -1,0 +1,5 @@
+<!-- public/icon.svg -->
+<svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="120" height="120" rx="30" fill="#1767A7"/>
+  <text x="50%" y="55%" text-anchor="middle" fill="white" font-size="56" font-family="sans-serif" dy=".35em" font-weight="bold">L</text>
+</svg>
