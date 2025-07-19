@@ -23,19 +23,7 @@ export default function App() {
   const selectedUrl = tabs.find(t => t.key === selectedTab).url;
 
   return (
-    <div style={{
-      fontFamily: 'sans-serif',
-      width: '100%',
-      maxWidth: 940,
-      minWidth: 0, // ← ここを0に
-      margin: '24px auto',
-      padding: '5vw 2vw 4vw 2vw', // スマホでも余白自動調整
-      boxSizing: 'border-box',
-      background: '#f9f9fd',
-      borderRadius: 12,
-      border: '1px solid #cde',
-      boxShadow: '0 1px 16px #eef3ff44'
-    }}>
+    <div style={{ width: '100%', boxSizing: 'border-box' }}>
       {/* ロゴ＆タイトル */}
       <div style={{
         display: 'flex',
