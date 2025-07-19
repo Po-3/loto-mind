@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import PastResults from './PastResults';
+import PastResultsPro from './PastResultsPro'; // ← 新しい過去検索コンポーネント
+import PastResults from './PastResults';       // ※従来版（残してもOK）
 import Diagnosis from './Diagnosis';
 import Prediction from './Prediction';
 import Settings from './Settings';
@@ -12,7 +13,7 @@ const tabs = [
 
 const features = [
   { key: 'past', label: '過去検索' },
-  { key: 'diagnosis', label: '数字くん\n診断' }, // ←2行表示
+  { key: 'diagnosis', label: '数字くん\n診断' },
   { key: 'prediction', label: 'ズバリ予想' },
   { key: 'settings', label: '設定' }
 ];
@@ -21,8 +22,17 @@ export default function App() {
   const [selectedTab, setSelectedTab] = useState('loto6');
   const [feature, setFeature] = useState('past');
 
+  // 検索URL（loto6, miniloto, loto7で切り替え）
+  const selectedUrl = tabs.find(t => t.key === selectedTab).url;
+
   return (
-    <div style={{ fontFamily: 'sans-serif', maxWidth: 520, margin: '24px auto', padding: 24 }}>
+    <div style={{
+      fontFamily: 'sans-serif',
+      maxWidth: 520,
+      margin: '24px auto',
+      padding: 24,
+      boxSizing: 'border-box'
+    }}>
       {/* アイコン */}
       <div style={{
         display: 'flex',
@@ -57,7 +67,13 @@ export default function App() {
         </span>
       </h1>
       {/* ロト種別タブ */}
-      <div style={{ display: 'flex', gap: 10, justifyContent: 'center', marginBottom: 20 }}>
+      <div style={{
+        display: 'flex',
+        gap: 10,
+        justifyContent: 'center',
+        marginBottom: 20,
+        width: '100%'
+      }}>
         {tabs.map(tab =>
           <button
             key={tab.key}
@@ -75,7 +91,7 @@ export default function App() {
           >{tab.label}</button>
         )}
       </div>
-      {/* 機能タブ：ラベル風＋2行表示対応 */}
+      {/* 機能タブ（ラベル風・2行対応） */}
       <div
         style={{
           display: 'flex',
@@ -114,9 +130,16 @@ export default function App() {
         )}
       </div>
       {/* メイン画面切り替え */}
-      <div>
-        {feature === 'past' && <PastResults jsonUrl={tabs.find(t => t.key === selectedTab).url} />}
-        {feature === 'diagnosis' && <Diagnosis jsonUrl={tabs.find(t => t.key === selectedTab).url} />}
+      <div style={{ width: '100%' }}>
+        {feature === 'past' && (
+          <div style={{
+            margin: '-20px -24px 0 -24px', // 親divの余白をキャンセルしてワイドに
+            maxWidth: 'none'
+          }}>
+            <PastResultsPro jsonUrl={selectedUrl} />
+          </div>
+        )}
+        {feature === 'diagnosis' && <Diagnosis jsonUrl={selectedUrl} />}
         {feature === 'prediction' && <Prediction lotoType={selectedTab} />}
         {feature === 'settings' && <Settings />}
       </div>
