@@ -28,23 +28,19 @@ function getLocalStorage(key, fallback) {
 const DEFAULT_BG_COLOR = '#fafcff';
 
 export default function App() {
-  // 初回レンダリング時のみdefaultMenu/defaultLotoTypeで初期化
   const [selectedTab, setSelectedTab] = useState(() => getLocalStorage('defaultLotoType', 'loto6'));
   const [feature, setFeature] = useState(() => getLocalStorage('defaultMenu', 'past'));
   const [font, setFont] = useState(getLocalStorage('font', 'system-ui, Avenir, Helvetica, Arial, sans-serif'));
   const [themeColor, setThemeColor] = useState(getLocalStorage('themeColor', DEFAULT_BG_COLOR));
 
-  // 「タブ（ロト種別）」変更 → 画面と設定も即保存
   const handleTabChange = (tabKey) => {
     setSelectedTab(tabKey);
   };
 
-  // 「機能タブ」変更
   const handleFeatureChange = (menu) => {
     setFeature(menu);
   };
 
-  // 設定ページ用（設定値のみ保存。画面は切り替えない）
   const handleDefaultLotoChange = (type) => {
     localStorage.setItem('defaultLotoType', type);
   };
@@ -60,7 +56,6 @@ export default function App() {
     localStorage.setItem('themeColor', colorVal);
   };
 
-  // フォント・背景色即時反映
   useEffect(() => {
     document.body.style.fontFamily = font;
   }, [font]);
@@ -68,7 +63,6 @@ export default function App() {
     document.body.style.backgroundColor = themeColor || DEFAULT_BG_COLOR;
   }, [themeColor]);
 
-  // 「設定変更後の反映」ではなく、「起動時は必ずデフォルトで起動」ロジック
   useEffect(() => {
     setSelectedTab(getLocalStorage('defaultLotoType', 'loto6'));
     setFeature(getLocalStorage('defaultMenu', 'past'));
@@ -78,15 +72,19 @@ export default function App() {
 
   return (
     <div style={containerStyle}>
-
       {/* 明示的な再読込ボタン（丸形アイコン＋矢印） */}
       <button
-        onClick={() => window.location.reload()}
+        onClick={() => {
+          // 強制的に再読み込み（キャッシュクリア含む場合は以下）
+          // window.location.reload(true);
+          window.location.reload();
+        }}
         style={reloadButtonStyle}
         title="アプリを再読込（更新）"
         aria-label="アプリ再読込"
+        type="button"
       >
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#337be8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#337be8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ display: 'block', margin: 'auto' }}>
           <polyline points="1 4 1 10 7 10" />
           <polyline points="23 20 23 14 17 14" />
           <path d="M3.51 15a9 9 0 0 0 14.85-3.5" />
@@ -136,7 +134,7 @@ export default function App() {
 
       {/* メイン表示エリア */}
       <div style={{ width: '100%', position: 'relative' }}>
-        {/* ↑↓ スクロールボタン（右下） ※「過去検索」ページのみ表示 */}
+        {/* ↑↓ スクロールボタン（右下）: 「過去検索」のみ表示 */}
         {feature === 'past' && (
           <div style={scrollButtonContainer}>
             <button
@@ -144,6 +142,7 @@ export default function App() {
               style={scrollButtonStyle}
               title="最上段へ"
               aria-label="最上段へ"
+              type="button"
             >
               ↑
             </button>
@@ -152,6 +151,7 @@ export default function App() {
               style={scrollButtonStyle}
               title="最下段へ"
               aria-label="最下段へ"
+              type="button"
             >
               ↓
             </button>
