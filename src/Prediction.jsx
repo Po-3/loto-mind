@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 // URLパターン生成
 function getPredictionUrl(lotoType, drawNo) {
@@ -12,12 +12,16 @@ export default function Prediction({ lotoType }) {
   const [loading, setLoading] = useState(false);
   const [searched, setSearched] = useState(false);
 
-  // 開催回検索のロジック
-  const handleSearch = () => {
-    if (!lotoType || !inputDrawNo) return;
+  // inputDrawNoが変更された時に自動fetch
+  useEffect(() => {
+    if (!lotoType || !inputDrawNo) {
+      setRows([]);
+      setSearched(false);
+      return;
+    }
     setLoading(true);
-    setRows([]);
     setSearched(true);
+    setRows([]);
     const url = getPredictionUrl(lotoType, inputDrawNo);
     fetch(url)
       .then(res => res.text())
@@ -47,14 +51,7 @@ export default function Prediction({ lotoType }) {
         setRows([]);
         setLoading(false);
       });
-  };
-
-  // Enterキーで検索発動
-  const handleKeyDown = (e) => {
-    if (e.key === 'Enter') {
-      handleSearch();
-    }
-  };
+  }, [lotoType, inputDrawNo]);
 
   return (
     <div style={outerStyle}>
@@ -64,11 +61,9 @@ export default function Prediction({ lotoType }) {
           type="number"
           value={inputDrawNo}
           onChange={e => setInputDrawNo(e.target.value)}
-          onKeyDown={handleKeyDown}
           placeholder="開催回（例：2018）"
           style={inputStyle}
         />
-        <button style={searchBtnStyle} onClick={handleSearch}>検索</button>
       </div>
 
       {/* --- 結果表示 --- */}
@@ -102,7 +97,7 @@ export default function Prediction({ lotoType }) {
       )}
       {!searched && (
         <div style={{ color: '#888', fontSize: '0.98em', marginTop: 14 }}>
-          開催回を入力して検索してください。
+          開催回を入力すると自動で取得します。
         </div>
       )}
     </div>
@@ -138,17 +133,6 @@ const inputStyle = {
   borderRadius: 6,
   border: '1px solid #ccc',
   marginRight: 6
-};
-
-const searchBtnStyle = {
-  padding: '8px 18px',
-  fontSize: '1em',
-  borderRadius: 6,
-  background: '#1767a7',
-  color: '#fff',
-  border: 'none',
-  cursor: 'pointer',
-  fontWeight: 600
 };
 
 const scrollStyle = {
