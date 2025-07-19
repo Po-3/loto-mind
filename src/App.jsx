@@ -19,32 +19,36 @@ const features = [
   { key: 'settings', label: '設定' }
 ];
 
+// localStorageから取得
 function getLocalStorage(key, fallback) {
   return localStorage.getItem(key) || fallback;
 }
 
 export default function App() {
-  // 初期値
-  const [selectedTab, setSelectedTab] = useState(getLocalStorage('defaultLotoType', 'loto6'));
-  const [feature, setFeature] = useState(getLocalStorage('defaultMenu', 'past'));
+  // 初回レンダリング時のみdefaultMenu/defaultLotoTypeで初期化
+  const [selectedTab, setSelectedTab] = useState(() => getLocalStorage('defaultLotoType', 'loto6'));
+  const [feature, setFeature] = useState(() => getLocalStorage('defaultMenu', 'past'));
   const [font, setFont] = useState(getLocalStorage('font', 'system-ui, Avenir, Helvetica, Arial, sans-serif'));
   const [theme, setTheme] = useState(getLocalStorage('theme', 'tonari'));
 
-  // タブのクリックで画面切り替え
-  const handleFeatureChange = (menu) => {
-    setFeature(menu);
+  // 「タブ（ロト種別）」変更 → 画面と設定も即保存
+  const handleTabChange = (tabKey) => {
+    setSelectedTab(tabKey);
+    // localStorage.setItem('defaultLotoType', tabKey); ← 画面操作と設定を分離するならここはコメントアウト
   };
 
-  // 設定画面用：デフォルト値設定のみ
-  // デフォルトロト種別
+  // 「機能タブ」変更
+  const handleFeatureChange = (menu) => {
+    setFeature(menu);
+    // localStorage.setItem('defaultMenu', menu); ← 画面操作と設定を分離するならここはコメントアウト
+  };
+
+  // 設定ページ用（設定値のみ保存。画面は切り替えない）
   const handleDefaultLotoChange = (type) => {
     localStorage.setItem('defaultLotoType', type);
-    setSelectedTab(type);
   };
-  // デフォルトメニュー（即時画面とプルダウン両方反映！）
   const handleDefaultMenuChange = (menu) => {
     localStorage.setItem('defaultMenu', menu);
-    setFeature(menu); // ← ここで即時featureも更新！
   };
   const handleFontChange = (fontVal) => {
     setFont(fontVal);
@@ -69,6 +73,14 @@ export default function App() {
     }
   }, [theme]);
 
+  // 「設定変更後の反映」ではなく、「起動時は必ずデフォルトで起動」ロジック
+  useEffect(() => {
+    // mount時のみ「デフォルト設定」で強制上書き
+    setSelectedTab(getLocalStorage('defaultLotoType', 'loto6'));
+    setFeature(getLocalStorage('defaultMenu', 'past'));
+    // ※リロード・PWA再起動時にも必ずデフォルト設定で開く
+  }, []);
+
   const selectedUrl = tabs.find(t => t.key === selectedTab).url;
 
   return (
@@ -87,10 +99,7 @@ export default function App() {
         {tabs.map(tab =>
           <button
             key={tab.key}
-            onClick={() => {
-              setSelectedTab(tab.key);
-              localStorage.setItem('defaultLotoType', tab.key);
-            }}
+            onClick={() => handleTabChange(tab.key)}
             style={{
               ...tabStyle,
               ...(selectedTab === tab.key ? activeTabStyle : {})
@@ -134,9 +143,9 @@ export default function App() {
             onThemeChange={handleThemeChange}
             onFontChange={handleFontChange}
             onDefaultLotoChange={handleDefaultLotoChange}
-            onDefaultMenuChange={handleDefaultMenuChange} // ←ここで渡す
-            defaultLotoType={selectedTab}
-            defaultMenu={feature} // ←stateを直接渡すことでプルダウンもリアルタイム反映
+            onDefaultMenuChange={handleDefaultMenuChange}
+            defaultLotoType={getLocalStorage('defaultLotoType', 'loto6')}
+            defaultMenu={getLocalStorage('defaultMenu', 'past')}
             theme={theme}
             font={font}
           />
