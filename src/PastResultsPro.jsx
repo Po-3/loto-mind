@@ -100,8 +100,12 @@ export default function PastResultsPro({ jsonUrl }) {
     return mainNums(row).reduce((a, b) => a + b, 0);
   }
 
+  // ★ここを降順に修正！
   useEffect(() => {
-    fetch(jsonUrl).then(res => res.json()).then(setData);
+    fetch(jsonUrl).then(res => res.json()).then(json => {
+      json.sort((a, b) => Number(b['開催回']) - Number(a['開催回'])); // ←ここ！
+      setData(json);
+    });
   }, [jsonUrl]);
 
   // 出現数ランキング
