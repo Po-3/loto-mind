@@ -1,7 +1,108 @@
-export default function Settings() {
+import { useEffect, useState } from 'react';
+
+const FONT_OPTIONS = [
+  { label: '標準（system）', value: 'system-ui, Avenir, Helvetica, Arial, sans-serif' },
+  { label: 'ゴシック（Noto Sans）', value: '"Noto Sans JP", sans-serif' },
+  { label: '明朝（Noto Serif）', value: '"Noto Serif JP", serif' }
+];
+
+const THEME_OPTIONS = [
+  { label: 'となりカラー', value: 'tonari' },
+  { label: 'シンプルグレー', value: 'gray' },
+  { label: 'アイボリー', value: 'ivory' }
+];
+
+const LOTO_OPTIONS = [
+  { label: 'ミニロト', value: 'miniloto' },
+  { label: 'ロト6', value: 'loto6' },
+  { label: 'ロト7', value: 'loto7' }
+];
+
+const MENU_OPTIONS = [
+  { label: '過去検索', value: 'past' },
+  { label: 'となり診断', value: 'diagnosis' },
+  { label: 'ズバリ予想', value: 'prediction' },
+  { label: '設定', value: 'settings' }
+];
+
+export default function Settings({
+  onThemeChange,
+  onFontChange,
+  onDefaultLotoChange,
+  onDefaultMenuChange,
+  defaultLotoType,
+  defaultMenu,
+  theme,
+  font
+}) {
+  const [selectedLoto, setSelectedLoto] = useState(defaultLotoType || 'loto6');
+  const [selectedMenu, setSelectedMenu] = useState(defaultMenu || 'prediction');
+  const [selectedFont, setSelectedFont] = useState(font || FONT_OPTIONS[0].value);
+  const [selectedTheme, setSelectedTheme] = useState(theme || 'tonari');
+
+  // 設定保存・即反映
+  useEffect(() => {
+    localStorage.setItem('defaultLotoType', selectedLoto);
+    if (onDefaultLotoChange) onDefaultLotoChange(selectedLoto);
+  }, [selectedLoto]);
+
+  useEffect(() => {
+    localStorage.setItem('defaultMenu', selectedMenu);
+    if (onDefaultMenuChange) onDefaultMenuChange(selectedMenu);
+  }, [selectedMenu]);
+
+  useEffect(() => {
+    localStorage.setItem('font', selectedFont);
+    if (onFontChange) onFontChange(selectedFont);
+  }, [selectedFont]);
+
+  useEffect(() => {
+    localStorage.setItem('theme', selectedTheme);
+    if (onThemeChange) onThemeChange(selectedTheme);
+  }, [selectedTheme]);
+
   return (
     <div style={{ width: '100%', boxSizing: 'border-box' }}>
-      <h2 style={{ fontSize: '1.10em', margin: '8px 0' }}>設定・ガイド</h2>
+      <h2 style={{ fontSize: '1.10em', margin: '8px 0' }}>設定</h2>
+
+      <div style={settingBlock}>
+        <strong>デフォルトロト種別：</strong>
+        <select value={selectedLoto} onChange={e => setSelectedLoto(e.target.value)} style={selectStyle}>
+          {LOTO_OPTIONS.map(opt => (
+            <option key={opt.value} value={opt.value}>{opt.label}</option>
+          ))}
+        </select>
+      </div>
+
+      <div style={settingBlock}>
+        <strong>起動時の初期メニュー：</strong>
+        <select value={selectedMenu} onChange={e => setSelectedMenu(e.target.value)} style={selectStyle}>
+          {MENU_OPTIONS.map(opt => (
+            <option key={opt.value} value={opt.value}>{opt.label}</option>
+          ))}
+        </select>
+      </div>
+
+      <div style={settingBlock}>
+        <strong>画面フォント：</strong>
+        <select value={selectedFont} onChange={e => setSelectedFont(e.target.value)} style={selectStyle}>
+          {FONT_OPTIONS.map(opt => (
+            <option key={opt.value} value={opt.value}>{opt.label}</option>
+          ))}
+        </select>
+      </div>
+
+      <div style={settingBlock}>
+        <strong>配色テーマ：</strong>
+        <select value={selectedTheme} onChange={e => setSelectedTheme(e.target.value)} style={selectStyle}>
+          {THEME_OPTIONS.map(opt => (
+            <option key={opt.value} value={opt.value}>{opt.label}</option>
+          ))}
+        </select>
+      </div>
+
+      {/* ↓ガイド文・リンク群はそのまま残す */}
+      <h2 style={{ fontSize: '1.10em', margin: '18px 0 8px' }}>ガイド</h2>
       <ul style={{ fontSize: '0.98em', marginTop: 8, paddingLeft: 18, marginBottom: 0, color: '#222' }}>
         <li>最新のロト抽せん結果・出現傾向は自動で取得・反映されます。</li>
         <li>「となり流ズバリ予想」「構成タイプ判定」など独自機能をすべて無料で利用可能です。</li>
@@ -33,3 +134,15 @@ export default function Settings() {
     </div>
   );
 }
+
+// スタイル
+const selectStyle = {
+  fontSize: '1em',
+  marginLeft: 10,
+  padding: '5px 16px',
+  borderRadius: 6,
+  border: '1px solid #bbb'
+};
+const settingBlock = {
+  margin: '14px 0 10px'
+};

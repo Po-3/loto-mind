@@ -86,11 +86,6 @@ export default function App() {
       
       {/* ガイド文＆リンク */}
       <div style={guideStyle}>
-        <strong>設定・ガイド</strong>
-        <ul style={{ margin: '10px 0 10px 1.4em', padding: 0, fontSize: '1em' }}>
-          <li>最新データはネットから自動取得</li>
-          <li>広告なし・全機能無料！</li>
-        </ul>
         <a
           href="https://www.kujitonari.net/"
           target="_blank"
