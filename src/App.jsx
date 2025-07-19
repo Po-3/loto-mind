@@ -30,13 +30,16 @@ export default function App() {
   const [font, setFont] = useState(getLocalStorage('font', 'system-ui, Avenir, Helvetica, Arial, sans-serif'));
   const [theme, setTheme] = useState(getLocalStorage('theme', 'tonari'));
 
-  // 設定ページからの変更は「現在の画面」も即書き換える
+  // ロトデータURL
+  const selectedUrl = tabs.find(t => t.key === selectedTab).url;
+
+  // 設定ページからの変更で「今の画面」も必ず即切り替え！
   const handleLotoTypeChange = (type) => {
-    setSelectedTab(type); // ←画面反映（今いるタブが変わる）
+    setSelectedTab(type);
     localStorage.setItem('defaultLotoType', type);
   };
   const handleFeatureChange = (menu) => {
-    setFeature(menu); // ←画面反映（今いるメニューが変わる）
+    setFeature(menu);
     localStorage.setItem('defaultMenu', menu);
   };
   const handleFontChange = (fontVal) => {
@@ -52,19 +55,15 @@ export default function App() {
   useEffect(() => {
     document.body.style.fontFamily = font;
   }, [font]);
-
   useEffect(() => {
     if (theme === 'gray') {
       document.body.style.backgroundColor = '#eeeeee';
     } else if (theme === 'ivory') {
       document.body.style.backgroundColor = '#f9f6ee';
     } else {
-      document.body.style.backgroundColor = '#fafcff'; // となり標準
+      document.body.style.backgroundColor = '#fafcff';
     }
   }, [theme]);
-
-  // ロトデータURL
-  const selectedUrl = tabs.find(t => t.key === selectedTab).url;
 
   return (
     <div style={containerStyle}>
@@ -82,10 +81,7 @@ export default function App() {
         {tabs.map(tab =>
           <button
             key={tab.key}
-            onClick={() => {
-              setSelectedTab(tab.key);
-              localStorage.setItem('defaultLotoType', tab.key);
-            }}
+            onClick={() => handleLotoTypeChange(tab.key)}
             style={{
               ...tabStyle,
               ...(selectedTab === tab.key ? activeTabStyle : {})
@@ -99,10 +95,7 @@ export default function App() {
         {features.map(f =>
           <button
             key={f.key}
-            onClick={() => {
-              setFeature(f.key);
-              localStorage.setItem('defaultMenu', f.key);
-            }}
+            onClick={() => handleFeatureChange(f.key)}
             style={{
               ...featureTabStyle,
               ...(feature === f.key ? activeFeatureTabStyle : {})
@@ -131,8 +124,12 @@ export default function App() {
           <Settings
             onThemeChange={handleThemeChange}
             onFontChange={handleFontChange}
-            onDefaultLotoChange={handleLotoTypeChange}
-            onDefaultMenuChange={handleFeatureChange}
+            onDefaultLotoChange={(val) => {
+              handleLotoTypeChange(val);
+            }}
+            onDefaultMenuChange={(val) => {
+              handleFeatureChange(val);
+            }}
             defaultLotoType={selectedTab}
             defaultMenu={feature}
             theme={theme}

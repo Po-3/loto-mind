@@ -35,31 +35,39 @@ export default function Settings({
   theme,
   font
 }) {
+  // propsの初期値で制御
   const [selectedLoto, setSelectedLoto] = useState(defaultLotoType || 'loto6');
   const [selectedMenu, setSelectedMenu] = useState(defaultMenu || 'prediction');
   const [selectedFont, setSelectedFont] = useState(font || FONT_OPTIONS[0].value);
   const [selectedTheme, setSelectedTheme] = useState(theme || 'tonari');
 
-  // 設定保存・即反映
-  useEffect(() => {
-    localStorage.setItem('defaultLotoType', selectedLoto);
-    if (onDefaultLotoChange) onDefaultLotoChange(selectedLoto);
-  }, [selectedLoto]);
+  // ロト種別変更 → 画面・設定値を両方即時更新
+  const handleLotoChange = (val) => {
+    setSelectedLoto(val);
+    localStorage.setItem('defaultLotoType', val);
+    if (onDefaultLotoChange) onDefaultLotoChange(val);
+  };
+  // メニュー変更
+  const handleMenuChange = (val) => {
+    setSelectedMenu(val);
+    localStorage.setItem('defaultMenu', val);
+    if (onDefaultMenuChange) onDefaultMenuChange(val);
+  };
+  // フォント
+  const handleFont = (val) => {
+    setSelectedFont(val);
+    localStorage.setItem('font', val);
+    if (onFontChange) onFontChange(val);
+  };
+  // テーマ
+  const handleTheme = (val) => {
+    setSelectedTheme(val);
+    localStorage.setItem('theme', val);
+    if (onThemeChange) onThemeChange(val);
+  };
 
-  useEffect(() => {
-    localStorage.setItem('defaultMenu', selectedMenu);
-    if (onDefaultMenuChange) onDefaultMenuChange(selectedMenu);
-  }, [selectedMenu]);
-
-  useEffect(() => {
-    localStorage.setItem('font', selectedFont);
-    if (onFontChange) onFontChange(selectedFont);
-  }, [selectedFont]);
-
-  useEffect(() => {
-    localStorage.setItem('theme', selectedTheme);
-    if (onThemeChange) onThemeChange(selectedTheme);
-  }, [selectedTheme]);
+  // ※useEffectによる二重呼び出しは避けて、onChange時にprops即実行に一本化
+  // これで画面連動・localStorage保存・props通知が全て一発で揃います
 
   return (
     <div style={{ width: '100%', boxSizing: 'border-box' }}>
@@ -67,7 +75,7 @@ export default function Settings({
 
       <div style={settingBlock}>
         <strong>デフォルトロト種別：</strong>
-        <select value={selectedLoto} onChange={e => setSelectedLoto(e.target.value)} style={selectStyle}>
+        <select value={selectedLoto} onChange={e => handleLotoChange(e.target.value)} style={selectStyle}>
           {LOTO_OPTIONS.map(opt => (
             <option key={opt.value} value={opt.value}>{opt.label}</option>
           ))}
@@ -76,7 +84,7 @@ export default function Settings({
 
       <div style={settingBlock}>
         <strong>起動時の初期メニュー：</strong>
-        <select value={selectedMenu} onChange={e => setSelectedMenu(e.target.value)} style={selectStyle}>
+        <select value={selectedMenu} onChange={e => handleMenuChange(e.target.value)} style={selectStyle}>
           {MENU_OPTIONS.map(opt => (
             <option key={opt.value} value={opt.value}>{opt.label}</option>
           ))}
@@ -85,7 +93,7 @@ export default function Settings({
 
       <div style={settingBlock}>
         <strong>画面フォント：</strong>
-        <select value={selectedFont} onChange={e => setSelectedFont(e.target.value)} style={selectStyle}>
+        <select value={selectedFont} onChange={e => handleFont(e.target.value)} style={selectStyle}>
           {FONT_OPTIONS.map(opt => (
             <option key={opt.value} value={opt.value}>{opt.label}</option>
           ))}
@@ -94,7 +102,7 @@ export default function Settings({
 
       <div style={settingBlock}>
         <strong>配色テーマ：</strong>
-        <select value={selectedTheme} onChange={e => setSelectedTheme(e.target.value)} style={selectStyle}>
+        <select value={selectedTheme} onChange={e => handleTheme(e.target.value)} style={selectStyle}>
           {THEME_OPTIONS.map(opt => (
             <option key={opt.value} value={opt.value}>{opt.label}</option>
           ))}
