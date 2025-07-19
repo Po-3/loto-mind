@@ -33,7 +33,7 @@ export default function Settings({
   theme,
   font
 }) {
-  // useStateは使わない。propsで100%制御する！
+  // useState一切ナシ！propsによる100%制御
 
   return (
     <div style={{ width: '100%', boxSizing: 'border-box' }}>
@@ -43,7 +43,7 @@ export default function Settings({
         <strong>デフォルトロト種別：</strong>
         <select
           value={defaultLotoType}
-          onChange={e => onDefaultLotoChange(e.target.value)}
+          onChange={e => onDefaultLotoChange && onDefaultLotoChange(e.target.value)}
           style={selectStyle}
         >
           {LOTO_OPTIONS.map(opt => (
@@ -56,7 +56,7 @@ export default function Settings({
         <strong>起動時の初期メニュー：</strong>
         <select
           value={defaultMenu}
-          onChange={e => onDefaultMenuChange(e.target.value)}
+          onChange={e => onDefaultMenuChange && onDefaultMenuChange(e.target.value)}
           style={selectStyle}
         >
           {MENU_OPTIONS.map(opt => (
@@ -69,7 +69,7 @@ export default function Settings({
         <strong>画面フォント：</strong>
         <select
           value={font}
-          onChange={e => onFontChange(e.target.value)}
+          onChange={e => onFontChange && onFontChange(e.target.value)}
           style={selectStyle}
         >
           {FONT_OPTIONS.map(opt => (
@@ -82,7 +82,7 @@ export default function Settings({
         <strong>配色テーマ：</strong>
         <select
           value={theme}
-          onChange={e => onThemeChange(e.target.value)}
+          onChange={e => onThemeChange && onThemeChange(e.target.value)}
           style={selectStyle}
         >
           {THEME_OPTIONS.map(opt => (
