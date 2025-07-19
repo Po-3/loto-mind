@@ -1,6 +1,6 @@
 {
-  "name": "ロト検索＆予想アプリ",
-  "short_name": "ロト予想",
+  "name": "LotoMind by tonari",
+  "short_name": "LotoMind",
   "start_url": ".",
   "display": "standalone",
   "background_color": "#ffffff",
