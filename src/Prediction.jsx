@@ -12,6 +12,7 @@ export default function Prediction({ lotoType, drawNo }) {
 
   useEffect(() => {
     if (!lotoType || !drawNo) return;
+    setLoading(true);
     const url = getPredictionUrl(lotoType, drawNo);
     fetch(url)
       .then(res => res.text())
@@ -23,14 +24,23 @@ export default function Prediction({ lotoType, drawNo }) {
           setLoading(false);
           return;
         }
-        const trs = table.querySelectorAll('tbody tr');
+        // tbodyがないケースにも備えてtrを取得
+        const trs = table.querySelectorAll('tbody tr').length
+          ? table.querySelectorAll('tbody tr')
+          : table.querySelectorAll('tr');
         const arr = [];
         trs.forEach(tr => {
           const tds = Array.from(tr.children);
+          // 軸数字は <strong> があればその中身を優先
+          const axis = (() => {
+            const strong = tds[2]?.querySelector?.('strong');
+            if (strong) return strong.textContent.replace(/[^\d]/g, '');
+            return tds[2]?.textContent.replace(/[^\d]/g, '');
+          })();
           arr.push({
             type: tds[0]?.textContent.trim(),
             nums: tds[1]?.textContent.trim(),
-            axis: tds[2]?.textContent.replace(/[^\d]/g, ''),
+            axis,
             feature: tds[3]?.textContent.trim()
           });
         });
