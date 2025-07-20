@@ -189,7 +189,7 @@ export default function Diagnosis({ jsonUrl }) {
             color: '#ca3',
             fontWeight: 500
           }}>{result.comment}</p>
-          <p style={footerStyle}>上のロト種ボタンで切替えられるよ</p>
+          <p style={footerStyle}>上のロト種ボタンで切替えられるよ！<br/>「買ったら教えてね！」by となり</p>
         </>
       ) : <p>診断中…</p>}
     </div>
