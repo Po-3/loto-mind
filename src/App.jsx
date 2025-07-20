@@ -35,9 +35,15 @@ export default function App() {
   // 設定値をstateで保持（設定変更時は都度再取得）
   const [settings, setSettings] = useState(getSettings());
 
-  // 初回はsettingsのデフォルト値で起動
-  const [selectedTab, setSelectedTab] = useState(settings.defaultLotoType);
-  const [feature, setFeature] = useState(settings.defaultMenu);
+  // ★ここをlocalStorageダイレクト参照に修正★
+  const [selectedTab, setSelectedTab] = useState(() =>
+    localStorage.getItem('defaultLotoType') || 'loto6'
+  );
+  const [feature, setFeature] = useState(() =>
+    localStorage.getItem('defaultMenu') || 'past'
+  );
+  // ★ここまで修正★
+
   const [font, setFont] = useState(settings.font);
   const [themeColor, setThemeColor] = useState(settings.themeColor);
   const [showScrollBtns, setShowScrollBtns] = useState(true);
