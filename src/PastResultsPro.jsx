@@ -1,3 +1,5 @@
+省略しないで以下を修正したVerをコピペできる内容でください
+
 import { useEffect, useState } from 'react';
 
 // ロト種別ごとの設定（必ずこのファイル内に！）
@@ -69,7 +71,46 @@ const InfoIcon = ({ onClick }) => (
   <span style={{ display: 'inline-block', marginLeft: 6, cursor: 'pointer', color: '#e26580', fontSize: 15 }} onClick={onClick}>ⓘ</span>
 );
 
-// スクロールボタンなどは省略（前回同様）
+// スクロール用ボタン（上）
+const ScrollUpButton = () => (
+  <button
+    onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+    style={scrollButtonStyle}
+    title="最上段へ"
+  >↑</button>
+);
+// スクロール用ボタン（下）
+const ScrollDownButton = () => (
+  <button
+    onClick={() => window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })}
+    style={scrollButtonStyle}
+    title="最下段へ"
+  >↓</button>
+);
+// 更新ボタンアイコン（丸）
+const ReloadIcon = ({ onClick }) => (
+  <button
+    onClick={onClick}
+    title="更新"
+    style={{
+      ...reloadButtonStyle,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      cursor: 'pointer',
+      borderRadius: '50%',
+      border: 'none',
+      background: '#337be8',
+      width: 40,
+      height: 40,
+      color: 'white',
+      fontSize: 22,
+      fontWeight: 'bold',
+      boxShadow: '0 2px 8px #337be811',
+      userSelect: 'none'
+    }}
+  >⟳</button>
+);
 
 export default function PastResultsPro({ jsonUrl, lotoType }) {
   const [data, setData] = useState([]);
@@ -84,20 +125,66 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
 
   const config = lotoConfig[lotoType] || lotoConfig.loto6;
 
-  // --- Filtering（省略） ---
-  // ...中身そのまま...
+  // 各特徴ラベルの説明
+  const featureInfo = {
+    '連番あり': '連続した数字（例：24・25など）を含む構成です。',
+    '連番': '連続した数字（例：24・25など）を含む構成です。',
+    '奇数多め': `${config.main >= 7 ? '5個以上' : config.main === 6 ? '4個以上' : '4個以上'}の奇数を含む構成です。`,
+    '偶数多め': `${config.main >= 7 ? '5個以上' : config.main === 6 ? '4個以上' : '4個以上'}の偶数を含む構成です。`,
+    'バランス型': '奇数と偶数が2:3または3:2などバランスよく含まれています。',
+    '下一桁かぶり': '同じ下一桁の数字が2個以上（例：11・21など）含まれる構成です。',
+    '合計小さめ': `合計値が${lotoType === 'loto7' ? '160未満' : lotoType === 'loto6' ? '110未満' : '60未満'}の構成です。`,
+    '合計大きめ': `合計値が${lotoType === 'loto7' ? '160以上' : lotoType === 'loto6' ? '180以上' : '80以上'}の構成です。`,
+    'キャリーあり': 'キャリーオーバーが発生していた回です。'
+  };
+
+  // --- Filtering ---
+  const filtered = data.filter(row => {
+    const round = Number(row['開催回']);
+    const date = row['日付'];
+    if (filter.fromRound && round < Number(filter.fromRound)) return false;
+    if (filter.toRound && round > Number(filter.toRound)) return false;
+    if (filter.fromDate && date < filter.fromDate) return false;
+    if (filter.toDate && date > filter.toDate) return false;
+    // 特徴ラベル
+    if (filter.features.length > 0 && !filter.features.every(f => (row['特徴'] || '').includes(f))) return false;
+    // 含む・除く
+    const mainArr = Array(config.main).fill(0).map((_, i) => Number(row[`第${i + 1}数字`]));
+    if (filter.includeNumbers) {
+      const incl = filter.includeNumbers.split(',').map(s => Number(s.trim())).filter(Boolean);
+      if (incl.length && !incl.every(n => mainArr.includes(n))) return false;
+    }
+    if (filter.excludeNumbers) {
+      const excl = filter.excludeNumbers.split(',').map(s => Number(s.trim())).filter(Boolean);
+      if (excl.length && excl.some(n => mainArr.includes(n))) return false;
+    }
+    // 合計
+    if (filter.minSum && sumMain(row) < Number(filter.minSum)) return false;
+    if (filter.maxSum && sumMain(row) > Number(filter.maxSum)) return false;
+    // 奇数偶数パターン
+    if (filter.oddEven) {
+      const odds = mainArr.filter(n => n % 2 === 1).length;
+      const evens = config.main - odds;
+      if (filter.oddEven !== `${odds}-${evens}`) return false;
+    }
+    return true;
+  });
+
+  // ---- Pagination & CSV ----
+  const PAGE_SIZE = 50;
+  const paged = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+  const pages = Math.ceil(filtered.length / PAGE_SIZE);
 
   // --- Util ---
   function sumMain(row) {
     return Array(config.main).fill(0).map((_, i) => Number(row[`第${i + 1}数字`])).reduce((a, b) => a + b, 0);
   }
-  // --- CSVにキャリーオーバー列を追加 ---
   function toCSV(arr) {
     const head = [
       '開催回', '日付',
       ...Array(config.main).fill(0).map((_, i) => `第${i + 1}数字`),
       ...config.bonusNames, '特徴',
-      ...(lotoType === 'loto6' || lotoType === 'loto7' ? ['キャリーオーバー'] : []),
+      // 末等まで追加
       ...config.ranks.flatMap(rank => [rank.countKey, rank.prizeKey])
     ];
     const rows = arr.map(row => [
@@ -105,9 +192,6 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
       ...Array(config.main).fill(0).map((_, i) => row[`第${i + 1}数字`]),
       ...config.bonusNames.map(b => row[b] || ''),
       row['特徴'] || '',
-      ...(lotoType === 'loto6' || lotoType === 'loto7'
-        ? [row['キャリーオーバー'] ? String(row['キャリーオーバー']).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,') : '']
-        : []),
       ...config.ranks.flatMap(rank => [row[rank.countKey] || '', row[rank.prizeKey] || ''])
     ]);
     return [head, ...rows].map(row => row.join(',')).join('\n');
@@ -119,6 +203,19 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
     a.href = url; a.download = `${lotoType}_results.csv`;
     a.click(); URL.revokeObjectURL(url);
   }
+
+  // 出現ランキング
+  function getRanking(data) {
+    const count = Array(config.max + 1).fill(0);
+    data.forEach(row => {
+      for (let i = 1; i <= config.main; ++i) {
+        const n = Number(row[`第${i}数字`]);
+        if (n) count[n]++;
+      }
+    });
+    return count.map((c, n) => n === 0 ? null : { n, c }).filter(v => v).sort((a, b) => b.c - a.c);
+  }
+  const ranking = getRanking(filtered);
 
   // --- Fetch ---
   useEffect(() => {
@@ -134,10 +231,131 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
   };
   const hidePopup = () => setPopup({ ...popup, show: false });
 
-  // --- 表本体 ---
   return (
     <>
-      {/* Infoポップアップ（省略） */}
+      {/* Infoポップアップ */}
+      {popup.show && (
+        <div
+          style={{
+            position: 'fixed', left: popup.x + 8, top: popup.y + 8,
+            background: '#fff', border: '1px solid #e26580', borderRadius: 7, padding: 9,
+            fontSize: 13, color: '#d94f4f', zIndex: 9999, maxWidth: 220, boxShadow: '2px 2px 7px #e2658055'
+          }}
+          onClick={hidePopup}
+        >{popup.text}</div>
+      )}
+
+
+      <div style={{
+        background: '#f9f9fd',
+        border: '1px solid #cde',
+        borderRadius: 12,
+        boxShadow: '0 1px 16px #eef3ff44',
+        width: '100%',
+        margin: '0 auto',
+        padding: '4vw 2vw 3vw 2vw',
+        boxSizing: 'border-box'
+      }}>
+        {/* 検索ツール */}
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 15, marginBottom: 15, alignItems: 'flex-end' }}>
+          <label>開催回From:
+            <input type="number" min={1} value={filter.fromRound} onChange={e => setFilter(f => ({ ...f, fromRound: e.target.value }))} style={filterInputStyle} />
+          </label>
+          <label>To:
+            <input type="number" min={1} value={filter.toRound} onChange={e => setFilter(f => ({ ...f, toRound: e.target.value }))} style={filterInputStyle} />
+          </label>
+          <label>開催日From:
+            <input type="date" value={filter.fromDate} onChange={e => setFilter(f => ({ ...f, fromDate: e.target.value }))} style={filterInputStyle} />
+          </label>
+          <label>To:
+            <input type="date" value={filter.toDate} onChange={e => setFilter(f => ({ ...f, toDate: e.target.value }))} style={filterInputStyle} />
+          </label>
+          <label>含む数字:
+            <input type="text" placeholder="例: 3,17,28" value={filter.includeNumbers} onChange={e => setFilter(f => ({ ...f, includeNumbers: e.target.value }))} style={filterInputStyle} />
+          </label>
+          <label>除く数字:
+            <input type="text" placeholder="例: 1,12" value={filter.excludeNumbers} onChange={e => setFilter(f => ({ ...f, excludeNumbers: e.target.value }))} style={filterInputStyle} />
+          </label>
+        </div>
+        {/* 特徴ラベル群 */}
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, alignItems: 'center', marginBottom: 7 }}>
+          {config.labels.map(label =>
+            <label key={label} style={{ marginRight: 3 }}>
+              <input
+                type="checkbox"
+                checked={filter.features.includes(label)}
+                onChange={e => {
+                  setFilter(f => ({
+                    ...f,
+                    features: e.target.checked
+                      ? [...f.features, label]
+                      : f.features.filter(l => l !== label)
+                  }));
+                }}
+              /> {label}
+              <InfoIcon onClick={ev => handleInfo(featureInfo[label] || '', ev)} />
+            </label>
+          )}
+          {/* 合計値範囲 */}
+          <label style={{ marginLeft: 6 }}>合計値From:
+            <input
+              type="number"
+              min={config.sumRange[0]}
+              max={config.sumRange[1]}
+              value={filter.minSum}
+              onChange={e => setFilter(f => ({ ...f, minSum: e.target.value }))}
+              style={filterInputStyle}
+            />
+          </label>
+          <label>To:
+            <input
+              type="number"
+              min={config.sumRange[0]}
+              max={config.sumRange[1]}
+              value={filter.maxSum}
+              onChange={e => setFilter(f => ({ ...f, maxSum: e.target.value }))}
+              style={filterInputStyle}
+            />
+          </label>
+          {/* 奇数偶数構成 */}
+          <label>奇数・偶数構成:
+            <select
+              value={filter.oddEven}
+              onChange={e => setFilter(f => ({ ...f, oddEven: e.target.value }))}
+              style={{ ...filterInputStyle, width: 110 }}
+            >
+              <option value="">全件</option>
+              {config.oddEvenPatterns.map(opt =>
+                <option key={opt.value} value={opt.value}>{opt.label}</option>
+              )}
+            </select>
+          </label>
+        </div>
+        {/* ボタン群 */}
+        <div style={{ display: 'flex', gap: 8, margin: '9px 0 2px 0' }}>
+          <button onClick={() => setPage(1)} style={searchBtnStyle}><i className="fa fa-magnifying-glass"></i> 検索</button>
+          <button onClick={() => {
+            setFilter({
+              fromRound: '', toRound: '', fromDate: '', toDate: '',
+              includeNumbers: '', excludeNumbers: '', features: [], minSum: '', maxSum: '', oddEven: ''
+            });
+            setPage(1);
+          }} style={resetBtnStyle}><i className="fa fa-rotate-right"></i> リセット</button>
+          <button onClick={handleCSV} style={csvBtnStyle}><i className="fa fa-file-csv"></i> CSV出力</button>
+        </div>
+        {/* 検索結果・ランキング */}
+        <div style={{ fontSize: '0.97em', margin: '8px 0' }}>
+          検索結果：<b>{filtered.length}</b>件　
+          <span style={{ color: '#357' }}>
+            {filtered.length > 0 && <>
+              最多本数字：{ranking.slice(0, 3).map(v => <b key={v.n} style={{ color: '#357', marginLeft: 6 }}>{v.n}（{v.c}回）</b>)}　
+              最少本数字：{ranking.slice(-3).map(v => <b key={v.n} style={{ color: '#d43', marginLeft: 6 }}>{v.n}（{v.c}回）</b>)}
+            </>}
+          </span>
+        </div>
+      </div>
+
+      {/* 既存テーブル */}
       <div style={{
         overflowX: 'auto',
         border: '1px solid #ccd',
@@ -147,7 +365,7 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
         width: '100%',
         minWidth: 0
       }}>
-        <table style={{ borderCollapse: 'collapse', width: '100%', minWidth: 900, fontSize: '0.96em' }}>
+        <table style={{ borderCollapse: 'collapse', width: '100%', minWidth: 850, fontSize: '0.96em' }}>
           <thead>
             <tr>
               <th style={{ ...thStyle, ...stickyLeftStyle }}>回</th>
@@ -155,10 +373,8 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
               {Array(config.main).fill(0).map((_, i) => <th key={i} style={thStyle}>本数字{i + 1}</th>)}
               {config.bonusNames.map((name, i) => <th key={name} style={thStyle}>B数字{i + 1}</th>)}
               <th style={{ ...thStyle, minWidth: 180, width: '24%' }}>特徴</th>
-              {(lotoType === 'loto6' || lotoType === 'loto7') && (
-                <th style={thStyle}>キャリーオーバー</th>
-              )}
               <th style={thStyle}>合計</th>
+              {/* 口数・賞金列追加 */}
               {config.ranks.map(({ rank }) => (
                 <th key={rank} style={thStyle}>{rank}口数</th>
               ))}
@@ -179,18 +395,12 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
                   <td key={name} style={{ ...tdStyle, color: '#fa5', fontWeight: 600 }}>{row[name]}</td>
                 )}
                 <td style={{ ...tdStyle, color: '#286', fontSize: '0.98em' }}>{row['特徴']}</td>
-                {(lotoType === 'loto6' || lotoType === 'loto7') && (
-                  <td style={{ ...tdStyle, color: '#c43', fontWeight: 600, whiteSpace: 'nowrap' }}>
-                    {row['キャリーオーバー']
-                      ? Number(row['キャリーオーバー']).toLocaleString()
-                      : '―'}
-                  </td>
-                )}
                 <td style={{ ...tdStyle, color: '#135', fontWeight: 600 }}>{sumMain(row)}</td>
-                {config.ranks.map(({ countKey }) => (
+                {/* 口数・賞金列表示 */}
+                {config.ranks.map(({ countKey, prizeKey }) => (
                   <td key={countKey} style={tdStyle}>{row[countKey] || ''}</td>
                 ))}
-                {config.ranks.map(({ prizeKey }) => (
+                {config.ranks.map(({ countKey, prizeKey }) => (
                   <td key={prizeKey} style={tdStyle}>{row[prizeKey] || ''}</td>
                 ))}
               </tr>
@@ -198,12 +408,59 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
           </tbody>
         </table>
       </div>
-      {/* ページネーション等はそのまま */}
+
+      {/* ページネーション */}
+      {pages > 1 && (
+        <div style={{ textAlign: 'center', margin: '10px 0 4px 0' }}>
+          {Array.from({ length: pages }, (_, i) =>
+            <button
+              key={i + 1}
+              onClick={() => setPage(i + 1)}
+              style={{
+                margin: '0 2px',
+                padding: '2px 10px',
+                borderRadius: 4,
+                border: page === (i + 1) ? '2px solid #357' : '1px solid #aaa',
+                background: page === (i + 1) ? '#e4eeff' : '#f7f7f7',
+                color: '#135',
+                fontWeight: page === (i + 1) ? 700 : 400,
+                cursor: 'pointer'
+              }}
+            >{i + 1}</button>
+          )}
+        </div>
+      )}
     </>
   );
 }
 
 // --- Style ---
+const filterInputStyle = {
+  marginLeft: 6,
+  padding: '4px 8px',
+  borderRadius: 5,
+  border: '1px solid #ddd',
+  fontSize: '0.98em',
+  minWidth: 66
+};
+const searchBtnStyle = {
+  background: '#e26580',
+  color: '#fff',
+  border: 'none',
+  borderRadius: 8,
+  padding: '7px 14px',
+  fontWeight: 'bold',
+  fontSize: 15,
+  cursor: 'pointer'
+};
+const resetBtnStyle = {
+  ...searchBtnStyle,
+  background: '#d0a160'
+};
+const csvBtnStyle = {
+  ...searchBtnStyle,
+  background: '#46b955'
+};
 const thStyle = {
   padding: '3px 6px',
   borderBottom: '1.5px solid #bbd',
@@ -222,4 +479,24 @@ const stickyLeftStyle = {
   zIndex: 4,
   background: '#f7faff'
 };
-// 以下スタイルも必要に応じて追記
+const scrollButtonStyle = {
+  background: '#337be8',
+  color: '#fff',
+  border: 'none',
+  borderRadius: '50%',
+  width: 40,
+  height: 40,
+  fontSize: 24,
+  boxShadow: '0 2px 8px #337be822',
+  cursor: 'pointer',
+  outline: 'none',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center'
+};
+const reloadButtonStyle = {
+  ...scrollButtonStyle,
+  fontSize: 22,
+  fontWeight: 'bold',
+  userSelect: 'none'
+};
