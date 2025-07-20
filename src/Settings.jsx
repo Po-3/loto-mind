@@ -145,6 +145,11 @@ export default function Settings({
         <li>すべて広告表示なし、アカウント登録も不要。どなたでも安心して使えます。</li>
         <li>当アプリの各種データ・分析結果は公式サイトから取得した過去結果一覧のCSVと照合済み、正確性を最優先しています。</li>
       </ul>
+             <span style={{ fontSize: '0.92em' }}>
+          <a href="https://www.kujitonari.net/LotoMind" target="_blank" rel="noopener noreferrer" style={{ color: '#888' }}>
+            Ver 1.00（2025-07-20）
+          </a>
+        </span>
       <div style={{ marginTop: 16, fontSize: '0.97em' }}>
         <a href="https://www.kujitonari.net/" target="_blank" rel="noopener noreferrer">
           宝くじのとなり 公式ブログ（出現傾向＆予想の詳しい解説はこちら）
@@ -163,11 +168,6 @@ export default function Settings({
         <span>
           ※ 本サービスはデータ検証およびエンタメ目的で提供しています。<br />
           予想・分析の結果に基づく購入はご自身の判断・責任でお願いします。
-        </span>
-        <span style={{ fontSize: '0.92em' }}>
-          <a href="https://www.kujitonari.net/LotoMind" target="_blank" rel="noopener noreferrer" style={{ color: '#888' }}>
-            Ver 1.00（2025-07-20）
-          </a>
         </span>
       </div>
     </div>
