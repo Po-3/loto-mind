@@ -237,21 +237,59 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
     });
   }, [jsonUrl]);
 
-// --- Infoポップアップ ---
-const handleInfo = (text, e) => {
-  e.stopPropagation();
-  if (!text || !text.trim()) return; // 空説明なら何もしない（アイコン無効化も可）
+  // --- Infoポップアップ ---
+  const handleInfo = (text, e) => {
+    e.stopPropagation();
+    if (!text || !text.trim()) return; // 空説明なら何もしない（アイコン無効化も可）
 
-  // ポップアップを画面中央に表示
-  const popupWidth = 240;
-  const popupHeight = 80;
-  const x = Math.max((window.innerWidth - popupWidth) / 2, 0);
-  const y = Math.max((window.innerHeight - popupHeight) / 2, 0);
+    // ポップアップを画面中央に表示
+    const popupWidth = 240;
+    const popupHeight = 80;
+    const x = Math.max((window.innerWidth - popupWidth) / 2, 0);
+    const y = Math.max((window.innerHeight - popupHeight) / 2, 0);
 
-  setPopup({ show: true, text, x, y });
-};
+    setPopup({ show: true, text, x, y });
+  };
 
-const hidePopup = () => setPopup(popup => ({ ...popup, show: false }));
+  const hidePopup = () => setPopup(popup => ({ ...popup, show: false }));
+
+  // --- 「画面のどこかをクリックしたら消す」 ---  
+  useEffect(() => {
+    if (!popup.show) return;
+    const handleClick = (e) => {
+      if (popupRef.current && popupRef.current.contains(e.target)) return; // ポップアップ自体なら無視
+      setPopup(popup => ({ ...popup, show: false }));
+    };
+    document.addEventListener('mousedown', handleClick);
+    return () => document.removeEventListener('mousedown', handleClick);
+  }, [popup.show]);
+
+  // --- UI ---
+  return (
+      {popup.show && (
+        <div
+          ref={popupRef}
+          style={{
+            position: 'fixed',
+            left: popup.x,
+            top: popup.y,
+            background: '#fff',
+            border: '1px solid #e26580',
+            borderRadius: 7,
+            padding: 9,
+            fontSize: 13,
+            color: '#d94f4f',
+            zIndex: 9999,
+            maxWidth: 240,
+            minWidth: 180,
+            boxShadow: '2px 2px 7px #e2658055',
+            textAlign: 'center'
+          }}
+          onClick={hidePopup}
+        >
+          {popup.text}
+        </div>
+      )}
 
   // --- UI ---
   return (
