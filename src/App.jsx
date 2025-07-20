@@ -17,7 +17,7 @@ const features = [
 ];
 const DEFAULT_BG_COLOR = '#fafcff';
 
-// 起動時の初期値取得（last_xxx優先、なければdefault_xxx）
+// --- 起動時：localStorageの"last_xxx"があれば優先。なければdefault_xxx ---
 function getStartupValue(key, defaultKey, fallback) {
   const last = localStorage.getItem('last_' + key);
   if (last) return last;
@@ -40,16 +40,14 @@ export default function App() {
   const [themeColor, setThemeColor] = useState(settings.themeColor);
   const [showScrollBtns, setShowScrollBtns] = useState(true);
 
-  // 設定画面で変更された時
+  // 設定画面で変更
   const handleDefaultLotoChange = (type) => {
     localStorage.setItem('defaultLotoType', type);
     setSettings(getSettings());
-    // 今いる画面はそのまま
   };
   const handleDefaultMenuChange = (menu) => {
     localStorage.setItem('defaultMenu', menu);
     setSettings(getSettings());
-    // 今いる画面はそのまま
   };
   const handleFontChange = (fontVal) => {
     localStorage.setItem('font', fontVal);
@@ -60,7 +58,7 @@ export default function App() {
     setThemeColor(colorVal);
   };
 
-  // ユーザーが操作したら「last_xxx」を更新
+  // --- ユーザー操作時はlast_xxxを更新 ---
   const handleTabChange = (tabKey) => {
     setSelectedTab(tabKey);
     localStorage.setItem('last_LotoType', tabKey);
@@ -69,6 +67,20 @@ export default function App() {
     setFeature(menu);
     localStorage.setItem('last_Menu', menu);
   };
+
+  // --- F5リロードのときは維持、ウィンドウ終了・新規タブは初期化 ---
+  useEffect(() => {
+    const handleUnload = (e) => {
+      // 画面終了時のみ（リロード判定）
+      if (!performance.getEntriesByType("navigation")[0].type.startsWith("reload")) {
+        // リロード以外（タブ閉じや新規タブ）はlast_xxxを消す
+        localStorage.removeItem('last_LotoType');
+        localStorage.removeItem('last_Menu');
+      }
+    };
+    window.addEventListener('beforeunload', handleUnload);
+    return () => window.removeEventListener('beforeunload', handleUnload);
+  }, []);
 
   useEffect(() => { document.body.style.fontFamily = font; }, [font]);
   useEffect(() => { document.body.style.backgroundColor = themeColor || DEFAULT_BG_COLOR; }, [themeColor]);
@@ -86,8 +98,8 @@ export default function App() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [feature]);
 
-  // nullチェック（selectedTab不正時に何も表示しない事故を防ぐ）
-  const selectedTabObj = tabs.find(t => t.key === selectedTab) || tabs[1]; // デフォはloto6
+  // null安全
+  const selectedTabObj = tabs.find(t => t.key === selectedTab) || tabs[1];
   const selectedUrl = selectedTabObj?.url || tabs[1].url;
   const showPastScrollBtns = feature === 'past' && showScrollBtns;
 
