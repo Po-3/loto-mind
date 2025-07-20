@@ -35,7 +35,7 @@ export default function App() {
   // 設定値をstateで保持（設定変更時は都度再取得）
   const [settings, setSettings] = useState(getSettings());
 
-  // 初回はsettingsのデフォルト値で起動
+  // ★localStorageの初期値を使って最初だけfeature/tabを決定！
   const [selectedTab, setSelectedTab] = useState(settings.defaultLotoType);
   const [feature, setFeature] = useState(settings.defaultMenu);
   const [font, setFont] = useState(settings.font);
@@ -69,13 +69,16 @@ export default function App() {
   useEffect(() => { document.body.style.fontFamily = font; }, [font]);
   useEffect(() => { document.body.style.backgroundColor = themeColor || DEFAULT_BG_COLOR; }, [themeColor]);
 
-  // 設定値が変わったらstateも強制的に「デフォルト」に戻す
+  // 設定値が変わったらstateも強制的に「デフォルト」に戻す（ロト種別のみ）
   useEffect(() => {
     setSelectedTab(settings.defaultLotoType);
   }, [settings.defaultLotoType]);
-  useEffect(() => {
-    setFeature(settings.defaultMenu);
-  }, [settings.defaultMenu]);
+
+  // ↓↓↓ これを絶対にコメントアウトor削除してください！ ↓↓↓
+  // useEffect(() => {
+  //   setFeature(settings.defaultMenu);
+  // }, [settings.defaultMenu]);
+  // ↑↑↑ これがfeatureの強制リセット原因 ↑↑↑
 
   // スクロールボタンの制御
   useEffect(() => {
@@ -260,162 +263,3 @@ export default function App() {
     </div>
   );
 }
-
-// --- スタイル（すべてそのまま使ってOK） ---
-const containerStyle = {
-  width: '100%',
-  maxWidth: 470,
-  margin: '0 auto 0 auto',
-  padding: '12px 8px 10px 8px',
-  boxSizing: 'border-box',
-  fontSize: '16px',
-  background: 'transparent',
-  borderRadius: 16,
-  border: '1px solid #e0e8f3',
-  marginTop: 10,
-  boxShadow: '0 6px 24px #d2e4fa22',
-};
-
-const scrollButtonContainer = {
-  position: 'fixed',
-  bottom: 22,
-  right: 16,
-  zIndex: 90,
-  display: 'flex',
-  flexDirection: 'column',
-  gap: 12,
-};
-
-const scrollCircleButtonStyle = {
-  background: '#337be8',
-  color: '#fff',
-  border: 'none',
-  borderRadius: '50%',
-  width: 54,
-  height: 54,
-  minWidth: 54,
-  minHeight: 54,
-  fontSize: 26,
-  boxShadow: '0 2px 10px #337be822',
-  cursor: 'pointer',
-  outline: 'none',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  flexShrink: 0,
-  padding: 0,
-};
-
-const headerStyle = {
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  gap: 18,
-  marginBottom: 6,
-  marginTop: -10,
-};
-
-const titleBlockStyle = {
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'flex-start',
-  justifyContent: 'center',
-};
-
-const appNameStyle = {
-  fontSize: '2.1em',
-  fontWeight: '700',
-  fontFamily: 'sans-serif',
-  letterSpacing: 0.5,
-  userSelect: 'none',
-  lineHeight: 1.06,
-};
-
-const byTonariStyle = {
-  fontSize: '0.98em',
-  color: '#888',
-  fontWeight: 400,
-  marginTop: 2,
-  marginLeft: 1,
-  letterSpacing: '0.06em',
-};
-
-const iconStyle = {
-  width: 56,
-  height: 56,
-  borderRadius: '50%',
-  boxShadow: '0 2px 14px #bbb5',
-  objectFit: 'cover',
-  background: '#fff',
-};
-
-const tabRowStyle = {
-  display: 'flex',
-  gap: 12,
-  justifyContent: 'center',
-  marginBottom: 15,
-  width: '100%',
-};
-
-const tabStyle = {
-  fontWeight: 400,
-  background: '#fff',
-  border: '1px solid #888',
-  borderRadius: 8,
-  padding: '8px 20px',
-  cursor: 'pointer',
-  flex: 1,
-  minWidth: 0,
-  fontSize: '1em',
-  transition: 'all 0.14s',
-};
-
-const activeTabStyle = {
-  background: '#ededed',
-  fontWeight: 700,
-  border: '1.5px solid #1767a7',
-  color: '#1767a7',
-};
-
-const featureTabRowStyle = {
-  display: 'flex',
-  justifyContent: 'space-between',
-  marginBottom: 16,
-  width: '100%',
-  maxWidth: 440,
-  marginLeft: 'auto',
-  marginRight: 'auto',
-};
-
-const featureTabStyle = {
-  flex: 1,
-  background: '#f7f7f7',
-  color: '#444',
-  border: 'none',
-  borderBottom: '3.5px solid #e3e3e3',
-  fontWeight: 500,
-  fontSize: '1.05em',
-  cursor: 'pointer',
-  padding: '12px 0 9px 0',
-  minWidth: 0,
-  outline: 'none',
-  boxShadow: 'none',
-  transition: 'all 0.12s',
-};
-
-const activeFeatureTabStyle = {
-  background: '#337be8',
-  color: '#fff',
-  borderBottom: '3.5px solid #225bb7',
-  fontWeight: 700,
-  boxShadow: '0 2px 8px #337be811',
-};
-
-const guideStyle = {
-  background: '#f8fafd',
-  borderRadius: 12,
-  border: '1px solid #eef1f7',
-  margin: '32px 0 8px 0',
-  padding: '15px 20px 5px 20px',
-  fontSize: '1em',
-};
