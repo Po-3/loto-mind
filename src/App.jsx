@@ -128,27 +128,6 @@ export default function App() {
               </button>
             </>
           )}
-          {/* 診断の再取得（必要なら） */}
-          {showDiagnosisReload && (
-            <button
-              onClick={() => setDiagnosisReloadKey(k => k + 1)}
-              style={scrollCircleButtonStyle}
-              title="診断再取得"
-              aria-label="診断再取得"
-              type="button"
-            >
-              <svg width="32" height="32" viewBox="0 0 32 32" fill="none"
-                stroke="#fff" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round"
-                style={{ display: 'block', margin: 'auto' }}>
-                <line x1="8" y1="10" x2="24" y2="10" />
-                <polyline points="20 6 24 10 20 14" />
-                <line x1="24" y1="22" x2="8" y2="22" />
-                <polyline points="12 18 8 22 12 26" />
-              </svg>
-            </button>
-          )}
-        </div>
-      )}
 
       {/* アイコン＋見出し */}
       <div style={headerStyle}>
