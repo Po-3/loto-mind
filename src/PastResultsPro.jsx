@@ -266,33 +266,6 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
 
   // --- UI ---
   return (
-      {popup.show && (
-        <div
-          ref={popupRef}
-          style={{
-            position: 'fixed',
-            left: popup.x,
-            top: popup.y,
-            background: '#fff',
-            border: '1px solid #e26580',
-            borderRadius: 7,
-            padding: 9,
-            fontSize: 13,
-            color: '#d94f4f',
-            zIndex: 9999,
-            maxWidth: 240,
-            minWidth: 180,
-            boxShadow: '2px 2px 7px #e2658055',
-            textAlign: 'center'
-          }}
-          onClick={hidePopup}
-        >
-          {popup.text}
-        </div>
-      )}
-
-  // --- UI ---
-  return (
     <>
       {popup.show && (
         <div
