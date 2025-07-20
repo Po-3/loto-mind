@@ -139,7 +139,17 @@ export default function Settings({
 
       <h2 style={{ fontSize: '1.10em', margin: '18px 0 8px' }}>ガイド</h2>
       <ul style={{ fontSize: '0.98em', marginTop: 8, paddingLeft: 18, marginBottom: 0, color: '#222' }}>
-        <li><strong>PWAとしてインストール可能：</strong>iPhone（Safari）やAndroid（Chrome）で「ホーム画面に追加」するだけで、アプリのように使えます。</li>
+        <li>
+          <strong>PWAとしてインストール可能：</strong>
+          以下の手順でホーム画面に追加すれば、アプリのように起動できます。
+          <ul style={{ margin: '8px 0 10px 1.1em', paddingLeft: '1.1em' }}>
+            <li><b>iPhone（Safari）：</b> 画面下の <b>「共有」ボタン</b> → <b>「ホーム画面に追加」</b> をタップ</li>
+            <li><b>Android（Chrome）：</b> 画面右上 <b>「︙」メニュー</b> → <b>「ホーム画面に追加」</b> をタップ</li>
+            <li><b>PC（Chrome）：</b> アドレスバー右端の「インストール」ボタンからアプリ化できます</li>
+            <li>ホーム画面アイコンからいつでもアプリ感覚でアクセス可能です</li>
+            <li style={{ color:'#248', fontSize:'0.96em' }}>※ PWA対応なので、アップデートは自動で反映されます</li>
+          </ul>
+        </li>
         <li>最新のロト抽せん結果・出現傾向は自動で取得・反映されます。</li>
         <li>「となり流ズバリ予想」「構成タイプ判定」など独自機能をすべて無料で利用可能です。</li>
         <li>すべて広告表示なし、アカウント登録も不要。どなたでも安心して使えます。</li>
