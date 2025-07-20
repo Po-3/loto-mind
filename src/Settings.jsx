@@ -39,13 +39,13 @@ export default function Settings({
   onThemeColorChange,
 }) {
   const [selectedLoto, setSelectedLoto] = useState(defaultLotoType || 'loto6');
-  const [selectedMenu, setSelectedMenu] = useState(defaultMenu || 'past');
+  const [selectedMenu, setSelectedMenu] = useState(() => defaultMenu || 'past'); // ★初期値のみ反映
   const [selectedFont, setSelectedFont] = useState(font || FONT_OPTIONS[0].value);
   const [selectedColor, setSelectedColor] = useState(themeColor || '#fafcff');
   const [customColor, setCustomColor] = useState('');
 
   useEffect(() => { setSelectedLoto(defaultLotoType || 'loto6'); }, [defaultLotoType]);
-  useEffect(() => { setSelectedMenu(defaultMenu || 'past'); }, [defaultMenu]);
+  // ↓ここは削除！ useEffect(() => { setSelectedMenu(defaultMenu || 'past'); }, [defaultMenu]);
   useEffect(() => { setSelectedFont(font || FONT_OPTIONS[0].value); }, [font]);
   useEffect(() => {
     setSelectedColor(themeColor || '#fafcff');
