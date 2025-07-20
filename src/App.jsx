@@ -19,56 +19,65 @@ const features = [
   { key: 'settings', label: '設定' }
 ];
 
-// localStorageから取得
-function getLocalStorage(key, fallback) {
-  return localStorage.getItem(key) || fallback;
-}
-
-// デフォルト背景色
 const DEFAULT_BG_COLOR = '#fafcff';
 
-// ページ遷移なしで再読込する
-const forceReload = (selectedTab, feature) => {
-  // ★直前の状態を保存してリロード
-  localStorage.setItem('defaultLotoType', selectedTab);
-  localStorage.setItem('defaultMenu', feature);
-  if ('caches' in window) {
-    caches.keys().then(names => {
-      for (let name of names) caches.delete(name);
-    }).finally(() => {
-      window.location.reload();
-    });
-  } else {
-    window.location.reload();
-  }
-};
+// localStorageから設定をまとめて取得
+function getSettings() {
+  return {
+    defaultLotoType: localStorage.getItem('defaultLotoType') || 'loto6',
+    defaultMenu: localStorage.getItem('defaultMenu') || 'past',
+    font: localStorage.getItem('font') || 'system-ui, Avenir, Helvetica, Arial, sans-serif',
+    themeColor: localStorage.getItem('themeColor') || DEFAULT_BG_COLOR,
+  };
+}
 
 export default function App() {
-  // 初回だけlocalStorageから
-  const [selectedTab, setSelectedTab] = useState(() => getLocalStorage('defaultLotoType', 'loto6'));
-  const [feature, setFeature] = useState(() => getLocalStorage('defaultMenu', 'past'));
-  const [font, setFont] = useState(getLocalStorage('font', 'system-ui, Avenir, Helvetica, Arial, sans-serif'));
-  const [themeColor, setThemeColor] = useState(getLocalStorage('themeColor', DEFAULT_BG_COLOR));
+  // 設定値をstateで保持（設定変更時は都度再取得）
+  const [settings, setSettings] = useState(getSettings());
+
+  // 初回はsettingsのデフォルト値で起動
+  const [selectedTab, setSelectedTab] = useState(settings.defaultLotoType);
+  const [feature, setFeature] = useState(settings.defaultMenu);
+  const [font, setFont] = useState(settings.font);
+  const [themeColor, setThemeColor] = useState(settings.themeColor);
   const [showScrollBtns, setShowScrollBtns] = useState(true);
 
-  // タブ・設定切替
-  const handleTabChange = (tabKey) => {
-    setSelectedTab(tabKey);
-    localStorage.setItem('defaultLotoType', tabKey);
+  // 設定画面から呼ばれる
+  const handleDefaultLotoChange = (type) => {
+    localStorage.setItem('defaultLotoType', type);
+    setSettings(getSettings());
+    setSelectedTab(type);
   };
-  const handleFeatureChange = (menu) => {
-    setFeature(menu);
+  const handleDefaultMenuChange = (menu) => {
     localStorage.setItem('defaultMenu', menu);
+    setSettings(getSettings());
+    setFeature(menu);
   };
-  const handleDefaultLotoChange = (type) => localStorage.setItem('defaultLotoType', type);
-  const handleDefaultMenuChange = (menu) => localStorage.setItem('defaultMenu', menu);
-  const handleFontChange = (fontVal) => { setFont(fontVal); localStorage.setItem('font', fontVal); };
-  const handleThemeColorChange = (colorVal) => { setThemeColor(colorVal); localStorage.setItem('themeColor', colorVal); };
+  const handleFontChange = (fontVal) => {
+    localStorage.setItem('font', fontVal);
+    setFont(fontVal);
+  };
+  const handleThemeColorChange = (colorVal) => {
+    localStorage.setItem('themeColor', colorVal);
+    setThemeColor(colorVal);
+  };
+
+  // タブ・機能のユーザー操作時（localStorageは書き換えず、stateのみ切り替え）
+  const handleTabChange = (tabKey) => setSelectedTab(tabKey);
+  const handleFeatureChange = (menu) => setFeature(menu);
 
   useEffect(() => { document.body.style.fontFamily = font; }, [font]);
   useEffect(() => { document.body.style.backgroundColor = themeColor || DEFAULT_BG_COLOR; }, [themeColor]);
 
-  // スクロールで一番下判定してボタン制御
+  // 設定値が変わったらstateも強制的に「デフォルト」に戻す
+  useEffect(() => {
+    setSelectedTab(settings.defaultLotoType);
+  }, [settings.defaultLotoType]);
+  useEffect(() => {
+    setFeature(settings.defaultMenu);
+  }, [settings.defaultMenu]);
+
+  // スクロールボタンの制御
   useEffect(() => {
     if (feature !== 'past') {
       setShowScrollBtns(true);
@@ -84,14 +93,13 @@ export default function App() {
   }, [feature]);
 
   const selectedUrl = tabs.find(t => t.key === selectedTab).url;
-
-  // 右下ボタン群の出し分け
   const showPastScrollBtns = feature === 'past' && showScrollBtns;
   const showDiagnosisReload = feature === 'diagnosis';
 
+  // --- 以降はUIのまま ---
   return (
     <div style={containerStyle}>
-      {/* --- 右下：スクロール＋再読込ボタン群 --- */}
+      {/* 右下：スクロール＋再読込ボタン群 */}
       {(showPastScrollBtns || showDiagnosisReload) && (
         <div style={scrollButtonContainer}>
           {showPastScrollBtns && (
@@ -126,7 +134,7 @@ export default function App() {
           )}
           {/* 再読込（どちらのページでも） */}
           <button
-            onClick={() => forceReload(selectedTab, feature)}
+            onClick={() => window.location.reload()}
             style={scrollCircleButtonStyle}
             title="アプリを再読込（更新）"
             aria-label="アプリ再読込"
@@ -135,10 +143,8 @@ export default function App() {
             <svg width="32" height="32" viewBox="0 0 32 32" fill="none"
               stroke="#fff" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round"
               style={{ display: 'block', margin: 'auto' }}>
-              {/* 上段の右向き矢印 */}
               <line x1="8" y1="10" x2="24" y2="10" />
               <polyline points="20 6 24 10 20 14" />
-              {/* 下段の左向き矢印 */}
               <line x1="24" y1="22" x2="8" y2="22" />
               <polyline points="12 18 8 22 12 26" />
             </svg>
@@ -204,8 +210,8 @@ export default function App() {
             onFontChange={handleFontChange}
             onDefaultLotoChange={handleDefaultLotoChange}
             onDefaultMenuChange={handleDefaultMenuChange}
-            defaultLotoType={getLocalStorage('defaultLotoType', 'loto6')}
-            defaultMenu={getLocalStorage('defaultMenu', 'past')}
+            defaultLotoType={settings.defaultLotoType}
+            defaultMenu={settings.defaultMenu}
             themeColor={themeColor}
             font={font}
           />
@@ -255,7 +261,7 @@ export default function App() {
   );
 }
 
-// --- スタイル全定義 ---
+// --- スタイル（すべてそのまま使ってOK） ---
 const containerStyle = {
   width: '100%',
   maxWidth: 470,
