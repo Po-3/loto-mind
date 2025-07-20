@@ -238,11 +238,24 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
   }, [jsonUrl]);
 
   // --- Infoポップアップ ---
-  const handleInfo = (text, e) => {
-    e.stopPropagation();
-    setPopup({ show: true, text, x: e.pageX, y: e.pageY });
-  };
-  const hidePopup = () => setPopup({ ...popup, show: false });
+const handleInfo = (text, e) => {
+  e.stopPropagation();
+  const popupWidth = 240; // 必要に応じてmaxWidthと合わせて調整
+  const popupHeight = 80; // 適宜調整
+
+  let x = e.pageX + 8;
+  let y = e.pageY + 8;
+
+  // 画面右端・下端にはみ出すなら内側にずらす
+  if (x + popupWidth > window.innerWidth - 12) {
+    x = window.innerWidth - popupWidth - 12;
+  }
+  if (y + popupHeight > window.innerHeight - 12) {
+    y = window.innerHeight - popupHeight - 12;
+  }
+
+  setPopup({ show: true, text, x, y });
+};
 
   // --- UI ---
   return (
