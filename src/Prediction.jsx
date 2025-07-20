@@ -114,7 +114,7 @@ export default function Prediction({ lotoType, latestDrawNoFromProps }) {
           type="number"
           value={inputDrawNo}
           onChange={e => setInputDrawNo(e.target.value)}
-          placeholder="開催回（例：2018）"
+          placeholder="（例：2018）"
           style={inputStyle}
         />
         <button
