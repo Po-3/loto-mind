@@ -17,12 +17,7 @@ const features = [
 ];
 const DEFAULT_BG_COLOR = '#fafcff';
 
-// --- 起動時：localStorageの"last_xxx"があれば優先。なければdefault_xxx ---
-function getStartupValue(key, defaultKey, fallback) {
-  const last = localStorage.getItem('last_' + key);
-  if (last) return last;
-  return localStorage.getItem(defaultKey) || fallback;
-}
+// localStorageから設定値だけ取得
 function getSettings() {
   return {
     defaultLotoType: localStorage.getItem('defaultLotoType') || 'loto6',
@@ -33,17 +28,20 @@ function getSettings() {
 }
 
 export default function App() {
-  const [settings, setSettings] = useState(getSettings());
-  const [selectedTab, setSelectedTab] = useState(() => getStartupValue('LotoType', 'defaultLotoType', 'loto6'));
-  const [feature, setFeature] = useState(() => getStartupValue('Menu', 'defaultMenu', 'past'));
+  const [settings, setSettings] = useState(getSettings);
+
+  // 起動時は"設定画面で選んだ値"からスタート（以降はstate管理）
+  const [selectedTab, setSelectedTab] = useState(settings.defaultLotoType);
+  const [feature, setFeature] = useState(settings.defaultMenu);
   const [font, setFont] = useState(settings.font);
   const [themeColor, setThemeColor] = useState(settings.themeColor);
   const [showScrollBtns, setShowScrollBtns] = useState(true);
 
-  // 設定画面で変更
+  // 設定画面から「デフォルト起動値」が変更された時
   const handleDefaultLotoChange = (type) => {
     localStorage.setItem('defaultLotoType', type);
     setSettings(getSettings());
+    // 次回新規タブ・リロードから反映。今いる画面はそのまま。
   };
   const handleDefaultMenuChange = (menu) => {
     localStorage.setItem('defaultMenu', menu);
@@ -58,29 +56,9 @@ export default function App() {
     setThemeColor(colorVal);
   };
 
-  // --- ユーザー操作時はlast_xxxを更新 ---
-  const handleTabChange = (tabKey) => {
-    setSelectedTab(tabKey);
-    localStorage.setItem('last_LotoType', tabKey);
-  };
-  const handleFeatureChange = (menu) => {
-    setFeature(menu);
-    localStorage.setItem('last_Menu', menu);
-  };
-
-  // --- F5リロードのときは維持、ウィンドウ終了・新規タブは初期化 ---
-  useEffect(() => {
-    const handleUnload = (e) => {
-      // 画面終了時のみ（リロード判定）
-      if (!performance.getEntriesByType("navigation")[0].type.startsWith("reload")) {
-        // リロード以外（タブ閉じや新規タブ）はlast_xxxを消す
-        localStorage.removeItem('last_LotoType');
-        localStorage.removeItem('last_Menu');
-      }
-    };
-    window.addEventListener('beforeunload', handleUnload);
-    return () => window.removeEventListener('beforeunload', handleUnload);
-  }, []);
+  // タブ・機能の切替はstateのみ管理。ストレージへは保存しない
+  const handleTabChange = (tabKey) => setSelectedTab(tabKey);
+  const handleFeatureChange = (menu) => setFeature(menu);
 
   useEffect(() => { document.body.style.fontFamily = font; }, [font]);
   useEffect(() => { document.body.style.backgroundColor = themeColor || DEFAULT_BG_COLOR; }, [themeColor]);
@@ -98,9 +76,9 @@ export default function App() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [feature]);
 
-  // null安全
+  // nullチェック（不正値対策）
   const selectedTabObj = tabs.find(t => t.key === selectedTab) || tabs[1];
-  const selectedUrl = selectedTabObj?.url || tabs[1].url;
+  const selectedUrl = selectedTabObj.url;
   const showPastScrollBtns = feature === 'past' && showScrollBtns;
 
   return (
