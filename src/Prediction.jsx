@@ -1,9 +1,7 @@
 import { useEffect, useState } from 'react';
 
-// 開催回数取得用（サンプル：JSONなど外部APIを想定）
+// 開催回数取得（NaNや空配列にも完全対応）
 async function fetchLatestDrawNo(lotoType) {
-  // ▼本番はAPIやCSV、外部ファイルのパスをここで分岐
-  // 例： https://po-3.github.io/loto6-data/loto6.json のような形式を想定
   const urls = {
     miniloto: 'https://po-3.github.io/miniloto-data/miniloto.json',
     loto6: 'https://po-3.github.io/loto6-data/loto6.json',
@@ -14,8 +12,11 @@ async function fetchLatestDrawNo(lotoType) {
   try {
     const res = await fetch(url);
     const data = await res.json();
-    // 最新開催回番号（数字が最大のやつ）を返す
-    const allDrawNos = data.map(row => Number(row['回'] || row['開催回'] || row['drawNo']));
+    // '開催回' or '回' or 'drawNo' のどれかを数値で取得
+    const allDrawNos = data.map(row =>
+      Number(row['回'] ?? row['開催回'] ?? row['drawNo'])
+    ).filter(n => !isNaN(n) && isFinite(n));
+    if (!allDrawNos.length) return '';
     return Math.max(...allDrawNos);
   } catch {
     return '';
@@ -24,6 +25,7 @@ async function fetchLatestDrawNo(lotoType) {
 
 // URLパターン生成
 function getPredictionUrl(lotoType, drawNo) {
+  if (!lotoType || !drawNo || isNaN(Number(drawNo)) || !isFinite(Number(drawNo))) return '';
   const prefix = lotoType === 'miniloto' ? 'miniloto' : lotoType;
   return `https://www.kujitonari.net/entry/${prefix}-${drawNo}-prediction-tonari`;
 }
@@ -35,9 +37,18 @@ export default function Prediction({ lotoType, latestDrawNoFromProps }) {
   const [searched, setSearched] = useState(false);
   const [fetchingLatest, setFetchingLatest] = useState(false);
 
+  // ロト種別が未定義や不正値の場合は即ガード
+  if (!lotoType || !['miniloto', 'loto6', 'loto7'].includes(lotoType)) {
+    return (
+      <div style={{ color: 'red', padding: 20 }}>
+        ロト種別エラー（miniloto, loto6, loto7のみ対応）
+      </div>
+    );
+  }
+
   // inputDrawNoが変更された時に自動fetch
   useEffect(() => {
-    if (!lotoType || !inputDrawNo) {
+    if (!lotoType || !inputDrawNo || isNaN(Number(inputDrawNo)) || !isFinite(Number(inputDrawNo))) {
       setRows([]);
       setSearched(false);
       return;
@@ -46,6 +57,11 @@ export default function Prediction({ lotoType, latestDrawNoFromProps }) {
     setSearched(true);
     setRows([]);
     const url = getPredictionUrl(lotoType, inputDrawNo);
+    if (!url) {
+      setRows([]);
+      setLoading(false);
+      return;
+    }
     fetch(url)
       .then(res => res.text())
       .then(html => {
@@ -81,12 +97,12 @@ export default function Prediction({ lotoType, latestDrawNoFromProps }) {
     setFetchingLatest(true);
     let latestNo = '';
     // propsで最新開催回番号をもらった場合はそれを優先
-    if (latestDrawNoFromProps) {
+    if (latestDrawNoFromProps && isFinite(Number(latestDrawNoFromProps))) {
       latestNo = latestDrawNoFromProps;
     } else {
       latestNo = await fetchLatestDrawNo(lotoType);
     }
-    setInputDrawNo(latestNo ? String(latestNo) : '');
+    setInputDrawNo(latestNo && isFinite(latestNo) ? String(latestNo) : '');
     setFetchingLatest(false);
   };
 
