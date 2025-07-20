@@ -408,7 +408,7 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
         最多本数字：
         {ranking.slice(0, 3).map(v =>
           <b key={v.n} style={{ color: '#357', marginLeft: 6 }}>{v.n}（{v.c}回）</b>
-        )}
+        )}<br />
         最少本数字：
         {ranking.slice(-3).map(v =>
           <b key={v.n} style={{ color: '#d43', marginLeft: 6 }}>{v.n}（{v.c}回）</b>
