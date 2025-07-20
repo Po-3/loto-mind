@@ -51,7 +51,7 @@ export default function App() {
   const handleDefaultMenuChange = (menu) => {
     localStorage.setItem('defaultMenu', menu);
     setSettings(getSettings());
-    setFeature(menu);
+    setFeature(menu); // ここでだけ機能タブをリセット
   };
   const handleFontChange = (fontVal) => {
     localStorage.setItem('font', fontVal);
@@ -69,13 +69,16 @@ export default function App() {
   useEffect(() => { document.body.style.fontFamily = font; }, [font]);
   useEffect(() => { document.body.style.backgroundColor = themeColor || DEFAULT_BG_COLOR; }, [themeColor]);
 
-  // 設定値が変わったらstateも強制的に「デフォルト」に戻す
+  // 設定値が変わったらstateも強制的に「デフォルト」に戻す（ロト種別のみ）
   useEffect(() => {
     setSelectedTab(settings.defaultLotoType);
   }, [settings.defaultLotoType]);
-  useEffect(() => {
-    setFeature(settings.defaultMenu);
-  }, [settings.defaultMenu]);
+
+  // ↓↓↓ ここが大事！デフォルトメニューへのuseEffectを削除 ↓↓↓
+  // useEffect(() => {
+  //   setFeature(settings.defaultMenu);
+  // }, [settings.defaultMenu]);
+  // ↑↑↑ これを絶対に入れないでください！ ↑↑↑
 
   // スクロールボタンの制御
   useEffect(() => {
