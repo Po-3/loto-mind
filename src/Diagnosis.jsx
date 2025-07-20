@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 
 export default function Diagnosis({ jsonUrl }) {
   const [result, setResult] = useState(null);
+  const [data, setData] = useState(null); // 直近30回データをキャッシュ
 
   // シャッフルしてcount個返す
   function getRandomNums(nums, count) {
@@ -13,12 +14,10 @@ export default function Diagnosis({ jsonUrl }) {
     return arr.slice(0, count);
   }
 
-  // コメント選択ユーティリティ
   function pickRandom(arr) {
     return arr[Math.floor(Math.random() * arr.length)];
   }
 
-  // 診断コメント生成（厳密ロジック）
   function generateComment(nums, maxNum) {
     const sorted = [...nums].sort((a, b) => a - b);
     const min = sorted[0], max = sorted[sorted.length - 1];
@@ -34,7 +33,6 @@ export default function Diagnosis({ jsonUrl }) {
     const isNarrow = range <= Math.floor(maxNum / 3);
     const isWide = range >= Math.floor(maxNum * 0.8);
 
-    // コメントパターン（厳格条件ごとに）
     const patterns = [
       {
         check: () => hasConsecutive,
@@ -94,15 +92,11 @@ export default function Diagnosis({ jsonUrl }) {
         ]
       }
     ];
-
-    // 条件ごとにコメント選出（優先順位は上から順）
     for (const pattern of patterns) {
       if (pattern.check()) {
         return pickRandom(pattern.comments);
       }
     }
-
-    // どれにも該当しないときは完全ランダムコメント
     const randomComments = [
       "今日は完全ランダム型。こういう時こそ神頼み！",
       "狙いはランダム、当たりもランダム!?",
@@ -113,55 +107,74 @@ export default function Diagnosis({ jsonUrl }) {
     return pickRandom(randomComments);
   }
 
+  // 最初の一回だけfetch
   useEffect(() => {
+    setResult(null); // ローディング用
     fetch(jsonUrl)
       .then(res => res.json())
       .then(json => {
-        const latest = json.slice(-30);
-
-        // ロト種別ごとに数字数をセット
-        let maxNum = 43, recommendCount = 6, numKeys = 6;
-        if (jsonUrl.includes('miniloto')) {
-          maxNum = 31; recommendCount = 5; numKeys = 5;
-        } else if (jsonUrl.includes('loto7')) {
-          maxNum = 37; recommendCount = 7; numKeys = 7;
-        }
-
-        // 直近30回で出た本数字を全部配列化（重複OK）
-        let allNums = [];
-        latest.forEach(row => {
-          for (let i = 1; i <= numKeys; i++) {
-            const key = `第${i}数字`;
-            let raw = row[key];
-            if (typeof raw === "string") raw = raw.trim();
-            if (raw !== undefined && raw !== null && raw !== "" && !isNaN(raw)) {
-              const val = Number(raw);
-              if (val > 0) allNums.push(val);
-            }
-          }
-        });
-
-        // 本来出現可能な全数字
-        const all = Array.from({ length: maxNum }, (_, i) => i + 1);
-
-        // 直近30回で出てない数字リスト
-        const notAppear = all.filter(n => !allNums.includes(n));
-
-        // notAppearが十分な数ない場合は、全数字からランダム
-        const pool = notAppear.length >= recommendCount ? notAppear : all;
-
-        const nums = getRandomNums(pool, recommendCount);
-
-        setResult({
-          recommend: nums,
-          comment: generateComment(nums, maxNum)
-        });
+        setData(json.slice(-30));
       });
   }, [jsonUrl]);
+
+  // 診断実行
+  function runDiagnosis(json) {
+    let maxNum = 43, recommendCount = 6, numKeys = 6;
+    if (jsonUrl.includes('miniloto')) {
+      maxNum = 31; recommendCount = 5; numKeys = 5;
+    } else if (jsonUrl.includes('loto7')) {
+      maxNum = 37; recommendCount = 7; numKeys = 7;
+    }
+    let allNums = [];
+    json.forEach(row => {
+      for (let i = 1; i <= numKeys; i++) {
+        const key = `第${i}数字`;
+        let raw = row[key];
+        if (typeof raw === "string") raw = raw.trim();
+        if (raw !== undefined && raw !== null && raw !== "" && !isNaN(raw)) {
+          const val = Number(raw);
+          if (val > 0) allNums.push(val);
+        }
+      }
+    });
+    const all = Array.from({ length: maxNum }, (_, i) => i + 1);
+    const notAppear = all.filter(n => !allNums.includes(n));
+    const pool = notAppear.length >= recommendCount ? notAppear : all;
+    const nums = getRandomNums(pool, recommendCount);
+
+    setResult({
+      recommend: nums,
+      comment: generateComment(nums, maxNum)
+    });
+  }
+
+  // 初回診断
+  useEffect(() => {
+    if (data) runDiagnosis(data);
+  }, [data]);
+
+  // 診断の再抽選だけ（ボタンクリック時）
+  function handleRefresh() {
+    if (data) runDiagnosis(data);
+  }
 
   return (
     <div style={outerStyle}>
       <h2 style={titleStyle}>となり診断</h2>
+      <button
+        style={{
+          padding: '6px 16px',
+          borderRadius: '6px',
+          border: '1px solid #aaa',
+          background: '#f4f4fc',
+          color: '#345',
+          marginBottom: 10,
+          cursor: 'pointer'
+        }}
+        onClick={handleRefresh}
+      >
+        診断を更新
+      </button>
       {result ? (
         <>
           <p style={descStyle}>直近で出ていない数字から選びました！</p>
