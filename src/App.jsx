@@ -272,7 +272,7 @@ const containerStyle = {
   background: 'transparent',
   borderRadius: 16,
   border: '1px solid #e0e8f3',
-  marginTop: 32,
+  marginTop: 12,
   boxShadow: '0 6px 24px #d2e4fa22',
 };
 
