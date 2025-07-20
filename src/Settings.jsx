@@ -39,13 +39,27 @@ export default function Settings({
   onThemeColorChange,
 }) {
   const [selectedLoto, setSelectedLoto] = useState(defaultLotoType || 'loto6');
-  const [selectedMenu, setSelectedMenu] = useState(() => defaultMenu || 'past'); // ★初期値のみ反映
+  const [selectedMenu, setSelectedMenu] = useState(defaultMenu || 'past');
   const [selectedFont, setSelectedFont] = useState(font || FONT_OPTIONS[0].value);
   const [selectedColor, setSelectedColor] = useState(themeColor || '#fafcff');
   const [customColor, setCustomColor] = useState('');
 
-  useEffect(() => { setSelectedLoto(defaultLotoType || 'loto6'); }, [defaultLotoType]);
-  // ↓ここは削除！ useEffect(() => { setSelectedMenu(defaultMenu || 'past'); }, [defaultMenu]);
+  // 「ユーザーが自分で一度でも選んだら以降は維持」フラグ
+  const [isUserSelectedLoto, setIsUserSelectedLoto] = useState(false);
+  const [isUserSelectedMenu, setIsUserSelectedMenu] = useState(false);
+
+  useEffect(() => {
+    if (!isUserSelectedLoto) {
+      setSelectedLoto(defaultLotoType || 'loto6');
+    }
+    // eslint-disable-next-line
+  }, [defaultLotoType]);
+  useEffect(() => {
+    if (!isUserSelectedMenu) {
+      setSelectedMenu(defaultMenu || 'past');
+    }
+    // eslint-disable-next-line
+  }, [defaultMenu]);
   useEffect(() => { setSelectedFont(font || FONT_OPTIONS[0].value); }, [font]);
   useEffect(() => {
     setSelectedColor(themeColor || '#fafcff');
@@ -53,10 +67,12 @@ export default function Settings({
   }, [themeColor]);
 
   const handleLotoChange = val => {
+    setIsUserSelectedLoto(true);
     setSelectedLoto(val);
     onDefaultLotoChange?.(val);
   };
   const handleMenuChange = val => {
+    setIsUserSelectedMenu(true);
     setSelectedMenu(val);
     onDefaultMenuChange?.(val);
   };
