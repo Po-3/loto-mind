@@ -170,14 +170,14 @@ export default function Settings({
         </a>
       </div>
       <div style={{ marginTop: 18, color: '#888', fontSize: '0.96em', display: 'flex', justifyContent: 'space-between' }}>
-        <span>
+         <span>
           ※ 本サービスはデータ検証およびエンタメ目的で提供しています。<br />
-          予想・分析の結果に基づく購入はご自身の判断・責任でお願いします。
-        </span>
-        <span style={{ fontSize: '0.92em' }}>
-          <a href="https://www.kujitonari.net/LotoMind" target="_blank" rel="noopener noreferrer" style={{ color: '#888' }}>
-            Ver 1.00（2025-07-20）
-          </a>
+          予想・分析の結果に基づく購入はご自身の判断・責任でお願いします。<br />
+          <span style={{ fontSize: '0.92em', display: 'inline-block', marginTop: 2 }}>
+            <a href="https://www.kujitonari.net/LotoMind" target="_blank" rel="noopener noreferrer" style={{ color: '#888' }}>
+              Ver 1.00（2025-07-20）
+            </a>
+          </span>
         </span>
       </div>
     </div>
