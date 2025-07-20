@@ -352,14 +352,26 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
           <button onClick={handleCSV} style={csvBtnStyle}><i className="fa fa-file-csv"></i> CSV出力</button>
         </div>
         <div style={{ fontSize: '0.97em', margin: '8px 0' }}>
-          検索結果：<b>{filtered.length}</b>件　
-          <span style={{ color: '#357' }}>
-            {filtered.length > 0 && <>
-              最多本数字：{ranking.slice(0, 3).map(v => <b key={v.n} style={{ color: '#357', marginLeft: 6 }}>{v.n}（{v.c}回）</b>)}　
-              最少本数字：{ranking.slice(-3).map(v => <b key={v.n} style={{ color: '#d43', marginLeft: 6 }}>{v.n}（{v.c}回）</b>)}
-            </>}
-          </span>
-        </div>
+  <span>
+    検索結果：<b>{filtered.length}</b>件
+    {getFilterSummary() && <span>{getFilterSummary()}</span>}
+  </span>
+  <br />
+  <span style={{ color: '#357' }}>
+    {filtered.length > 0 && (
+      <>
+        最多本数字：
+        {ranking.slice(0, 3).map(v =>
+          <b key={v.n} style={{ color: '#357', marginLeft: 6 }}>{v.n}（{v.c}回）</b>
+        )}
+        最少本数字：
+        {ranking.slice(-3).map(v =>
+          <b key={v.n} style={{ color: '#d43', marginLeft: 6 }}>{v.n}（{v.c}回）</b>
+        )}
+      </>
+    )}
+  </span>
+</div>
       </div>
 
       <div style={{
