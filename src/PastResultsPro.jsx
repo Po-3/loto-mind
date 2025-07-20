@@ -353,7 +353,7 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
         </div>
       </div>
 
-      {/* 既存テーブル */}
+            {/* 既存テーブル */}
       <div style={{
         overflowX: 'auto',
         border: '1px solid #ccd',
@@ -372,6 +372,10 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
               {config.bonusNames.map((name, i) => <th key={name} style={thStyle}>B数字{i + 1}</th>)}
               <th style={{ ...thStyle, minWidth: 180, width: '24%' }}>特徴</th>
               <th style={thStyle}>合計</th>
+              {/* ▼ここにキャリーオーバー追加（loto6/loto7のみ） */}
+              {(lotoType === 'loto6' || lotoType === 'loto7') && (
+                <th style={thStyle}>キャリーオーバー</th>
+              )}
               {/* 口数・賞金列追加 */}
               {config.ranks.map(({ rank }) => (
                 <th key={rank} style={thStyle}>{rank}口数</th>
@@ -394,11 +398,19 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
                 )}
                 <td style={{ ...tdStyle, color: '#286', fontSize: '0.98em' }}>{row['特徴']}</td>
                 <td style={{ ...tdStyle, color: '#135', fontWeight: 600 }}>{sumMain(row)}</td>
+                {/* ▼ここにキャリーオーバー追加（loto6/loto7のみ） */}
+                {(lotoType === 'loto6' || lotoType === 'loto7') && (
+                  <td style={{ ...tdStyle, color: '#c43', fontWeight: 600, whiteSpace: 'nowrap' }}>
+                    {row['キャリーオーバー'] 
+                      ? Number(row['キャリーオーバー']).toLocaleString() 
+                      : '―'}
+                  </td>
+                )}
                 {/* 口数・賞金列表示 */}
-                {config.ranks.map(({ countKey, prizeKey }) => (
+                {config.ranks.map(({ countKey }) => (
                   <td key={countKey} style={tdStyle}>{row[countKey] || ''}</td>
                 ))}
-                {config.ranks.map(({ countKey, prizeKey }) => (
+                {config.ranks.map(({ prizeKey }) => (
                   <td key={prizeKey} style={tdStyle}>{row[prizeKey] || ''}</td>
                 ))}
               </tr>
