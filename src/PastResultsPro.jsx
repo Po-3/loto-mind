@@ -370,7 +370,7 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
               <th style={thStyle}>日付</th>
               {Array(config.main).fill(0).map((_, i) => <th key={i} style={thStyle}>本数字{i + 1}</th>)}
               {config.bonusNames.map((name, i) => <th key={name} style={thStyle}>B数字{i + 1}</th>)}
-              <th style={thStyle}>特徴</th>
+              <th style={{ ...thStyle, minWidth: 180, width: '24%' }}>特徴</th>
               <th style={thStyle}>合計</th>
               {/* 口数・賞金列追加 */}
               {config.ranks.map(({ rank }) => (
