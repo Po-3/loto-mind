@@ -1,16 +1,39 @@
 import { useEffect, useState } from 'react';
 
+// 開催回数取得用（サンプル：JSONなど外部APIを想定）
+async function fetchLatestDrawNo(lotoType) {
+  // ▼本番はAPIやCSV、外部ファイルのパスをここで分岐
+  // 例： https://po-3.github.io/loto6-data/loto6.json のような形式を想定
+  const urls = {
+    miniloto: 'https://po-3.github.io/miniloto-data/miniloto.json',
+    loto6: 'https://po-3.github.io/loto6-data/loto6.json',
+    loto7: 'https://po-3.github.io/loto7-data/loto7.json'
+  };
+  const url = urls[lotoType];
+  if (!url) return '';
+  try {
+    const res = await fetch(url);
+    const data = await res.json();
+    // 最新開催回番号（数字が最大のやつ）を返す
+    const allDrawNos = data.map(row => Number(row['回'] || row['開催回'] || row['drawNo']));
+    return Math.max(...allDrawNos);
+  } catch {
+    return '';
+  }
+}
+
 // URLパターン生成
 function getPredictionUrl(lotoType, drawNo) {
   const prefix = lotoType === 'miniloto' ? 'miniloto' : lotoType;
   return `https://www.kujitonari.net/entry/${prefix}-${drawNo}-prediction-tonari`;
 }
 
-export default function Prediction({ lotoType }) {
+export default function Prediction({ lotoType, latestDrawNoFromProps }) {
   const [inputDrawNo, setInputDrawNo] = useState('');
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(false);
   const [searched, setSearched] = useState(false);
+  const [fetchingLatest, setFetchingLatest] = useState(false);
 
   // inputDrawNoが変更された時に自動fetch
   useEffect(() => {
@@ -53,6 +76,20 @@ export default function Prediction({ lotoType }) {
       });
   }, [lotoType, inputDrawNo]);
 
+  // 最新予想ボタン押下時
+  const handleLatest = async () => {
+    setFetchingLatest(true);
+    let latestNo = '';
+    // propsで最新開催回番号をもらった場合はそれを優先
+    if (latestDrawNoFromProps) {
+      latestNo = latestDrawNoFromProps;
+    } else {
+      latestNo = await fetchLatestDrawNo(lotoType);
+    }
+    setInputDrawNo(latestNo ? String(latestNo) : '');
+    setFetchingLatest(false);
+  };
+
   return (
     <div style={outerStyle}>
       <h2 style={titleStyle}>となりのズバリ予想</h2>
@@ -64,6 +101,13 @@ export default function Prediction({ lotoType }) {
           placeholder="開催回（例：2018）"
           style={inputStyle}
         />
+        <button
+          style={buttonStyle}
+          onClick={handleLatest}
+          disabled={fetchingLatest}
+        >
+          {fetchingLatest ? '取得中…' : '最新予想'}
+        </button>
       </div>
 
       {/* --- 結果表示 --- */}
@@ -145,6 +189,16 @@ const inputStyle = {
   borderRadius: 6,
   border: '1px solid #ccc',
   marginRight: 6
+};
+
+const buttonStyle = {
+  padding: '8px 16px',
+  fontSize: '1em',
+  borderRadius: 6,
+  border: '1px solid #1976d2',
+  background: '#1a78e2',
+  color: '#fff',
+  cursor: 'pointer'
 };
 
 const scrollStyle = {
