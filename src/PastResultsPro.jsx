@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-// ロト種別ごとの設定（必ずこのファイル内に！）
+// ロト種別ごとの設定
 const lotoConfig = {
   loto6: {
     main: 6,
@@ -64,50 +64,9 @@ const lotoConfig = {
   }
 };
 
-// アイコン（info用）
+// Info用アイコン
 const InfoIcon = ({ onClick }) => (
   <span style={{ display: 'inline-block', marginLeft: 6, cursor: 'pointer', color: '#e26580', fontSize: 15 }} onClick={onClick}>ⓘ</span>
-);
-
-// スクロール用ボタン（上）
-const ScrollUpButton = () => (
-  <button
-    onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-    style={scrollButtonStyle}
-    title="最上段へ"
-  >↑</button>
-);
-// スクロール用ボタン（下）
-const ScrollDownButton = () => (
-  <button
-    onClick={() => window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })}
-    style={scrollButtonStyle}
-    title="最下段へ"
-  >↓</button>
-);
-// 更新ボタンアイコン（丸）
-const ReloadIcon = ({ onClick }) => (
-  <button
-    onClick={onClick}
-    title="更新"
-    style={{
-      ...reloadButtonStyle,
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      cursor: 'pointer',
-      borderRadius: '50%',
-      border: 'none',
-      background: '#337be8',
-      width: 40,
-      height: 40,
-      color: 'white',
-      fontSize: 22,
-      fontWeight: 'bold',
-      boxShadow: '0 2px 8px #337be811',
-      userSelect: 'none'
-    }}
-  >⟳</button>
 );
 
 export default function PastResultsPro({ jsonUrl, lotoType }) {
@@ -123,7 +82,7 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
 
   const config = lotoConfig[lotoType] || lotoConfig.loto6;
 
-  // 各特徴ラベルの説明
+  // ラベルの説明
   const featureInfo = {
     '連番あり': '連続した数字（例：24・25など）を含む構成です。',
     '連番': '連続した数字（例：24・25など）を含む構成です。',
@@ -136,7 +95,7 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
     'キャリーあり': 'キャリーオーバーが発生していた回です。'
   };
 
-  // --- Filtering ---
+  // 検索フィルタ
   const filtered = data.filter(row => {
     const round = Number(row['開催回']);
     const date = row['日付'];
@@ -144,9 +103,7 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
     if (filter.toRound && round > Number(filter.toRound)) return false;
     if (filter.fromDate && date < filter.fromDate) return false;
     if (filter.toDate && date > filter.toDate) return false;
-    // 特徴ラベル
     if (filter.features.length > 0 && !filter.features.every(f => (row['特徴'] || '').includes(f))) return false;
-    // 含む・除く
     const mainArr = Array(config.main).fill(0).map((_, i) => Number(row[`第${i + 1}数字`]));
     if (filter.includeNumbers) {
       const incl = filter.includeNumbers.split(',').map(s => Number(s.trim())).filter(Boolean);
@@ -156,10 +113,8 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
       const excl = filter.excludeNumbers.split(',').map(s => Number(s.trim())).filter(Boolean);
       if (excl.length && excl.some(n => mainArr.includes(n))) return false;
     }
-    // 合計
     if (filter.minSum && sumMain(row) < Number(filter.minSum)) return false;
     if (filter.maxSum && sumMain(row) > Number(filter.maxSum)) return false;
-    // 奇数偶数パターン
     if (filter.oddEven) {
       const odds = mainArr.filter(n => n % 2 === 1).length;
       const evens = config.main - odds;
@@ -168,15 +123,16 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
     return true;
   });
 
-  // ---- Pagination & CSV ----
+  // ページネーション等
   const PAGE_SIZE = 50;
   const paged = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
   const pages = Math.ceil(filtered.length / PAGE_SIZE);
 
-  // --- Util ---
+  // 合計
   function sumMain(row) {
     return Array(config.main).fill(0).map((_, i) => Number(row[`第${i + 1}数字`])).reduce((a, b) => a + b, 0);
   }
+  // CSV出力
   function toCSV(arr) {
     const head = [
       '開催回', '日付',
@@ -200,7 +156,6 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
     a.href = url; a.download = `${lotoType}_results.csv`;
     a.click(); URL.revokeObjectURL(url);
   }
-
   // 出現ランキング
   function getRanking(data) {
     const count = Array(config.max + 1).fill(0);
@@ -214,7 +169,7 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
   }
   const ranking = getRanking(filtered);
 
-  // --- Fetch ---
+  // データ取得
   useEffect(() => {
     fetch(jsonUrl).then(res => res.json()).then(json => {
       json.sort((a, b) => Number(b['開催回']) - Number(a['開催回']));
@@ -222,7 +177,7 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
     });
   }, [jsonUrl]);
 
-  // --- Infoポップアップ ---
+  // Infoポップアップ
   const handleInfo = (text, e) => {
     setPopup({ show: true, text, x: e.pageX, y: e.pageY });
   };
@@ -252,14 +207,11 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
         padding: '4vw 2vw 3vw 2vw',
         boxSizing: 'border-box'
       }}>
-        {/* 検索ツール */}
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 15, marginBottom: 15, alignItems: 'flex-end' }}>
-          {/* ...（省略：ここは元のままでOK）... */}
-        </div>
-        {/* ...省略：特徴ラベル群・ボタン・ランキング（ここも元のまま）... */}
+        {/* 検索ツール・ラベル選択・ボタン類は省略(今まで通りでOK) */}
+        {/* ...この部分はあなたのコードで置き換えてOK... */}
       </div>
 
-      {/* 結果テーブル */}
+      {/* 既存テーブル */}
       <div style={{
         overflowX: 'auto',
         border: '1px solid #ccd',
@@ -276,10 +228,8 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
               <th style={thStyle}>日付</th>
               {Array(config.main).fill(0).map((_, i) => <th key={i} style={thStyle}>本数字{i + 1}</th>)}
               {config.bonusNames.map((name, i) => <th key={name} style={thStyle}>B数字{i + 1}</th>)}
-              {/* 特徴列だけ幅広指定 */}
-              <th style={{ ...thStyle, minWidth: 180, width: '24%' }}>特徴</th>
+              <th style={{ ...thStyle, minWidth: 130 }}>特徴</th>
               <th style={thStyle}>合計</th>
-              {/* 口数・賞金列追加 */}
               {config.ranks.map(({ rank }) => (
                 <th key={rank} style={thStyle}>{rank}口数</th>
               ))}
@@ -299,24 +249,12 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
                 {config.bonusNames.map((name, i) =>
                   <td key={name} style={{ ...tdStyle, color: '#fa5', fontWeight: 600 }}>{row[name]}</td>
                 )}
-                {/* 特徴セルも幅指定＋左寄せ */}
-                <td style={{
-                  ...tdStyle,
-                  color: '#286',
-                  fontSize: '0.98em',
-                  minWidth: 180,
-                  width: '24%',
-                  whiteSpace: 'pre-line',
-                  textAlign: 'left'
-                }}>
-                  {row['特徴']}
-                </td>
+                <td style={{ ...tdStyle, color: '#286', fontSize: '0.98em', minWidth: 130 }}>{row['特徴']}</td>
                 <td style={{ ...tdStyle, color: '#135', fontWeight: 600 }}>{sumMain(row)}</td>
-                {/* 口数・賞金列表示 */}
-                {config.ranks.map(({ countKey, prizeKey }) => (
+                {config.ranks.map(({ countKey }) => (
                   <td key={countKey} style={tdStyle}>{row[countKey] || ''}</td>
                 ))}
-                {config.ranks.map(({ countKey, prizeKey }) => (
+                {config.ranks.map(({ prizeKey }) => (
                   <td key={prizeKey} style={tdStyle}>{row[prizeKey] || ''}</td>
                 ))}
               </tr>
@@ -325,7 +263,7 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
         </table>
       </div>
 
-      {/* ページネーション */}
+      {/* ページネーション（今まで通り） */}
       {pages > 1 && (
         <div style={{ textAlign: 'center', margin: '10px 0 4px 0' }}>
           {Array.from({ length: pages }, (_, i) =>
