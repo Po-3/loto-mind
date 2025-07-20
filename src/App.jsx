@@ -17,7 +17,13 @@ const features = [
 ];
 const DEFAULT_BG_COLOR = '#fafcff';
 
-// localStorageから設定値だけ取得
+// --- ▼▼ ココ重要 ▼▼ ---
+// sessionStorage > localStorage(default) の順で初期値を使う
+function getStartupValue(key, defaultKey, fallback) {
+  const session = sessionStorage.getItem('session_' + key);
+  if (session) return session;
+  return localStorage.getItem(defaultKey) || fallback;
+}
 function getSettings() {
   return {
     defaultLotoType: localStorage.getItem('defaultLotoType') || 'loto6',
@@ -30,18 +36,17 @@ function getSettings() {
 export default function App() {
   const [settings, setSettings] = useState(getSettings);
 
-  // 起動時は"設定画面で選んだ値"からスタート（以降はstate管理）
-  const [selectedTab, setSelectedTab] = useState(settings.defaultLotoType);
-  const [feature, setFeature] = useState(settings.defaultMenu);
+  // 初期値は sessionStorage優先
+  const [selectedTab, setSelectedTab] = useState(() => getStartupValue('LotoType', 'defaultLotoType', 'loto6'));
+  const [feature, setFeature] = useState(() => getStartupValue('Menu', 'defaultMenu', 'past'));
   const [font, setFont] = useState(settings.font);
   const [themeColor, setThemeColor] = useState(settings.themeColor);
   const [showScrollBtns, setShowScrollBtns] = useState(true);
 
-  // 設定画面から「デフォルト起動値」が変更された時
+  // 設定画面でデフォルト値が変わった時
   const handleDefaultLotoChange = (type) => {
     localStorage.setItem('defaultLotoType', type);
     setSettings(getSettings());
-    // 次回新規タブ・リロードから反映。今いる画面はそのまま。
   };
   const handleDefaultMenuChange = (menu) => {
     localStorage.setItem('defaultMenu', menu);
@@ -56,9 +61,17 @@ export default function App() {
     setThemeColor(colorVal);
   };
 
-  // タブ・機能の切替はstateのみ管理。ストレージへは保存しない
-  const handleTabChange = (tabKey) => setSelectedTab(tabKey);
-  const handleFeatureChange = (menu) => setFeature(menu);
+  // タブ・機能切替時は sessionStorage にも保存（F5時のみ有効）
+  const handleTabChange = (tabKey) => {
+    setSelectedTab(tabKey);
+    sessionStorage.setItem('session_LotoType', tabKey);
+  };
+  const handleFeatureChange = (menu) => {
+    setFeature(menu);
+    sessionStorage.setItem('session_Menu', menu);
+  };
+
+  // 完全終了時（window/tab close）→ sessionStorage消える → 起動時は設定値に戻る
 
   useEffect(() => { document.body.style.fontFamily = font; }, [font]);
   useEffect(() => { document.body.style.backgroundColor = themeColor || DEFAULT_BG_COLOR; }, [themeColor]);
@@ -76,7 +89,7 @@ export default function App() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [feature]);
 
-  // nullチェック（不正値対策）
+  // 不正値対策
   const selectedTabObj = tabs.find(t => t.key === selectedTab) || tabs[1];
   const selectedUrl = selectedTabObj.url;
   const showPastScrollBtns = feature === 'past' && showScrollBtns;
