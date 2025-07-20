@@ -80,12 +80,6 @@ export default function App() {
     setSelectedTab(settings.defaultLotoType);
   }, [settings.defaultLotoType]);
 
-  // ↓↓↓ ここが大事！デフォルトメニューへのuseEffectを削除 ↓↓↓
-  // useEffect(() => {
-  //   setFeature(settings.defaultMenu);
-  // }, [settings.defaultMenu]);
-  // ↑↑↑ これを絶対に入れないでください！ ↑↑↑
-
   // スクロールボタンの制御
   useEffect(() => {
     if (feature !== 'past') {
