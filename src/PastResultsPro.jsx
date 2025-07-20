@@ -1,13 +1,19 @@
 import { useEffect, useState } from 'react';
 
-// ロト種別ごとの設定（HTML定義に合わせて特徴ラベル統一）
+// --- ロト種別ごとの設定（HTMLラベルに完全一致） ---
 const lotoConfig = {
   miniloto: {
     main: 5,
     bonus: 1,
     bonusNames: ['ボーナス数字'],
-    // ミニロト：「連番あり」「奇数多め」…とHTMLに合わせる
-    labels: ['連番あり', '奇数多め', '偶数多め', '下一桁かぶり', '合計小さめ', '合計大きめ'],
+    labels: [
+      '連番あり',
+      '奇数多め',
+      '偶数多め',
+      '下一桁かぶり',
+      '合計小さめ',
+      '合計大きめ'
+    ],
     min: 1,
     max: 31,
     oddEvenPatterns: [
@@ -19,14 +25,23 @@ const lotoConfig = {
       { rank: '1等', countKey: '1等口数', prizeKey: '1等賞金' },
       { rank: '2等', countKey: '2等口数', prizeKey: '2等賞金' },
       { rank: '3等', countKey: '3等口数', prizeKey: '3等賞金' },
-      { rank: '4等', countKey: '4等口数', prizeKey: '4等賞金' },
+      { rank: '4等', countKey: '4等口数', prizeKey: '4等賞金' }
     ],
   },
   loto6: {
     main: 6,
     bonus: 1,
     bonusNames: ['ボーナス数字'],
-    labels: ['連番あり', '奇数多め', '偶数多め', 'バランス型', '下一桁かぶり', '合計小さめ', '合計大きめ', 'キャリーあり'],
+    labels: [
+      '連番あり',
+      '奇数多め',
+      '偶数多め',
+      'バランス型',
+      '下一桁かぶり',
+      '合計小さめ',
+      '合計大きめ',
+      'キャリーあり'
+    ],
     min: 1,
     max: 43,
     oddEvenPatterns: [
@@ -39,14 +54,23 @@ const lotoConfig = {
       { rank: '2等', countKey: '2等口数', prizeKey: '2等賞金' },
       { rank: '3等', countKey: '3等口数', prizeKey: '3等賞金' },
       { rank: '4等', countKey: '4等口数', prizeKey: '4等賞金' },
-      { rank: '5等', countKey: '5等口数', prizeKey: '5等賞金' },
+      { rank: '5等', countKey: '5等口数', prizeKey: '5等賞金' }
     ],
   },
   loto7: {
     main: 7,
     bonus: 2,
     bonusNames: ['BONUS数字1', 'BONUS数字2'],
-    labels: ['連番あり', '奇数多め', '偶数多め', '下一桁かぶり', '合計小さめ', '合計大きめ', '高低ミックス', 'キャリーあり'],
+    labels: [
+      '連番あり',
+      '奇数多め',
+      '偶数多め',
+      '下一桁かぶり',
+      '合計小さめ',
+      '合計大きめ',
+      '高低ミックス',
+      'キャリーあり'
+    ],
     min: 1,
     max: 37,
     oddEvenPatterns: [
@@ -60,16 +84,39 @@ const lotoConfig = {
       { rank: '3等', countKey: '3等口数', prizeKey: '3等賞金' },
       { rank: '4等', countKey: '4等口数', prizeKey: '4等賞金' },
       { rank: '5等', countKey: '5等口数', prizeKey: '5等賞金' },
-      { rank: '6等', countKey: '6等口数', prizeKey: '6等賞金' },
+      { rank: '6等', countKey: '6等口数', prizeKey: '6等賞金' }
     ],
   }
 };
 
-// アイコン（info用）
+// --- ラベル説明（ロト種別ごとに出し分け） ---
+const featureInfo = {
+  // 共通
+  '連番あり': '連続した数字（例：24・25など）を含む構成です。',
+  '下一桁かぶり': '同じ下一桁（例：11・21・31など）が複数含まれる構成です。',
+  'キャリーあり': 'キャリーオーバーが発生していた回です。',
+  // デフォルト（ミニロト）用
+  '奇数多め': '奇数が4個以上含まれる構成です。',
+  '偶数多め': '偶数が4個以上含まれる構成です。',
+  '合計小さめ': '本数字の合計が60未満の構成です。',
+  '合計大きめ': '本数字の合計が80以上の構成です。',
+  // ロト6用
+  'バランス型': '奇数と偶数が均等に含まれる構成です。',
+  '奇数多め_loto6': '奇数が4個以上含まれる構成です。',
+  '偶数多め_loto6': '偶数が4個以上含まれる構成です。',
+  '合計小さめ_loto6': '6つの本数字の合計が114未満の構成です。',
+  '合計大きめ_loto6': '6つの本数字の合計が151を超える構成です。',
+  // ロト7用
+  '奇数多め_loto7': '奇数が5個以上含まれる構成です。',
+  '偶数多め_loto7': '偶数が5個以上含まれる構成です。',
+  '合計小さめ_loto7': '7つの本数字の合計が160未満の構成です。',
+  '合計大きめ_loto7': '7つの本数字の合計が160以上の構成です。',
+  '高低ミックス': '10未満と30以上の数字が両方含まれる構成です。',
+};
+
+// --- アイコン ---
 const InfoIcon = ({ onClick }) => (
-  <span style={{
-    display: 'inline-block', marginLeft: 6, cursor: 'pointer', color: '#e26580', fontSize: 15, userSelect: 'none'
-  }} onClick={onClick}>ⓘ</span>
+  <span style={{ display: 'inline-block', marginLeft: 6, cursor: 'pointer', color: '#e26580', fontSize: 15 }} onClick={onClick}>ⓘ</span>
 );
 
 export default function PastResultsPro({ jsonUrl, lotoType }) {
@@ -85,23 +132,7 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
 
   const config = lotoConfig[lotoType] || lotoConfig.loto6;
 
-  // HTML掲載内容・ラベル説明に完全合わせ（説明文も揃え済み）
-  const featureInfo = {
-    // ミニロト
-    '連番あり': '連続した数字（例：24・25など）を含む構成です。',
-    '奇数多め': '奇数が4個以上含まれる構成です。',
-    '偶数多め': '偶数が4個以上含まれる構成です。',
-    '下一桁かぶり': '同じ下一桁（例：11・21・31など）が複数含まれる構成です。',
-    '合計小さめ': '本数字の合計が60未満',
-    '合計大きめ': '本数字の合計が80以上',
-    // ロト6
-    'バランス型': '奇数と偶数が均等に含まれる構成です。',
-    'キャリーあり': 'キャリーオーバーが発生していた回です。',
-    // ロト7
-    '高低ミックス': '10未満と30以上の数字が両方含まれる構成'
-  };
-
-  // 日付の正規化
+  // --- 日付の正規化 ---
   function normalizeDate(str) {
     if (!str) return '';
     const [y, m, d] = str.split('/');
@@ -137,7 +168,7 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
     return true;
   });
 
-  // Pagination & CSV
+  // --- ページング＆CSV ---
   const PAGE_SIZE = 50;
   const paged = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
   const pages = Math.ceil(filtered.length / PAGE_SIZE);
@@ -172,7 +203,7 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
     a.click(); URL.revokeObjectURL(url);
   }
 
-  // 出現ランキング
+  // --- 出現ランキング ---
   function getRanking(data) {
     const count = Array(config.max + 1).fill(0);
     data.forEach(row => {
@@ -185,7 +216,7 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
   }
   const ranking = getRanking(filtered);
 
-  // --- Fetch ---
+  // --- データ取得 ---
   useEffect(() => {
     fetch(jsonUrl).then(res => res.json()).then(json => {
       json.sort((a, b) => Number(b['開催回']) - Number(a['開催回']));
@@ -195,11 +226,12 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
 
   // --- Infoポップアップ ---
   const handleInfo = (text, e) => {
-    e.stopPropagation(); // iボタン押下時のlabel波及ストップ
+    e.stopPropagation();
     setPopup({ show: true, text, x: e.pageX, y: e.pageY });
   };
   const hidePopup = () => setPopup({ ...popup, show: false });
 
+  // --- UI ---
   return (
     <>
       {popup.show && (
@@ -244,31 +276,37 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
           </label>
         </div>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, alignItems: 'center', marginBottom: 7 }}>
-          {config.labels.map(label =>
-            <span key={label} style={{ marginRight: 3, display: 'inline-flex', alignItems: 'center' }}>
-              <label style={{ margin: 0, cursor: 'pointer' }}>
-                <input
-                  type="checkbox"
-                  checked={filter.features.includes(label)}
-                  onChange={e => {
-                    setFilter(f => ({
-                      ...f,
-                      features: e.target.checked
-                        ? [...f.features, label]
-                        : f.features.filter(l => l !== label)
-                    }));
-                  }}
-                  style={{ cursor: 'pointer' }}
-                /> {label}
-              </label>
-              <span
-                onMouseDown={e => e.stopPropagation()}
-                style={{ display: 'inline-block' }}
-              >
-                <InfoIcon onClick={ev => handleInfo(featureInfo[label] || '', ev)} />
+          {config.labels.map(label => {
+            // 説明文の優先度：loto7→loto6→デフォルト
+            let info = featureInfo[label];
+            if (lotoType === 'loto6' && featureInfo[label + '_loto6']) info = featureInfo[label + '_loto6'];
+            if (lotoType === 'loto7' && featureInfo[label + '_loto7']) info = featureInfo[label + '_loto7'];
+            return (
+              <span key={label} style={{ marginRight: 3, display: 'inline-flex', alignItems: 'center' }}>
+                <label style={{ margin: 0, cursor: 'pointer' }}>
+                  <input
+                    type="checkbox"
+                    checked={filter.features.includes(label)}
+                    onChange={e => {
+                      setFilter(f => ({
+                        ...f,
+                        features: e.target.checked
+                          ? [...f.features, label]
+                          : f.features.filter(l => l !== label)
+                      }));
+                    }}
+                    style={{ cursor: 'pointer' }}
+                  /> {label}
+                </label>
+                <span
+                  onMouseDown={e => e.stopPropagation()}
+                  style={{ display: 'inline-block' }}
+                >
+                  <InfoIcon onClick={ev => handleInfo(info || '', ev)} />
+                </span>
               </span>
-            </span>
-          )}
+            );
+          })}
           <label style={{ marginLeft: 6 }}>合計値From:
             <input
               type="number"
