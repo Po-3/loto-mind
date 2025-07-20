@@ -132,6 +132,19 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
 
   const config = lotoConfig[lotoType] || lotoConfig.loto6;
 
+    function getFilterSummary() {
+    const out = [];
+    if (filter.features.length > 0) out.push(filter.features.join('・'));
+    if (filter.includeNumbers) out.push(`含む数字:${filter.includeNumbers}`);
+    if (filter.excludeNumbers) out.push(`除く数字:${filter.excludeNumbers}`);
+    if (filter.fromRound || filter.toRound) out.push(`開催回:${filter.fromRound || '?'}〜${filter.toRound || '?'}`);
+    if (filter.fromDate || filter.toDate) out.push(`日付:${filter.fromDate || '?'}〜${filter.toDate || '?'}`);
+    if (filter.oddEven) out.push(`奇数・偶数:${filter.oddEven.replace('-', '対')}`);
+    if (filter.minSum || filter.maxSum) out.push(`合計値:${filter.minSum || '?'}〜${filter.maxSum || '?'}`);
+    if (out.length === 0) return '';
+    return `（${out.join('，')}）`;
+  }
+
   // --- 日付の正規化 ---
   function normalizeDate(str) {
     if (!str) return '';
