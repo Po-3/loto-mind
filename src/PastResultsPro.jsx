@@ -240,28 +240,40 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
   // --- Infoポップアップ ---
   const handleInfo = (text, e) => {
     e.stopPropagation();
-    if (!text || !text.trim()) return; // 空説明なら何もしない（アイコン無効化も可）
-
+    if (!text || !text.trim()) return; // 空説明なら何もしない
     // ポップアップを画面中央に表示
     const popupWidth = 240;
     const popupHeight = 80;
     const x = Math.max((window.innerWidth - popupWidth) / 2, 0);
     const y = Math.max((window.innerHeight - popupHeight) / 2, 0);
-
     setPopup({ show: true, text, x, y });
   };
 
   const hidePopup = () => setPopup(popup => ({ ...popup, show: false }));
 
-  // --- 「画面のどこかをクリックしたら消す」 ---  
+  // --- 画面のどこかクリック・スクロール・Escで説明ポップアップを消す ---
   useEffect(() => {
     if (!popup.show) return;
     const handleClick = (e) => {
       if (popupRef.current && popupRef.current.contains(e.target)) return; // ポップアップ自体なら無視
       setPopup(popup => ({ ...popup, show: false }));
     };
+    const handleScroll = () => {
+      setPopup(popup => ({ ...popup, show: false }));
+    };
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') setPopup(popup => ({ ...popup, show: false }));
+    };
+
     document.addEventListener('mousedown', handleClick);
-    return () => document.removeEventListener('mousedown', handleClick);
+    document.addEventListener('scroll', handleScroll, true);
+    document.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClick);
+      document.removeEventListener('scroll', handleScroll, true);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
   }, [popup.show]);
 
   // --- UI ---
