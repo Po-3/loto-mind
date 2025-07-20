@@ -23,7 +23,6 @@ function getStartupValue(key, defaultKey, fallback) {
   if (last) return last;
   return localStorage.getItem(defaultKey) || fallback;
 }
-// 各種設定一括取得
 function getSettings() {
   return {
     defaultLotoType: localStorage.getItem('defaultLotoType') || 'loto6',
@@ -40,18 +39,17 @@ export default function App() {
   const [font, setFont] = useState(settings.font);
   const [themeColor, setThemeColor] = useState(settings.themeColor);
   const [showScrollBtns, setShowScrollBtns] = useState(true);
-  const [pastReloadKey, setPastReloadKey] = useState(0);
 
   // 設定画面で変更された時
   const handleDefaultLotoChange = (type) => {
     localStorage.setItem('defaultLotoType', type);
     setSettings(getSettings());
-    // ※ここではselectedTabは即変更しない
+    // 今いる画面はそのまま
   };
   const handleDefaultMenuChange = (menu) => {
     localStorage.setItem('defaultMenu', menu);
     setSettings(getSettings());
-    // ※ここでもfeatureは即変更しない
+    // 今いる画面はそのまま
   };
   const handleFontChange = (fontVal) => {
     localStorage.setItem('font', fontVal);
@@ -88,15 +86,138 @@ export default function App() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [feature]);
 
-  const selectedUrl = tabs.find(t => t.key === selectedTab).url;
+  // nullチェック（selectedTab不正時に何も表示しない事故を防ぐ）
+  const selectedTabObj = tabs.find(t => t.key === selectedTab) || tabs[1]; // デフォはloto6
+  const selectedUrl = selectedTabObj?.url || tabs[1].url;
   const showPastScrollBtns = feature === 'past' && showScrollBtns;
 
-  // --- UI ---
   return (
     <div style={containerStyle}>
-      {/* ...（以下UI部分・レイアウトは変更なしでOK）... */}
-      {/* 必要なら上記からコピペ */}
-      {/* 省略 */}
+      {/* スクロールボタン */}
+      {showPastScrollBtns && (
+        <div style={scrollButtonContainer}>
+          <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} style={scrollCircleButtonStyle} title="最上段へ" aria-label="最上段へ" type="button">
+            <svg width="22" height="22" viewBox="0 0 24 24" style={{ display: 'block', margin: 'auto' }}>
+              <polyline points="12 6 12 18" fill="none" stroke="#fff" strokeWidth="2.8" strokeLinecap="round" />
+              <polyline points="6 12 12 6 18 12" fill="none" stroke="#fff" strokeWidth="2.8" strokeLinejoin="round" />
+            </svg>
+          </button>
+          <button onClick={() => window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })} style={scrollCircleButtonStyle} title="最下段へ" aria-label="最下段へ" type="button">
+            <svg width="22" height="22" viewBox="0 0 24 24" style={{ display: 'block', margin: 'auto' }}>
+              <polyline points="12 18 12 6" fill="none" stroke="#fff" strokeWidth="2.8" strokeLinecap="round" />
+              <polyline points="6 12 12 18 18 12" fill="none" stroke="#fff" strokeWidth="2.8" strokeLinejoin="round" />
+            </svg>
+          </button>
+        </div>
+      )}
+
+      {/* アイコン＋見出し */}
+      <div style={headerStyle}>
+        <img src="/tonari.png" alt="となりアイコン" style={iconStyle} />
+        <div style={titleBlockStyle}>
+          <span style={appNameStyle}>
+            Loto <span style={{ color: '#1767a7' }}>Mind</span>
+          </span>
+          <span style={byTonariStyle}>by tonari</span>
+        </div>
+      </div>
+
+      {/* ロト種別タブ */}
+      <div style={tabRowStyle}>
+        {tabs.map((tab) => (
+          <button
+            key={tab.key}
+            onClick={() => handleTabChange(tab.key)}
+            style={{
+              ...tabStyle,
+              ...(selectedTab === tab.key ? activeTabStyle : {}),
+            }}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
+
+      {/* 機能タブ */}
+      <div style={featureTabRowStyle}>
+        {features.map((f) => (
+          <button
+            key={f.key}
+            onClick={() => handleFeatureChange(f.key)}
+            style={{
+              ...featureTabStyle,
+              ...(feature === f.key ? activeFeatureTabStyle : {}),
+            }}
+          >
+            <span style={{ whiteSpace: 'pre-line', lineHeight: 1.15 }}>{f.label}</span>
+          </button>
+        ))}
+      </div>
+
+      {/* メイン表示エリア */}
+      <div style={{ width: '100%', position: 'relative' }}>
+        {feature === 'past' && (
+          <div style={{ margin: '-12px -18px 0 -18px', maxWidth: 'none' }}>
+            <PastResultsPro jsonUrl={selectedUrl} lotoType={selectedTabObj.key} />
+          </div>
+        )}
+        {feature === 'diagnosis' && (
+          <Diagnosis jsonUrl={selectedUrl} lotoType={selectedTabObj.key} />
+        )}
+        {feature === 'prediction' && <Prediction lotoType={selectedTabObj.key} />}
+        {feature === 'settings' && (
+          <Settings
+            onThemeColorChange={handleThemeColorChange}
+            onFontChange={handleFontChange}
+            onDefaultLotoChange={handleDefaultLotoChange}
+            onDefaultMenuChange={handleDefaultMenuChange}
+            defaultLotoType={settings.defaultLotoType}
+            defaultMenu={settings.defaultMenu}
+            themeColor={themeColor}
+            font={font}
+          />
+        )}
+      </div>
+
+      {/* ガイド文＆リンク */}
+      <div style={guideStyle}>
+        <a
+          href="https://www.kujitonari.net/"
+          target="_blank"
+          rel="noopener"
+          style={{ color: '#1767a7', textDecoration: 'underline', fontWeight: 600 }}
+        >
+          宝くじのとなりブログ
+        </a>
+      </div>
+      <div
+        style={{
+          textAlign: 'right',
+          fontSize: '0.98em',
+          color: '#be9000',
+          marginTop: 8,
+          opacity: 0.72,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'flex-end',
+          gap: 4,
+        }}
+      >
+        <span>となり</span>
+        <img
+          src="/tonari.png"
+          alt="となりくん"
+          style={{
+            width: 22,
+            height: 22,
+            marginLeft: 2,
+            verticalAlign: 'middle',
+            borderRadius: '50%',
+            boxShadow: '0 1px 4px #bbb8',
+          }}
+        />
+        <span style={{ fontSize: '0.90em', marginLeft: 2 }}>がいつも応援中！</span>
+      </div>
     </div>
   );
 }
