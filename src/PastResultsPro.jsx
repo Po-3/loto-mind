@@ -240,9 +240,10 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
   // --- Infoポップアップ ---
 const handleInfo = (text, e) => {
   e.stopPropagation();
-  const popupWidth = 240;  // maxWidthに合わせる
-  const popupHeight = 80;  // 想定高さ
+  if (!text || !text.trim()) return; // ←空の場合は何もしない
 
+  const popupWidth = 240;
+  const popupHeight = 80;
   const x = Math.max((window.innerWidth - popupWidth) / 2, 0);
   const y = Math.max((window.innerHeight - popupHeight) / 2, 0);
 
