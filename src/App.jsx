@@ -114,15 +114,14 @@ export default function App() {
         </div>
       )}
 
-      {/* アイコン＋見出し */}
-      <div style={headerStyle}>
-        <img src="/tonari.png" alt="となりアイコン" style={iconStyle} />
-        <div style={titleBlockStyle}>
-          <span style={appNameStyle}>
-            Loto <span style={{ color: '#1767a7' }}>Mind</span>
-          </span>
-          <span style={byTonariStyle}>by tonari</span>
+      {/* アイコン＋見出し（ロゴ） */}
+      <div style={headerContainerStyle}>
+        <div style={logoRowStyle}>
+          <span style={logoTextLeft}>Loto</span>
+          <img src="/tonari.png" alt="となりアイコン" style={logoIconStyle} />
+          <span style={logoTextRight}>Mind</span>
         </div>
+        <div style={logoByTonariStyle}>by tonari</div>
       </div>
 
       {/* ロト種別タブ */}
@@ -225,7 +224,7 @@ export default function App() {
   );
 }
 
-// --- スタイル（すべてそのまま使ってOK） ---
+// --- スタイル定義 ---
 const containerStyle = {
   width: '100%',
   maxWidth: 470,
@@ -270,47 +269,60 @@ const scrollCircleButtonStyle = {
   padding: 0,
 };
 
-const headerStyle = {
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  gap: 18,
-  marginBottom: 6,
-  marginTop: -10,
-};
-
-const titleBlockStyle = {
+// ロゴ新スタイル
+const headerContainerStyle = {
   display: 'flex',
   flexDirection: 'column',
-  alignItems: 'flex-start',
+  alignItems: 'center',
+  marginBottom: 6,
+  marginTop: -8,
+};
+
+const logoRowStyle = {
+  display: 'flex',
+  alignItems: 'center',
+  gap: 13,
   justifyContent: 'center',
 };
 
-const appNameStyle = {
-  fontSize: '2.1em',
+const logoTextLeft = {
+  fontSize: '2.0em',
   fontWeight: '700',
-  fontFamily: 'sans-serif',
   letterSpacing: 0.5,
+  color: '#222',
+  fontFamily: 'sans-serif',
+  marginRight: 2,
   userSelect: 'none',
-  lineHeight: 1.06,
 };
 
-const byTonariStyle = {
-  fontSize: '0.98em',
-  color: '#888',
-  fontWeight: 400,
-  marginTop: 2,
-  marginLeft: 1,
-  letterSpacing: '0.06em',
+const logoTextRight = {
+  fontSize: '2.0em',
+  fontWeight: '700',
+  letterSpacing: 0.5,
+  color: '#1767a7',
+  fontFamily: 'sans-serif',
+  marginLeft: 2,
+  userSelect: 'none',
 };
 
-const iconStyle = {
-  width: 56,
-  height: 56,
+const logoIconStyle = {
+  width: 53,
+  height: 53,
   borderRadius: '50%',
   boxShadow: '0 2px 14px #bbb5',
   objectFit: 'cover',
   background: '#fff',
+  margin: '0 2px',
+};
+
+const logoByTonariStyle = {
+  fontSize: '0.98em',
+  color: '#888',
+  fontWeight: 400,
+  marginTop: 2,
+  letterSpacing: '0.07em',
+  textAlign: 'center',
+  userSelect: 'none',
 };
 
 const tabRowStyle = {
