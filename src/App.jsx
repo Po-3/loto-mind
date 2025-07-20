@@ -10,7 +10,7 @@ const tabs = [
   { key: 'loto7', label: 'ロト7', url: 'https://po-3.github.io/loto7-data/loto7.json' },
 ];
 const features = [
-  { key: 'past', label: '過去検索' },
+  { key: 'past', label: '検索ツール' },
   { key: 'diagnosis', label: 'となり診断' },
   { key: 'prediction', label: 'ズバリ予想' },
   { key: 'settings', label: '設定' }
