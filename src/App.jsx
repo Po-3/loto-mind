@@ -88,6 +88,9 @@ export default function App() {
   const showPastScrollBtns = feature === 'past' && showScrollBtns;
   const showDiagnosisReload = feature === 'diagnosis';
 
+    console.log('Appレンダリング', { selectedTab, feature, settings });
+
+
   // --- 以降はUIのまま ---
   return (
     <div style={containerStyle}>
