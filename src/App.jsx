@@ -42,9 +42,8 @@ export default function App() {
   const [themeColor, setThemeColor] = useState(settings.themeColor);
   const [showScrollBtns, setShowScrollBtns] = useState(true);
 
-  // 再取得トリガー
+  // 再取得トリガー（過去検索のみ・診断も個別ボタン）
   const [pastReloadKey, setPastReloadKey] = useState(0);
-  const [diagnosisReloadKey, setDiagnosisReloadKey] = useState(0);
 
   // 設定画面から呼ばれる
   const handleDefaultLotoChange = (type) => {
@@ -90,82 +89,39 @@ export default function App() {
 
   const selectedUrl = tabs.find(t => t.key === selectedTab).url;
   const showPastScrollBtns = feature === 'past' && showScrollBtns;
-  const showDiagnosisReload = feature === 'diagnosis';
 
-  // --- 以降はUIのまま ---
+  // --- UI ---
   return (
     <div style={containerStyle}>
-      {/* 右下：スクロール＋再取得ボタン群 */}
-      {(showPastScrollBtns || showDiagnosisReload) && (
+      {/* 右下：上下スクロールボタンだけ */}
+      {showPastScrollBtns && (
         <div style={scrollButtonContainer}>
-          {showPastScrollBtns && (
-            <>
-              {/* 上へ */}
-              <button
-                onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-                style={scrollCircleButtonStyle}
-                title="最上段へ"
-                aria-label="最上段へ"
-                type="button"
-              >
-                <svg width="22" height="22" viewBox="0 0 24 24" style={{ display: 'block', margin: 'auto' }}>
-                  <polyline points="12 6 12 18" fill="none" stroke="#fff" strokeWidth="2.8" strokeLinecap="round" />
-                  <polyline points="6 12 12 6 18 12" fill="none" stroke="#fff" strokeWidth="2.8" strokeLinejoin="round" />
-                </svg>
-              </button>
-              {/* 下へ */}
-              <button
-                onClick={() => window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })}
-                style={scrollCircleButtonStyle}
-                title="最下段へ"
-                aria-label="最下段へ"
-                type="button"
-              >
-                <svg width="22" height="22" viewBox="0 0 24 24" style={{ display: 'block', margin: 'auto' }}>
-                  <polyline points="12 18 12 6" fill="none" stroke="#fff" strokeWidth="2.8" strokeLinecap="round" />
-                  <polyline points="6 12 12 18 18 12" fill="none" stroke="#fff" strokeWidth="2.8" strokeLinejoin="round" />
-                </svg>
-              </button>
-            </>
-          )}
-          {/* 再取得（ページはリロードしない！） */}
-          {showPastScrollBtns && (
-            <button
-              onClick={() => setPastReloadKey(k => k + 1)}
-              style={scrollCircleButtonStyle}
-              title="データ再取得"
-              aria-label="データ再取得"
-              type="button"
-            >
-              <svg width="32" height="32" viewBox="0 0 32 32" fill="none"
-                stroke="#fff" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round"
-                style={{ display: 'block', margin: 'auto' }}>
-                <line x1="8" y1="10" x2="24" y2="10" />
-                <polyline points="20 6 24 10 20 14" />
-                <line x1="24" y1="22" x2="8" y2="22" />
-                <polyline points="12 18 8 22 12 26" />
-              </svg>
-            </button>
-          )}
-          {/* 診断の再取得（必要なら） */}
-          {showDiagnosisReload && (
-            <button
-              onClick={() => setDiagnosisReloadKey(k => k + 1)}
-              style={scrollCircleButtonStyle}
-              title="診断再取得"
-              aria-label="診断再取得"
-              type="button"
-            >
-              <svg width="32" height="32" viewBox="0 0 32 32" fill="none"
-                stroke="#fff" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round"
-                style={{ display: 'block', margin: 'auto' }}>
-                <line x1="8" y1="10" x2="24" y2="10" />
-                <polyline points="20 6 24 10 20 14" />
-                <line x1="24" y1="22" x2="8" y2="22" />
-                <polyline points="12 18 8 22 12 26" />
-              </svg>
-            </button>
-          )}
+          {/* 上へ */}
+          <button
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            style={scrollCircleButtonStyle}
+            title="最上段へ"
+            aria-label="最上段へ"
+            type="button"
+          >
+            <svg width="22" height="22" viewBox="0 0 24 24" style={{ display: 'block', margin: 'auto' }}>
+              <polyline points="12 6 12 18" fill="none" stroke="#fff" strokeWidth="2.8" strokeLinecap="round" />
+              <polyline points="6 12 12 6 18 12" fill="none" stroke="#fff" strokeWidth="2.8" strokeLinejoin="round" />
+            </svg>
+          </button>
+          {/* 下へ */}
+          <button
+            onClick={() => window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })}
+            style={scrollCircleButtonStyle}
+            title="最下段へ"
+            aria-label="最下段へ"
+            type="button"
+          >
+            <svg width="22" height="22" viewBox="0 0 24 24" style={{ display: 'block', margin: 'auto' }}>
+              <polyline points="12 18 12 6" fill="none" stroke="#fff" strokeWidth="2.8" strokeLinecap="round" />
+              <polyline points="6 12 12 18 18 12" fill="none" stroke="#fff" strokeWidth="2.8" strokeLinejoin="round" />
+            </svg>
+          </button>
         </div>
       )}
 
@@ -220,7 +176,7 @@ export default function App() {
           </div>
         )}
         {feature === 'diagnosis' && (
-          <Diagnosis key={diagnosisReloadKey} jsonUrl={selectedUrl} lotoType={selectedTab} />
+          <Diagnosis jsonUrl={selectedUrl} lotoType={selectedTab} />
         )}
         {feature === 'prediction' && <Prediction lotoType={selectedTab} />}
         {feature === 'settings' && (
