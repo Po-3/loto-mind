@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-// ロト種別ごとの設定（必ずこのファイル内に！）
+// ロト種別ごとの設定
 const lotoConfig = {
   loto6: {
     main: 6,
@@ -69,47 +69,6 @@ const InfoIcon = ({ onClick }) => (
   <span style={{ display: 'inline-block', marginLeft: 6, cursor: 'pointer', color: '#e26580', fontSize: 15 }} onClick={onClick}>ⓘ</span>
 );
 
-// スクロール用ボタン（上）
-const ScrollUpButton = () => (
-  <button
-    onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-    style={scrollButtonStyle}
-    title="最上段へ"
-  >↑</button>
-);
-// スクロール用ボタン（下）
-const ScrollDownButton = () => (
-  <button
-    onClick={() => window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })}
-    style={scrollButtonStyle}
-    title="最下段へ"
-  >↓</button>
-);
-// 更新ボタンアイコン（丸）
-const ReloadIcon = ({ onClick }) => (
-  <button
-    onClick={onClick}
-    title="更新"
-    style={{
-      ...reloadButtonStyle,
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      cursor: 'pointer',
-      borderRadius: '50%',
-      border: 'none',
-      background: '#337be8',
-      width: 40,
-      height: 40,
-      color: 'white',
-      fontSize: 22,
-      fontWeight: 'bold',
-      boxShadow: '0 2px 8px #337be811',
-      userSelect: 'none'
-    }}
-  >⟳</button>
-);
-
 export default function PastResultsPro({ jsonUrl, lotoType }) {
   const [data, setData] = useState([]);
   const [filter, setFilter] = useState({
@@ -122,6 +81,18 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
   const [page, setPage] = useState(1);
 
   const config = lotoConfig[lotoType] || lotoConfig.loto6;
+
+  // --- ここ！ データ日付("2000/10/5")→"2000-10-05"へ変換 ---
+  function normalizeDate(str) {
+    if (!str) return '';
+    const [y, m, d] = str.split('/');
+    if (!y || !m || !d) return '';
+    return [
+      y.padStart(4, '0'),
+      m.padStart(2, '0'),
+      d.padStart(2, '0')
+    ].join('-');
+  }
 
   // 各特徴ラベルの説明
   const featureInfo = {
@@ -139,14 +110,12 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
   // --- Filtering ---
   const filtered = data.filter(row => {
     const round = Number(row['開催回']);
-    const date = row['日付'];
+    const dateNorm = normalizeDate(row['日付']); // ★ここで正規化
     if (filter.fromRound && round < Number(filter.fromRound)) return false;
     if (filter.toRound && round > Number(filter.toRound)) return false;
-    if (filter.fromDate && date < filter.fromDate) return false;
-    if (filter.toDate && date > filter.toDate) return false;
-    // 特徴ラベル
+    if (filter.fromDate && dateNorm < filter.fromDate) return false;
+    if (filter.toDate && dateNorm > filter.toDate) return false;
     if (filter.features.length > 0 && !filter.features.every(f => (row['特徴'] || '').includes(f))) return false;
-    // 含む・除く
     const mainArr = Array(config.main).fill(0).map((_, i) => Number(row[`第${i + 1}数字`]));
     if (filter.includeNumbers) {
       const incl = filter.includeNumbers.split(',').map(s => Number(s.trim())).filter(Boolean);
@@ -156,10 +125,8 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
       const excl = filter.excludeNumbers.split(',').map(s => Number(s.trim())).filter(Boolean);
       if (excl.length && excl.some(n => mainArr.includes(n))) return false;
     }
-    // 合計
     if (filter.minSum && sumMain(row) < Number(filter.minSum)) return false;
     if (filter.maxSum && sumMain(row) > Number(filter.maxSum)) return false;
-    // 奇数偶数パターン
     if (filter.oddEven) {
       const odds = mainArr.filter(n => n % 2 === 1).length;
       const evens = config.main - odds;
@@ -182,7 +149,6 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
       '開催回', '日付',
       ...Array(config.main).fill(0).map((_, i) => `第${i + 1}数字`),
       ...config.bonusNames, '特徴',
-      // 末等まで追加
       ...config.ranks.flatMap(rank => [rank.countKey, rank.prizeKey])
     ];
     const rows = arr.map(row => [
@@ -231,7 +197,6 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
 
   return (
     <>
-      {/* Infoポップアップ */}
       {popup.show && (
         <div
           style={{
@@ -243,7 +208,6 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
         >{popup.text}</div>
       )}
 
-
       <div style={{
         background: '#f9f9fd',
         border: '1px solid #cde',
@@ -254,7 +218,6 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
         padding: '4vw 2vw 3vw 2vw',
         boxSizing: 'border-box'
       }}>
-        {/* 検索ツール */}
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 15, marginBottom: 15, alignItems: 'flex-end' }}>
           <label>開催回From:
             <input type="number" min={1} value={filter.fromRound} onChange={e => setFilter(f => ({ ...f, fromRound: e.target.value }))} style={filterInputStyle} />
@@ -275,7 +238,6 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
             <input type="text" placeholder="例: 1,12" value={filter.excludeNumbers} onChange={e => setFilter(f => ({ ...f, excludeNumbers: e.target.value }))} style={filterInputStyle} />
           </label>
         </div>
-        {/* 特徴ラベル群 */}
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, alignItems: 'center', marginBottom: 7 }}>
           {config.labels.map(label =>
             <label key={label} style={{ marginRight: 3 }}>
@@ -294,7 +256,6 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
               <InfoIcon onClick={ev => handleInfo(featureInfo[label] || '', ev)} />
             </label>
           )}
-          {/* 合計値範囲 */}
           <label style={{ marginLeft: 6 }}>合計値From:
             <input
               type="number"
@@ -315,7 +276,6 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
               style={filterInputStyle}
             />
           </label>
-          {/* 奇数偶数構成 */}
           <label>奇数・偶数構成:
             <select
               value={filter.oddEven}
@@ -329,7 +289,6 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
             </select>
           </label>
         </div>
-        {/* ボタン群 */}
         <div style={{ display: 'flex', gap: 8, margin: '9px 0 2px 0' }}>
           <button onClick={() => setPage(1)} style={searchBtnStyle}><i className="fa fa-magnifying-glass"></i> 検索</button>
           <button onClick={() => {
@@ -341,7 +300,6 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
           }} style={resetBtnStyle}><i className="fa fa-rotate-right"></i> リセット</button>
           <button onClick={handleCSV} style={csvBtnStyle}><i className="fa fa-file-csv"></i> CSV出力</button>
         </div>
-        {/* 検索結果・ランキング */}
         <div style={{ fontSize: '0.97em', margin: '8px 0' }}>
           検索結果：<b>{filtered.length}</b>件　
           <span style={{ color: '#357' }}>
@@ -353,7 +311,6 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
         </div>
       </div>
 
-            {/* 既存テーブル */}
       <div style={{
         overflowX: 'auto',
         border: '1px solid #ccd',
@@ -372,11 +329,9 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
               {config.bonusNames.map((name, i) => <th key={name} style={thStyle}>B数字{i + 1}</th>)}
               <th style={{ ...thStyle, minWidth: 180, width: '24%' }}>特徴</th>
               <th style={thStyle}>合計</th>
-              {/* ▼ここにキャリーオーバー追加（loto6/loto7のみ） */}
               {(lotoType === 'loto6' || lotoType === 'loto7') && (
                 <th style={thStyle}>キャリーオーバー</th>
               )}
-              {/* 口数・賞金列追加 */}
               {config.ranks.map(({ rank }) => (
                 <th key={rank} style={thStyle}>{rank}口数</th>
               ))}
@@ -398,15 +353,13 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
                 )}
                 <td style={{ ...tdStyle, color: '#286', fontSize: '0.98em' }}>{row['特徴']}</td>
                 <td style={{ ...tdStyle, color: '#135', fontWeight: 600 }}>{sumMain(row)}</td>
-                {/* ▼ここにキャリーオーバー追加（loto6/loto7のみ） */}
                 {(lotoType === 'loto6' || lotoType === 'loto7') && (
                   <td style={{ ...tdStyle, color: '#c43', fontWeight: 600, whiteSpace: 'nowrap' }}>
-                    {row['キャリーオーバー'] 
-                      ? Number(row['キャリーオーバー']).toLocaleString() 
+                    {row['キャリーオーバー']
+                      ? Number(row['キャリーオーバー']).toLocaleString()
                       : '―'}
                   </td>
                 )}
-                {/* 口数・賞金列表示 */}
                 {config.ranks.map(({ countKey }) => (
                   <td key={countKey} style={tdStyle}>{row[countKey] || ''}</td>
                 ))}
@@ -419,7 +372,6 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
         </table>
       </div>
 
-      {/* ページネーション */}
       {pages > 1 && (
         <div style={{ textAlign: 'center', margin: '10px 0 4px 0' }}>
           {Array.from({ length: pages }, (_, i) =>
@@ -444,7 +396,7 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
   );
 }
 
-// --- Style ---
+// --- Style群 ---
 const filterInputStyle = {
   marginLeft: 6,
   padding: '4px 8px',
@@ -488,25 +440,4 @@ const stickyLeftStyle = {
   left: 0,
   zIndex: 4,
   background: '#f7faff'
-};
-const scrollButtonStyle = {
-  background: '#337be8',
-  color: '#fff',
-  border: 'none',
-  borderRadius: '50%',
-  width: 40,
-  height: 40,
-  fontSize: 24,
-  boxShadow: '0 2px 8px #337be822',
-  cursor: 'pointer',
-  outline: 'none',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center'
-};
-const reloadButtonStyle = {
-  ...scrollButtonStyle,
-  fontSize: 22,
-  fontWeight: 'bold',
-  userSelect: 'none'
 };
