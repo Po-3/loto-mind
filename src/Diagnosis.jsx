@@ -160,7 +160,6 @@ export default function Diagnosis({ jsonUrl }) {
 
   return (
     <div style={outerStyle}>
-      <h2 style={titleStyle}>となり診断</h2>
       <button
         style={{
           padding: '6px 16px',
