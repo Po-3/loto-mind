@@ -409,27 +409,31 @@ const handleInfo = (label, e) => {
         minWidth: 0
       }}>
         <table style={{ borderCollapse: 'collapse', width: '100%', minWidth: 850, fontSize: '0.96em' }}>
-          <thead>
-            <tr>
-              <th style={{ ...thStyle, ...stickyLeftStyle }}>{t('round')}</th>
-              <th style={thStyle}>{t('date')}</th>
-              {Array(config.main).fill(0).map((_, i) => <th key={i} style={thStyle}>本数字{i + 1}</th>)}
-              {config.bonusNames.map((name, i) => (
-                <th key={name} style={thStyle}>B数字{i + 1}</th>
-              ))}
-              <th style={{ ...thStyle, minWidth: 180, width: '24%' }}>{t('features')}</th>
-              <th style={thStyle}>{t('sum')}</th>
-              {(lotoType === 'loto6' || lotoType === 'loto7') && (
-                <th style={thStyle}>{t('carryover')}</th>
-              )}
-              {config.ranks.map(({ rank }) => (
-                <th key={rank} style={thStyle}>{rank}口数</th>
-              ))}
-              {config.ranks.map(({ rank }) => (
-                <th key={rank + '_prize'} style={thStyle}>{rank}賞金</th>
-              ))}
-            </tr>
-          </thead>
+<thead>
+  <tr>
+    <th style={{ ...thStyle, ...stickyLeftStyle }}>{t('round')}</th>
+    <th style={thStyle}>{t('date')}</th>
+    {Array(config.main).fill(0).map((_, i) => (
+      <th key={i} style={thStyle}>{t('main_num', { num: i + 1 })}</th>
+    ))}
+    {config.bonusNames.map((name, i) => (
+      <th key={name} style={thStyle}>
+        {t('bonus_num', { num: i + 1 }) /* ← i18nで"ボーナス数字1"/"Bonus Number 1"等 */}
+      </th>
+    ))}
+    <th style={{ ...thStyle, minWidth: 180, width: '24%' }}>{t('features')}</th>
+    <th style={thStyle}>{t('sum')}</th>
+    {(lotoType === 'loto6' || lotoType === 'loto7') && (
+      <th style={thStyle}>{t('carryover')}</th>
+    )}
+    {config.ranks.map(({ rank }) => (
+      <th key={rank} style={thStyle}>{t('rank_count', { rank: t(rank.rank) })}</th>
+    ))}
+    {config.ranks.map(({ rank }) => (
+      <th key={rank + '_prize'} style={thStyle}>{t('rank_prize', { rank: t(rank.rank) })}</th>
+    ))}
+  </tr>
+</thead>
           <tbody>
             {paged.map(row => (
               <tr key={row['開催回']}>
