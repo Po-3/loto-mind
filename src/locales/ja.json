@@ -10,6 +10,7 @@
   "loading": "読み込み中…",
   "fetch_error": "データ取得エラー",
   "not_found": "データが見つかりませんでした",
+  "prediction_not_found": "予想記事が書かれていません",
   "csv_download": "CSV出力",
   "update": "更新",
   "yes": "はい",
