@@ -226,7 +226,7 @@ export default function App() {
   style={{ marginLeft: 6, display: 'inline-block', verticalAlign: 'middle' }}
 >
   <img
-    src="https:///img.shinobi.jp/tadaima/fj.gif"
+    src="https://xa.shinobi.jp/bin/ll?192060200"
     alt="アクセスカウンター"
     style={{ height: 18, verticalAlign: 'middle', border: 0 }}
   />
