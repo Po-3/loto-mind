@@ -52,6 +52,11 @@
   "most_often": "最多本数字",
   "least_often": "最少本数字",
 
+  "type": "タイプ",
+  "prediction_numbers": "予想数字",
+  "axis_number": "軸数字",
+  "features_and_aim": "特徴と狙い",
+
   "from_round": "開催回From",
   "to_round": "To",
   "from_date": "開催日From",
