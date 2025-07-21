@@ -23,7 +23,7 @@ i18n
       : navigator.language.startsWith('ja') ? 'ja'
       : 'en',
     fallbackLng: 'ja',
-    interpolation: { escapeValue: false },
+    interpolation: { escapeValue: false }, // ここが大事
   });
 
 export default i18n;

@@ -198,10 +198,3 @@
   "選ばれし数字たちに身を委ねよう。": "Surrender to the chosen numbers.",
   "今日の運勢はガチャガチャ仕様です。": "Today's fortune: pure gacha (capsule toy) mode."
 }
-
-{
-  "main_num": "Main Number {num}",
-  "bonus_num": "Bonus Number {num}",
-  "rank_count": "{rank} Winners",
-  "rank_prize": "{rank} Prize"
-}
