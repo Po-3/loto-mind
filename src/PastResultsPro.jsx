@@ -389,7 +389,7 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
             <tr>
               <th style={{ ...thStyle, ...stickyLeftStyle }}>{t('round')}</th>
               <th style={thStyle}>{t('date')}</th>
-              {Array(config.main).fill(0).map((_, i) => <th key={i} style={thStyle}>{t('main_num', { num: i + 1 })}</th>)}
+              {Array(config.main).fill(0).map((_, i) => <th key={i} style={thStyle}>本数字{i + 1}</th>)}
               {config.bonusNames.map((name, i) => <th key={name} style={thStyle}>{t('bonus_num', { num: i + 1 })}</th>)}
               <th style={{ ...thStyle, minWidth: 180, width: '24%' }}>{t('features')}</th>
               <th style={thStyle}>{t('sum')}</th>
