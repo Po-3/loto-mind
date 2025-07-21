@@ -163,8 +163,6 @@
   "キャリーあり": "With Carryover",
   "高低ミックス": "High-Low Mix",
 
-  // ▼▼▼▼▼ DIAGNOSIS_PATTERNS Labels & Descriptions ▼▼▼▼▼
-
   "notAppeared": "Numbers Not Recently Drawn",
   "desc_notAppeared": "Select numbers not drawn in the last 30 draws",
   "appeared": "Frequently Drawn Numbers",
@@ -207,8 +205,6 @@
   "desc_birthday": "A set made up of only numbers 1–31.",
   "carry": "With Carryover",
   "desc_carry": "Draws with carryover only.",
-
-  // ▼▼▼▼▼ END DIAGNOSIS_PATTERNS ▼▼▼▼▼
 
   "ranks": {
     "1等": "1st Prize",
