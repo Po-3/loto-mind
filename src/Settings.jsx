@@ -20,8 +20,8 @@ const COLOR_PRESETS = [
 
 // 言語選択肢
 const LANG_OPTIONS = [
-  { label: '日本語', value: 'ja' },
-  { label: 'English', value: 'en' }
+  { labelKey: 'lang_ja', value: 'ja' },
+  { labelKey: 'lang_en', value: 'en' }
 ];
 
 const PaletteIcon = ({ size = 27 }) => (
@@ -115,8 +115,8 @@ export default function Settings({
   <strong>{t('language_label')}</strong>
   <select value={selectedLang} onChange={e => handleLangChange(e.target.value)} style={selectStyle}>
     {LANG_OPTIONS.map(opt => (
-      <option key={opt.value} value={opt.value}>{opt.label}</option>
-    ))}
+  <option key={opt.value} value={opt.value}>{t(opt.labelKey)}</option> // ✅ 修正ここだけ！
+))}
   </select>
 </div>
 
