@@ -7,31 +7,27 @@ export default function NinjaCounter() {
     script.type = "text/javascript";
     document.body.appendChild(script);
 
-    // クリーンアップ（アンマウント時に消すなら）
+    // アンマウント時のクリーンアップ
     return () => {
       document.body.removeChild(script);
     };
   }, []);
 
+  // 画像部分だけ（通常表示）
   return (
-    <div style={{ marginTop: 12 }}>
-      {/* 非JavaScript環境用の代替イメージ（ほぼ不要だけど参考まで） */}
-      <a href="//xa.shinobi.jp/bin/gg?192060200" target="_blank" rel="noopener noreferrer">
-        <img
-          src="//xa.shinobi.jp/bin/ll?192060200"
-          alt="Ninja Access Counter"
-          style={{ border: 0, verticalAlign: 'text-bottom' }}
-        />
-      </a>
-      <span style={{ fontSize: 9 }}>
-        <img
-          src="//img.shinobi.jp/tadaima/fj.gif"
-          width={19}
-          height={11}
-          alt=""
-          style={{ margin: 0, verticalAlign: 'text-bottom' }}
-        />
-      </span>
-    </div>
+    <a href="//xa.shinobi.jp/bin/gg?192060200" target="_blank" rel="noopener noreferrer" style={{ display: 'inline-block', marginLeft: 10 }}>
+      <img
+        src="//xa.shinobi.jp/bin/ll?192060200"
+        alt="Ninja Access Counter"
+        style={{ border: 0, verticalAlign: 'text-bottom' }}
+      />
+      <img
+        src="//img.shinobi.jp/tadaima/fj.gif"
+        width={19}
+        height={11}
+        alt=""
+        style={{ margin: 0, verticalAlign: 'text-bottom', marginLeft: 2 }}
+      />
+    </a>
   );
 }

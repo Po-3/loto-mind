@@ -3,7 +3,7 @@ import PastResultsPro from './PastResultsPro';
 import Diagnosis from './Diagnosis';
 import Prediction from './Prediction';
 import Settings from './Settings';
-import AccessCounter from './AccessCounter';
+import NinjaCounter from './NinjaCounter';
 
 const tabs = [
   { key: 'miniloto', label: 'ミニロト', url: 'https://po-3.github.io/miniloto-data/miniloto.json' },
@@ -219,7 +219,7 @@ export default function App() {
             boxShadow: '0 1px 4px #bbb8',
           }}
         />
-        <span style={{ fontSize: '0.90em', marginLeft: 2 }}>がいつも応援中！</span> 
+        <span style={{ fontSize: '0.90em', marginLeft: 2 }}>がいつも応援中！</span> <NinjaCounter />
 </div>
     </div>
   );
