@@ -218,18 +218,19 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
     });
   }, [jsonUrl]);
 
-  // --- Infoポップアップ ---
-  const handleInfo = (label, e) => {
-    e.stopPropagation();
-    const text = featureInfo[label] || label;
-    if (!text || !text.trim()) return;
-    // ポップアップを画面中央に表示
-    const popupWidth = 240;
-    const popupHeight = 80;
-    const x = Math.max((window.innerWidth - popupWidth) / 2, 0);
-    const y = Math.max((window.innerHeight - popupHeight) / 2, 0);
-    setPopup({ show: true, text, x, y });
-  };
+// --- Infoポップアップ ---
+const handleInfo = (label, e) => {
+  e.stopPropagation();
+  // ↓これでOK（tで説明文も多言語化！）
+  const text = t(featureInfo[label]) || t(label) || label;
+  if (!text || !text.trim()) return;
+  // ポップアップを画面中央に表示
+  const popupWidth = 240;
+  const popupHeight = 80;
+  const x = Math.max((window.innerWidth - popupWidth) / 2, 0);
+  const y = Math.max((window.innerHeight - popupHeight) / 2, 0);
+  setPopup({ show: true, text, x, y });
+};
 
   const hidePopup = () => setPopup(popup => ({ ...popup, show: false }));
 
