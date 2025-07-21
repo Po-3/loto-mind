@@ -112,13 +112,13 @@ export default function Settings({
 
       {/* ▼ 言語選択 */}
       <div style={settingBlock}>
-        <strong>{t('language') || '表示言語'}</strong>
-        <select value={selectedLang} onChange={e => handleLangChange(e.target.value)} style={selectStyle}>
-          {LANG_OPTIONS.map(opt => (
-            <option key={opt.value} value={opt.value}>{opt.label}</option>
-          ))}
-        </select>
-      </div>
+  <strong>{t('language_label')}</strong>
+  <select value={selectedLang} onChange={e => handleLangChange(e.target.value)} style={selectStyle}>
+    {LANG_OPTIONS.map(opt => (
+      <option key={opt.value} value={opt.value}>{opt.label}</option>
+    ))}
+  </select>
+</div>
 
       {/* デフォルトロト種別 */}
       <div style={settingBlock}>
