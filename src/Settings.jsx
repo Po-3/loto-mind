@@ -3,19 +3,16 @@ import { useEffect, useState } from 'react';
 
 // フォント選択肢
 const FONT_OPTIONS = [
-  { label: '標準（推奨・全端末対応）', value: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, "Noto Sans JP", sans-serif' },
-  { label: '明朝体（標準）', value: 'serif, "Times New Roman", "Noto Serif JP", "YuMincho", "ヒラギノ明朝 ProN", "MS P明朝"' },
-  { label: '等幅（数字・表用）', value: 'monospace, "Menlo", "Consolas", "Liberation Mono", "Courier New"' },
+  { labelKey: 'font_standard', value: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, "Noto Sans JP", sans-serif' },
+  { labelKey: 'font_serif', value: 'serif, "Times New Roman", "Noto Serif JP", "YuMincho", "ヒラギノ明朝 ProN", "MS P明朝"' },
+  { labelKey: 'font_monospace', value: 'monospace, "Menlo", "Consolas", "Liberation Mono", "Courier New"' },
 ];
 
 // カラー
-const COLOR_PRESETS = [
-  { name: 'となりカラー', value: '#fafcff' },
-  { name: 'アイボリー', value: '#f9f6ee' },
-  { name: 'シンプルグレー', value: '#eeeeee' },
-  { name: '桜ピンク', value: '#ffe4e1' },
-  { name: 'ライトブルー', value: '#d1f0ff' },
-  { name: 'ホワイト', value: '#ffffff' }
+const FONT_OPTIONS = [
+  { labelKey: 'font_standard', value: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, "Noto Sans JP", sans-serif' },
+  { labelKey: 'font_serif', value: 'serif, "Times New Roman", "Noto Serif JP", "YuMincho", "ヒラギノ明朝 ProN", "MS P明朝"' },
+  { labelKey: 'font_monospace', value: 'monospace, "Menlo", "Consolas", "Liberation Mono", "Courier New"' }
 ];
 
 // 言語選択肢
