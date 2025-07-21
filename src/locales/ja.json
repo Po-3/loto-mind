@@ -53,6 +53,8 @@
   "least_often": "最少本数字",
 
   "language_label": "言語",
+    "lang_ja": "日本語",
+  "lang_en": "英語",
 
   "type": "タイプ",
   "prediction_numbers": "予想数字",
