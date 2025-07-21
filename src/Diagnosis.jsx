@@ -220,39 +220,39 @@ export default function Diagnosis({ jsonUrl }) {
         </span>
       </div>
       <button
-        style={{
-          padding: '6px 16px',
-          borderRadius: '6px',
-          border: '1px solid #aaa',
-          background: '#f4f4fc',
-          color: '#345',
-          marginBottom: 10,
-          cursor: 'pointer'
-        }}
-        onClick={() => data && runDiagnosis(data, pattern)}
-      >
-        {t('診断を更新')}
-      </button>
-      {result ? (
-        <>
-          <div style={numStyle}>
-            {result.recommend.map(n => (
-              <span key={n} style={numItemStyle}>{n}</span>
-            ))}
-          </div>
-          <p style={{
-            ...footerStyle,
-            marginTop: 8,
-            color: '#ca3',
-            fontWeight: 500
-          }}>{result.comment}</p>
-          <p style={footerStyle}>
-            {t('上のロト種ボタンで切替えられるよ！')}
-            <br />
-            {t('「当たったら教えてね！」by となり')}
-          </p>
-        </>
-      ) : <p>{t('診断中…')}</p>}
+  style={{
+    padding: '6px 16px',
+    borderRadius: '6px',
+    border: '1px solid #aaa',
+    background: '#f4f4fc',
+    color: '#345',
+    marginBottom: 10,
+    cursor: 'pointer'
+  }}
+  onClick={() => data && runDiagnosis(data, pattern)}
+>
+  {t('update_diagnosis')}
+</button>
+{result ? (
+  <>
+    <div style={numStyle}>
+      {result.recommend.map(n => (
+        <span key={n} style={numItemStyle}>{n}</span>
+      ))}
+    </div>
+    <p style={{
+      ...footerStyle,
+      marginTop: 8,
+      color: '#ca3',
+      fontWeight: 500
+    }}>{result.comment}</p>
+    <p style={footerStyle}>
+      {t('switch_loto_type')}
+      <br />
+      {t('notify_if_win')}
+    </p>
+  </>
+) : <p>{t('diagnosing')}</p>}
     </div>
   );
 }
