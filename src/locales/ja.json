@@ -50,16 +50,21 @@
   "search_result": "検索結果：{count}件",
   "most_often": "最多本数字",
   "least_often": "最少本数字",
-  "filter_round_from": "開催回From",
-  "filter_round_to": "To",
-  "filter_date_from": "開催日From",
-  "filter_date_to": "To",
-  "filter_include_numbers": "含む数字",
-  "filter_exclude_numbers": "除く数字",
-  "filter_features": "特徴ラベル",
-  "filter_sum_from": "合計値From",
-  "filter_sum_to": "To",
-  "filter_odd_even": "奇数・偶数構成",
+
+  "from_round": "開催回From",
+  "to_round": "To",
+  "from_date": "開催日From",
+  "to_date": "To",
+  "include_numbers": "含む数字",
+  "exclude_numbers": "除く数字",
+  "features_label": "特徴ラベル",
+  "from_sum": "合計値From",
+  "to_sum": "To",
+  "odd_even": "奇数・偶数構成",
+  "all": "全件",
+  "example_numbers": "例: 3,17,28",
+  "example_exclude": "例: 1,12",
+
   "csv_export": "CSV出力",
 
   "settings": "設定",
@@ -91,7 +96,9 @@
   "draw": "回",
   "date": "日付",
   "main_number": "本数字{index}",
+  "main_num": "本数字{num}",
   "bonus_number": "B数字{index}",
+  "bonus_num": "B数字{num}",
   "features": "特徴",
   "sum": "合計",
   "carryover": "キャリーオーバー",
@@ -101,5 +108,14 @@
   "close_dialog": "閉じる",
 
   "info": "説明",
-  "see_more": "もっと見る"
+  "see_more": "もっと見る",
+  "times": "回",
+  "items": "件",
+
+  "search_result": "検索結果",
+  "most_frequent_numbers": "最多本数字",
+  "least_frequent_numbers": "最少本数字",
+
+  "rank_count": "{rank}口数",
+  "rank_prize": "{rank}賞金"
 }
