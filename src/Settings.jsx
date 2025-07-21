@@ -20,8 +20,8 @@ const COLOR_PRESETS = [
 
 // 言語選択肢
 const LANG_OPTIONS = [
-  { labelKey: 'lang_ja', value: 'ja' },
-  { labelKey: 'lang_en', value: 'en' }
+  { label: '日本語', value: 'ja' },
+  { label: 'English', value: 'en' }
 ];
 
 const PaletteIcon = ({ size = 27 }) => (
@@ -34,6 +34,74 @@ const PaletteIcon = ({ size = 27 }) => (
     <circle cx="8.3" cy="14.1" r="1.2" fill="#e883d3"/>
   </svg>
 );
+
+// ▼ 言語切替カスタムUI
+function LanguageDropdown({ selectedLang, onChange }) {
+  const [open, setOpen] = useState(false);
+
+  // 選択中を上、非選択を下に
+  const sorted = [...LANG_OPTIONS].sort((a, b) =>
+    a.value === selectedLang ? -1 : b.value === selectedLang ? 1 : 0
+  );
+
+  return (
+    <div style={{ position: 'relative', display: 'inline-block', minWidth: 120 }}>
+      <button
+        type="button"
+        onClick={() => setOpen(o => !o)}
+        style={{
+          fontSize: '1em',
+          padding: '5px 20px',
+          borderRadius: 8,
+          border: '1px solid #bbb',
+          background: '#f7fafd',
+          cursor: 'pointer',
+          minWidth: 80
+        }}
+        aria-haspopup="listbox"
+        aria-expanded={open}
+      >
+        {sorted[0].label}
+        <span style={{ marginLeft: 6, fontSize: '0.94em', color: '#999' }}>▼</span>
+      </button>
+      {open && (
+        <div
+          style={{
+            position: 'absolute', left: 0, top: '110%', background: '#fff', border: '1px solid #ddd',
+            boxShadow: '0 4px 18px #0001', borderRadius: 10, marginTop: 5, minWidth: 110, zIndex: 50
+          }}
+          tabIndex={-1}
+        >
+          {sorted.map(lang => (
+            <div
+              key={lang.value}
+              onClick={() => {
+                if (lang.value !== selectedLang) {
+                  onChange(lang.value);
+                }
+                setOpen(false);
+              }}
+              style={{
+                fontWeight: lang.value === selectedLang ? 'bold' : undefined,
+                color: lang.value === selectedLang ? '#1c6cff' : '#333',
+                padding: '9px 16px 7px',
+                cursor: lang.value === selectedLang ? 'default' : 'pointer',
+                background: lang.value === selectedLang ? '#e6f3ff' : undefined,
+                borderRadius: 8,
+                display: 'flex',
+                alignItems: 'center',
+                fontSize: '1.09em'
+              }}
+            >
+              {lang.value === selectedLang && <span style={{ marginRight: 8, fontSize: '1.1em' }}>✓</span>}
+              {lang.label}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
 
 export default function Settings({
   defaultLotoType,
@@ -118,11 +186,7 @@ export default function Settings({
 
       <div style={settingBlock}>
         <strong>{selectedLang === 'ja' ? '言語' : 'Language'}</strong>
-        <select value={selectedLang} onChange={e => handleLangChange(e.target.value)} style={selectStyle}>
-          {LANG_OPTIONS.map(opt => (
-            <option key={opt.value} value={opt.value}>{t(opt.labelKey)}</option>
-          ))}
-        </select>
+        <LanguageDropdown selectedLang={selectedLang} onChange={handleLangChange} />
       </div>
 
       <div style={settingBlock}>
