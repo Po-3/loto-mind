@@ -172,17 +172,13 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
     return Array(config.main).fill(0).map((_, i) => Number(row[`第${i + 1}数字`])).reduce((a, b) => a + b, 0);
   }
   function toCSV(arr) {
-const head = [
-  t('round'), t('date'),
-  ...Array(config.main).fill(0).map((_, i) => t('main_num', { num: i + 1 })),
-  ...config.bonusNames.map((_, i) => t('bonus_num', { num: i + 1 })),
-  t('features'),
-  ...(lotoType === 'loto6' || lotoType === 'loto7' ? [t('carryover')] : []),
-  ...config.ranks.flatMap(rank => [
-    t('rank_count', { rank: t(rank.rank) }),
-    t('rank_prize', { rank: t(rank.rank) })
-  ])
-];
+    const head = [
+      t('round'), t('date'),
+      ...Array(config.main).fill(0).map((_, i) => t('main_num', { num: i + 1 })),
+      ...config.bonusNames, t('features'),
+      ...(lotoType === 'loto6' || lotoType === 'loto7' ? [t('carryover')] : []),
+      ...config.ranks.flatMap(rank => [t('rank_count', { rank: rank.rank }), t('rank_prize', { rank: rank.rank })])
+    ];
     const rows = arr.map(row => [
       row['開催回'], row['日付'],
       ...Array(config.main).fill(0).map((_, i) => row[`第${i + 1}数字`]),
@@ -413,27 +409,27 @@ const handleInfo = (label, e) => {
         minWidth: 0
       }}>
         <table style={{ borderCollapse: 'collapse', width: '100%', minWidth: 850, fontSize: '0.96em' }}>
-         <thead>
-  <tr>
-    {/* 本数字1,2,... */}
-    {Array(config.main).fill(0).map((_, i) =>
-      <th key={i} style={thStyle}>{t('main_num', { num: i + 1 })}</th>
-    )}
-    {/* ボーナス数字1,2... */}
-    {config.bonusNames.map((name, i) => (
-      <th key={name} style={thStyle}>{t('bonus_num', { num: i + 1 })}</th>
-    ))}
-    {/* ... */}
-    {/* ランクごとの列 */}
-    {config.ranks.map(({ rank }) => (
-      <th key={rank} style={thStyle}>{t('rank_count', { rank: t(rank.rank) })}</th>
-    ))}
-    {config.ranks.map(({ rank }) => (
-      <th key={rank + '_prize'} style={thStyle}>{t('rank_prize', { rank: t(rank.rank) })}</th>
-    ))}
-    {/* 必要なら他の列も */}
-  </tr>
-</thead>
+          <thead>
+            <tr>
+              <th style={{ ...thStyle, ...stickyLeftStyle }}>{t('round')}</th>
+              <th style={thStyle}>{t('date')}</th>
+              {Array(config.main).fill(0).map((_, i) => <th key={i} style={thStyle}>本数字{i + 1}</th>)}
+              {config.bonusNames.map((name, i) => (
+                <th key={name} style={thStyle}>B数字{i + 1}</th>
+              ))}
+              <th style={{ ...thStyle, minWidth: 180, width: '24%' }}>{t('features')}</th>
+              <th style={thStyle}>{t('sum')}</th>
+              {(lotoType === 'loto6' || lotoType === 'loto7') && (
+                <th style={thStyle}>{t('carryover')}</th>
+              )}
+              {config.ranks.map(({ rank }) => (
+                <th key={rank} style={thStyle}>{rank}口数</th>
+              ))}
+              {config.ranks.map(({ rank }) => (
+                <th key={rank + '_prize'} style={thStyle}>{rank}賞金</th>
+              ))}
+            </tr>
+          </thead>
           <tbody>
             {paged.map(row => (
               <tr key={row['開催回']}>
