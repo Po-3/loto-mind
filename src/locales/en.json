@@ -136,6 +136,10 @@
   "合計小さめ": "Low Sum",
   "合計大きめ": "High Sum",
 
+  "年": "yyyy",
+  "月": "mm",
+  "日": "dd",
+
   "language_label": "Language",
     "lang_ja": "Japanese",
   "lang_en": "English",
