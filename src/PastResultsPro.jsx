@@ -1,6 +1,27 @@
 import { useTranslation } from 'react-i18next';
 import { useEffect, useState, useRef } from 'react';
 
+// --- 特徴ごとの説明 ---
+const featureInfo = {
+  '連番あり': '連続した数字（例：24・25など）を含む構成です。',
+  '下一桁かぶり': '同じ下一桁（例：11・21・31など）が複数含まれる構成です。',
+  'キャリーあり': 'キャリーオーバーが発生していた回です。',
+  '奇数多め': '奇数が4個以上含まれる構成です。',
+  '偶数多め': '偶数が4個以上含まれる構成です。',
+  '合計小さめ': '本数字の合計が60未満の構成です。',
+  '合計大きめ': '本数字の合計が80以上の構成です。',
+  'バランス型': '奇数と偶数が均等に含まれる構成です。',
+  '奇数多め_loto6': '奇数が4個以上含まれる構成です。',
+  '偶数多め_loto6': '偶数が4個以上含まれる構成です。',
+  '合計小さめ_loto6': '6つの本数字の合計が114未満の構成です。',
+  '合計大きめ_loto6': '6つの本数字の合計が151を超える構成です。',
+  '奇数多め_loto7': '奇数が5個以上含まれる構成です。',
+  '偶数多め_loto7': '偶数が5個以上含まれる構成です。',
+  '合計小さめ_loto7': '7つの本数字の合計が160未満の構成です。',
+  '合計大きめ_loto7': '7つの本数字の合計が160以上の構成です。',
+  '高低ミックス': '10未満と30以上の数字が両方含まれる構成です。',
+};
+
 // --- ロト種別ごとの設定（HTMLラベルに完全一致） ---
 const lotoConfig = {
   miniloto: {
@@ -198,8 +219,9 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
   }, [jsonUrl]);
 
   // --- Infoポップアップ ---
-  const handleInfo = (text, e) => {
+  const handleInfo = (label, e) => {
     e.stopPropagation();
+    const text = featureInfo[label] || label;
     if (!text || !text.trim()) return;
     // ポップアップを画面中央に表示
     const popupWidth = 240;
@@ -390,19 +412,20 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
               <th style={{ ...thStyle, ...stickyLeftStyle }}>{t('round')}</th>
               <th style={thStyle}>{t('date')}</th>
               {Array(config.main).fill(0).map((_, i) => <th key={i} style={thStyle}>本数字{i + 1}</th>)}
-{config.bonusNames.map((name, i) => (
-  <th key={name} style={thStyle}>B数字{i + 1}</th>
-))}              <th style={{ ...thStyle, minWidth: 180, width: '24%' }}>{t('features')}</th>
+              {config.bonusNames.map((name, i) => (
+                <th key={name} style={thStyle}>B数字{i + 1}</th>
+              ))}
+              <th style={{ ...thStyle, minWidth: 180, width: '24%' }}>{t('features')}</th>
               <th style={thStyle}>{t('sum')}</th>
               {(lotoType === 'loto6' || lotoType === 'loto7') && (
                 <th style={thStyle}>{t('carryover')}</th>
               )}
               {config.ranks.map(({ rank }) => (
-  <th key={rank} style={thStyle}>{rank}口数</th>
-))}
+                <th key={rank} style={thStyle}>{rank}口数</th>
+              ))}
               {config.ranks.map(({ rank }) => (
-  <th key={rank + '_prize'} style={thStyle}>{rank}賞金</th>
-))}
+                <th key={rank + '_prize'} style={thStyle}>{rank}賞金</th>
+              ))}
             </tr>
           </thead>
           <tbody>
