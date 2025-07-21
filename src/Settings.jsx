@@ -107,13 +107,13 @@ export default function Settings({
     <div style={{ width: '100%', boxSizing: 'border-box' }}>
       <h2 style={{ fontSize: '1.10em', margin: '8px 0' }}>{t('settings')}</h2>
 
-      {/* ▼ 言語選択 */}
-      <div style={settingBlock}>
-  <strong>{t('language_label')}</strong>
+      {/* ▼ 言語選択ラベル */}
+<div style={settingBlock}>
+  <strong>{selectedLang === 'ja' ? '言語' : 'Language'}</strong> {/* ✅ ここだけ条件分岐 */}
   <select value={selectedLang} onChange={e => handleLangChange(e.target.value)} style={selectStyle}>
     {LANG_OPTIONS.map(opt => (
-  <option key={opt.value} value={opt.value}>{t(opt.labelKey)}</option> // ✅ 修正ここだけ！
-))}
+      <option key={opt.value} value={opt.value}>{t(opt.labelKey)}</option>
+    ))}
   </select>
 </div>
 
