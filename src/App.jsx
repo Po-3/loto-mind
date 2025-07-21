@@ -219,18 +219,6 @@ export default function App() {
           }}
         />
         <span style={{ fontSize: '0.90em', marginLeft: 2 }}>がいつも応援中！</span> 
-        <a
-  href="https://xa.shinobi.jp/bin/gg?192060200"
-  target="_blank"
-  rel="noopener noreferrer"
-  style={{ marginLeft: 6, display: 'inline-block', verticalAlign: 'middle' }}
->
-  <img
-    src="https://xa.shinobi.jp/bin/ll?192060200"
-    alt="アクセスカウンター"
-    style={{ height: 18, verticalAlign: 'middle', border: 0 }}
-  />
-</a>
 </div>
     </div>
   );
