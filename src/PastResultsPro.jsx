@@ -413,23 +413,19 @@ const handleInfo = (label, e) => {
   <tr>
     <th style={{ ...thStyle, ...stickyLeftStyle }}>{t('draw')}</th>
     <th style={thStyle}>{t('date')}</th>
-    {Array(config.main).fill(0).map((_, i) => (
-      <th key={`main${i+1}`} style={thStyle}>{t('main_num', { num: i + 1 })}</th>
-    ))}
-    {config.bonusNames.map((name, i) => (
-      <th key={`bonus${i+1}`} style={thStyle}>{t('bonus_num', { num: i + 1 })}</th>
-    ))}
-    <th style={{ ...thStyle, minWidth: 180, width: '24%' }}>{t('features')}</th>
-    <th style={thStyle}>{t('sum')}</th>
-    {(lotoType === 'loto6' || lotoType === 'loto7') && (
-      <th style={thStyle}>{t('carryover')}</th>
-    )}
-    {config.ranks.map(({ rank }) => (
-      <th key={rank} style={thStyle}>{t('rank_count', { rank: t(rank) })}</th>
-    ))}
-    {config.ranks.map(({ rank }) => (
-      <th key={rank + '_prize'} style={thStyle}>{t('rank_prize', { rank: t(rank) })}</th>
-    ))}
+{Array(config.main).fill(0).map((_, i) =>
+  <th key={i} style={thStyle}>{t('main_num', { num: i + 1 })}</th>
+)}
+{config.bonusNames.map((name, i) => (
+  <th key={name} style={thStyle}>{t('bonus_num', { num: i + 1 })}</th>
+))}
+...
+{config.ranks.map(({ rank }) => (
+  <th key={rank} style={thStyle}>{t('rank_count', { rank: t(rank) })}</th>
+))}
+{config.ranks.map(({ rank }) => (
+  <th key={rank + '_prize'} style={thStyle}>{t('rank_prize', { rank: t(rank) })}</th>
+))}
   </tr>
 </thead>
           <tbody>
