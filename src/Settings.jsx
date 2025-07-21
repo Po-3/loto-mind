@@ -180,12 +180,15 @@ export default function Settings({
     return <div>{t('loading')}</div>;
   }
 
+  // ★ここがポイント！
+  const langLabel = selectedLang === 'ja' ? 'Language' : '言語';
+
   return (
     <div style={{ width: '100%', boxSizing: 'border-box' }}>
       <h2 style={{ fontSize: '1.10em', margin: '8px 0' }}>{t('settings')}</h2>
 
       <div style={settingBlock}>
-        <strong>{selectedLang === 'ja' ? '言語' : 'Language'}</strong>
+        <strong>{langLabel}</strong>
         <LanguageDropdown selectedLang={selectedLang} onChange={handleLangChange} />
       </div>
 
