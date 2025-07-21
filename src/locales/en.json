@@ -10,6 +10,7 @@
   "loading": "Loading…",
   "fetch_error": "Data fetch error",
   "not_found": "No data found",
+  "prediction_not_found": "No prediction article has been written.",
   "csv_download": "Export CSV",
   "update": "Update",
   "yes": "Yes",
@@ -29,7 +30,7 @@
 
   "app_title_long": "Loto Search & Analysis App LotoMind",
 
-  "diagnosis_pattern": "Diagnosis Pattern",
+  "diagnosis_pattern": "Diagnosis Type",
   "update_diagnosis": "Update Diagnosis",
   "recommend_numbers": "Recommended Numbers",
   "diagnosis_comment": "Comment",
@@ -45,11 +46,11 @@
   "must_select_loto": "Please make sure to select the correct draw for the selected lotto.",
   "score_title": "★Prediction Result (Answer Check)",
   "score_not_found": "No result data found.",
-  "no_prediction": "Could not retrieve prediction.",
+  "no_prediction": "No prediction available.",
 
   "search_result": "Search result: {count} items",
-  "most_often": "Most Frequent Numbers",
-  "least_often": "Least Frequent Numbers",
+  "most_frequent_numbers": "Most Frequent Numbers",
+  "least_frequent_numbers": "Least Frequent Numbers",
 
   "from_round": "Draw No. From",
   "to_round": "To",
@@ -112,18 +113,12 @@
   "times": "times",
   "items": "items",
 
-  "search_result": "Search Result",
-  "most_frequent_numbers": "Most Frequent Numbers",
-  "least_frequent_numbers": "Least Frequent Numbers",
-
   "rank_count": "{rank} Winners",
   "rank_prize": "{rank} Prize",
 
-  "件": "items",
-  "回": "times",
   "vs": "vs",
 
-    "color_tonari": "Tonari Color",
+  "color_tonari": "Tonari Color",
   "color_ivory": "Ivory",
   "color_gray": "Simple Gray",
   "color_sakura": "Sakura Pink",
@@ -131,113 +126,13 @@
   "color_white": "White",
 
   "language_label": "Language",
-    "lang_ja": "Japanese",
+  "lang_ja": "Japanese",
   "lang_en": "English",
   "label_language": "Language",
-    "prediction_not_found": "No prediction article has been written.",
+
   "font_standard": "Standard (Recommended / Supported on all devices)",
   "font_serif": "Serif (Standard)",
   "font_monospace": "Monospace (For numbers/tables)",
-
-    "連続した数字（例：24・25など）を含む構成です。": "A combination that includes consecutive numbers (e.g., 24 and 25).",
-  "同じ下一桁（例：11・21・31など）が複数含まれる構成です。": "A combination that includes multiple numbers with the same last digit (e.g., 11, 21, 31, etc.).",
-  "キャリーオーバーが発生していた回です。": "A draw where a carryover occurred.",
-  "奇数が4個以上含まれる構成です。": "A combination that includes 4 or more odd numbers.",
-  "偶数が4個以上含まれる構成です。": "A combination that includes 4 or more even numbers.",
-  "本数字の合計が60未満の構成です。": "A combination where the sum of the main numbers is less than 60.",
-  "本数字の合計が80以上の構成です。": "A combination where the sum of the main numbers is 80 or more.",
-  "奇数と偶数が均等に含まれる構成です。": "A combination with an even balance of odd and even numbers.",
-  "6つの本数字の合計が114未満の構成です。": "A combination where the sum of the 6 main numbers is less than 114.",
-  "6つの本数字の合計が151を超える構成です。": "A combination where the sum of the 6 main numbers is over 151.",
-  "奇数が5個以上含まれる構成です。": "A combination that includes 5 or more odd numbers.",
-  "偶数が5個以上含まれる構成です。": "A combination that includes 5 or more even numbers.",
-  "7つの本数字の合計が160未満の構成です。": "A combination where the sum of the 7 main numbers is less than 160.",
-  "7つの本数字の合計が160以上の構成です。": "A combination where the sum of the 7 main numbers is 160 or more.",
-  "10未満と30以上の数字が両方含まれる構成です。": "A combination that includes both numbers under 10 and over 30.",
-
-  "最近出ていない数字": "Not Appeared Recently",
-  "過去30回で未出現の数字から抽出": "Selected from numbers not appeared in the last 30 draws",
-  "よく出ている数字": "Frequent Numbers",
-  "直近30回で出現頻度が高い数字から抽出": "Selected from numbers frequently appeared in the last 30 draws",
-  "完全ランダム": "Pure Random",
-  "完全無作為（すべての数字からランダム抽出）": "Completely random (drawn from all numbers)",
-  "奇数多め": "Odd-heavy",
-  "奇数が多い構成（ミニロト・ロト6:4個以上, ロト7:5個以上）": "More odd numbers (Mini Loto/Loto6: 4 or more, Loto7: 5 or more)",
-  "偶数多め": "Even-heavy",
-  "偶数が多い構成（ミニロト・ロト6:4個以上, ロト7:5個以上）": "More even numbers (Mini Loto/Loto6: 4 or more, Loto7: 5 or more)",
-  "奇数偶数バランス型": "Balanced Odd/Even",
-  "奇数:偶数が3:3": "3 odds / 3 evens",
-  "連番入り": "Contains Consecutive Numbers",
-  "連続数字（例:24,25など）が必ず含まれる": "Must include consecutive numbers (e.g. 24,25, etc.)",
-  "下一桁同じ数字入り": "Contains Same Last Digit",
-  "下一桁が同じ数字（例:11,21など）が複数含まれる": "Includes numbers with the same last digit (e.g. 11, 21, etc.)",
-  "低位ゾーン重視": "Low-zone Focused",
-  "最小ゾーン（1〜9）の数字を多めに選ぶ": "Select more from lowest zone (1–9)",
-  "中位ゾーン重視": "Mid-zone Focused",
-  "中央ゾーンの数字多め": "More from the middle zone",
-  "高位ゾーン重視": "High-zone Focused",
-  "最大ゾーン（例：ロト6は31〜43など）多め": "More from the highest zone (e.g. Loto6: 31–43)",
-  "まんべんなく全ゾーン": "Spread Across All Zones",
-  "各ゾーンから最低1つは必ず選ぶ": "At least one from each zone",
-  "範囲が狭い": "Narrow Range",
-  "最小～最大のレンジが小さい構成": "Small range between smallest and largest number",
-  "範囲が広い": "Wide Range",
-  "最小～最大のレンジが大きい構成": "Large range between smallest and largest number",
-  "前回かぶりあり": "Overlap with Previous Draw",
-  "前回当選数字と1つ以上重複": "At least one number overlaps with previous winning numbers",
-  "前回と完全非重複": "No Overlap with Previous Draw",
-  "前回当選数字と1つも重複しない": "No numbers overlap with previous winning numbers",
-  "合計値小さめ": "Low Sum",
-  "合計値が小さい構成（しきい値は種別で変わる）": "Low total sum (threshold varies by type)",
-  "合計値大きめ": "High Sum",
-  "合計値が大きい構成（しきい値は種別で変わる）": "High total sum (threshold varies by type)",
-  "素数のみ": "All Primes",
-  "全部素数！（完全ネタ枠／ファン向け）": "All numbers are prime! (For fun)",
-  "誕生日数字縛り": "Birthday Numbers Only",
-  "すべて「1〜31」の数字のみ": "All numbers are from 1 to 31",
-  "キャリーあり": "With Carryover",
-  "キャリー発生時・キャリー回のみ抽出": "Draws with a carryover only",
-
-    "type": "Type",
-  "prediction_numbers": "Prediction Numbers",
-  "axis_number": "Axis Number",
-  "features_and_aim": "Features & Aim",
-
-  "診断を更新": "Update Diagnosis",
-  "上のロト種ボタンで切替えられるよ！": "Switch using the lottery type buttons above!",
-  "「当たったら教えてね！」by となり": "\"Let me know if you win!\" by Tonari",
-  "診断中…": "Diagnosing…",
-
-  "連番アタック！流れに乗る日は大きく当たる日。": "Consecutive attack! Days when you ride the flow can bring big wins.",
-  "連続数字が熱い！波に乗れそうな予感。": "Consecutive numbers are hot! You might catch a wave.",
-  "連番多め。勢い重視のギャンブラー型診断！": "Lots of consecutive numbers. A gambler's type for momentum!",
-
-  "全て奇数！波乱の予感漂うアグレッシブ診断。": "All odd numbers! An aggressive pattern, expect surprises.",
-  "オッズ型フルスロットル！攻めの日です。": "All odds, full throttle! Time to go on the offensive.",
-
-  "全て偶数！堅実・安定感マックス。": "All even numbers! Maximum stability and reliability.",
-  "偶数オンリー。落ち着いた構成で勝負！": "Only even numbers. Play it cool and steady!",
-
-  "奇数偶数バランス型。大穴狙いでも鉄板狙いでもイケる！": "Balanced odds and evens. Good for both longshots and sure bets!",
-  "バランス型！何が来てもおかしくない絶妙ライン。": "Balanced style! Anything can happen on this fine line.",
-
-  "低位ゾーンに集中。地に足ついた堅実型！": "Focus on low zone. A grounded and steady approach.",
-  "1ケタばかりの慎重派。小さな当たりも積み重ね！": "Single-digit lovers. Build up small wins patiently!",
-
-  "高位ゾーンで夢を見ろ！一発逆転狙いの攻め型。": "Chase your dreams in the high zone! Go big or go home.",
-  "高位ゾーン中心のジャンボ狙い。": "Targeting high zone for jumbo prizes.",
-
-  "数字のまとまり感がスゴい！結束力バツグン。": "Amazing number cohesion! Fantastic team spirit.",
-  "レンジが狭い…団結力で当たりを呼ぶパターン!?": "Tight range... Will teamwork bring a win?",
-
-  "広範囲カバー型。どこからでも“当たり”を拾いに行ける！": "Wide coverage. You can catch a win from anywhere!",
-  "ばらけている時こそ、意外な一発に期待！": "When numbers are spread out, watch for surprise hits!",
-
-  "今日は完全ランダム型。こういう時こそ神頼み！": "Today is pure random. Time to trust your luck!",
-  "狙いはランダム、当たりもランダム!?": "Random picks, random wins!?",
-  "“運”という名のギャンブル診断！": "A gamble diagnosis called 'Luck'!",
-  "選ばれし数字たちに身を委ねよう。": "Surrender to the chosen numbers.",
-  "今日の運勢はガチャガチャ仕様です。": "Today's fortune: pure gacha (capsule toy) mode.",
 
   "ranks": {
     "1等": "1st Prize",
@@ -252,4 +147,4 @@
     "BONUS数字1": "Bonus 1",
     "BONUS数字2": "Bonus 2"
   }
-   }
+}
