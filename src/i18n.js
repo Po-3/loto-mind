@@ -5,6 +5,7 @@ import ja from './locales/ja.json';
 import en from './locales/en.json';
 import zh from './locales/zh.json';
 import zhTW from './locales/zh-TW.json';
+import LanguageDetector from 'i18next-browser-languagedetector';
 
 // ▼推奨：rank名やbonus名もJSONリソース側で管理する
 //   ex: en.json, ja.json それぞれ
@@ -19,20 +20,19 @@ const resources = {
 };
 
 i18n
+.use(LanguageDetector)
   .use(initReactI18next)
-  .init({
+   .init({
     resources,
-    lng:
-      navigator.language.startsWith('zh-TW') ? 'zh-TW'
-      : navigator.language.startsWith('zh') ? 'zh'
-      : navigator.language.startsWith('ja') ? 'ja'
-      : 'en',
     fallbackLng: 'ja',
-    interpolation: { escapeValue: false }, // プレースホルダの展開に必須
-    // 推奨：キー未定義の時に警告が出る設定
+    interpolation: { escapeValue: false },
+    detection: {
+      order: ['localStorage', 'navigator', 'htmlTag', 'path', 'subdomain'],
+      caches: ['localStorage'],
+    },
+    // 既存の設定もそのまま残す
     saveMissing: true,
     missingKeyHandler: function(lng, ns, key, fallbackValue) {
-      // 本番用には消してOK
       if (process.env.NODE_ENV === 'development') {
         console.warn(`[i18n] missing: ${key} (${lng})`);
       }
