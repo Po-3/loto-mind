@@ -421,10 +421,10 @@ const handleInfo = (label, e) => {
 ))}
 ...
 {config.ranks.map(({ rank }) => (
-  <th key={rank} style={thStyle}>{t('rank_count', { rank: t(rank) })}</th>
+  <th key={rank} style={thStyle}>{t('rank_count', { rank: t(rank.rank) })}</th>
 ))}
 {config.ranks.map(({ rank }) => (
-  <th key={rank + '_prize'} style={thStyle}>{t('rank_prize', { rank: t(rank) })}</th>
+  <th key={rank + '_prize'} style={thStyle}>{t('rank_prize', { rank: t(rank.rank) })}</th>
 ))}
   </tr>
 </thead>
