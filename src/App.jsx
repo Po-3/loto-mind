@@ -220,8 +220,7 @@ export default function App() {
           }}
         />
         <span style={{ fontSize: '0.90em', marginLeft: 2 }}>がいつも応援中！</span> 
-        <AccessCounter />
-      </div>
+<NinjaCounter /> </div>
     </div>
   );
 }
