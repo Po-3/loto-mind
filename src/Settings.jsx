@@ -47,9 +47,7 @@ export default function Settings({
 }) {
   const { t, i18n } = useTranslation();
 
-  // ▼追加：言語状態管理
   const [selectedLang, setSelectedLang] = useState(i18n.language || 'ja');
-
   const [selectedLoto, setSelectedLoto] = useState(defaultLotoType || 'loto6');
   const [selectedMenu, setSelectedMenu] = useState(defaultMenu || 'past');
   const [selectedFont, setSelectedFont] = useState(font || FONT_OPTIONS[0].value);
@@ -59,7 +57,6 @@ export default function Settings({
   const [isUserSelectedLoto, setIsUserSelectedLoto] = useState(false);
   const [isUserSelectedMenu, setIsUserSelectedMenu] = useState(false);
 
-  // ▼追加：言語切替処理
   const handleLangChange = lang => {
     setSelectedLang(lang);
     i18n.changeLanguage(lang);
@@ -68,10 +65,15 @@ export default function Settings({
   useEffect(() => {
     if (!isUserSelectedLoto) setSelectedLoto(defaultLotoType || 'loto6');
   }, [defaultLotoType]);
+
   useEffect(() => {
     if (!isUserSelectedMenu) setSelectedMenu(defaultMenu || 'past');
   }, [defaultMenu]);
-  useEffect(() => { setSelectedFont(font || FONT_OPTIONS[0].value); }, [font]);
+
+  useEffect(() => {
+    setSelectedFont(font || FONT_OPTIONS[0].value);
+  }, [font]);
+
   useEffect(() => {
     setSelectedColor(themeColor || '#fafcff');
     setCustomColor('');
@@ -82,20 +84,24 @@ export default function Settings({
     setSelectedLoto(val);
     onDefaultLotoChange?.(val);
   };
+
   const handleMenuChange = val => {
     setIsUserSelectedMenu(true);
     setSelectedMenu(val);
     onDefaultMenuChange?.(val);
   };
+
   const handleFontChange = val => {
     setSelectedFont(val);
     onFontChange?.(val);
   };
+
   const handlePresetColor = color => {
     setSelectedColor(color);
     setCustomColor('');
     onThemeColorChange?.(color);
   };
+
   const handleCustomColor = color => {
     setSelectedColor(color);
     setCustomColor(color);
@@ -110,17 +116,15 @@ export default function Settings({
     <div style={{ width: '100%', boxSizing: 'border-box' }}>
       <h2 style={{ fontSize: '1.10em', margin: '8px 0' }}>{t('settings')}</h2>
 
-      {/* ▼ 言語選択ラベル */}
-<div style={settingBlock}>
-  <strong>{selectedLang === 'ja' ? '言語' : 'Language'}</strong> {/* ✅ ここだけ条件分岐 */}
-  <select value={selectedLang} onChange={e => handleLangChange(e.target.value)} style={selectStyle}>
-    {LANG_OPTIONS.map(opt => (
-      <option key={opt.value} value={opt.value}>{t(opt.labelKey)}</option>
-    ))}
-  </select>
-</div>
+      <div style={settingBlock}>
+        <strong>{selectedLang === 'ja' ? '言語' : 'Language'}</strong>
+        <select value={selectedLang} onChange={e => handleLangChange(e.target.value)} style={selectStyle}>
+          {LANG_OPTIONS.map(opt => (
+            <option key={opt.value} value={opt.value}>{t(opt.labelKey)}</option>
+          ))}
+        </select>
+      </div>
 
-      {/* デフォルトロト種別 */}
       <div style={settingBlock}>
         <strong>{t('default_loto_type')}</strong>
         <select value={selectedLoto} onChange={e => handleLotoChange(e.target.value)} style={selectStyle}>
@@ -130,7 +134,6 @@ export default function Settings({
         </select>
       </div>
 
-      {/* 起動時の初期メニュー */}
       <div style={settingBlock}>
         <strong>{t('default_menu')}</strong>
         <select value={selectedMenu} onChange={e => handleMenuChange(e.target.value)} style={selectStyle}>
@@ -140,25 +143,23 @@ export default function Settings({
         </select>
       </div>
 
-      {/* フォント */}
       <div style={settingBlock}>
         <strong>{t('screen_font')}</strong>
         <select value={selectedFont} onChange={e => handleFontChange(e.target.value)} style={selectStyle}>
           {FONT_OPTIONS.map(opt => (
-            <option key={opt.value} value={opt.value}>{opt.label}</option>
+            <option key={opt.value} value={opt.value}>{t(opt.labelKey)}</option>
           ))}
         </select>
         <span style={{ marginLeft: 12, fontSize: '0.93em', fontFamily: selectedFont, borderBottom: '1px dotted #bbb' }}>
-          {FONT_OPTIONS.find(f => f.value === selectedFont)?.label || ''}
+          {t(FONT_OPTIONS.find(f => f.value === selectedFont)?.labelKey || '')}
         </span>
       </div>
 
-      {/* 背景カラー */}
       <div style={settingBlock}>
         <strong>{t('background_color')}</strong>
         <span style={{ display: 'inline-flex', gap: 4, verticalAlign: 'middle', alignItems: 'center' }}>
           {COLOR_PRESETS.map(c => (
-            <button key={c.value} title={c.name} style={{
+            <button key={c.value} title={t(c.labelKey)} style={{
               width: 28, height: 28, borderRadius: '50%',
               border: selectedColor === c.value ? '2px solid #333' : '1px solid #ccc',
               background: c.value, cursor: 'pointer', marginRight: 2
@@ -180,7 +181,6 @@ export default function Settings({
         </span>
       </div>
 
-      {/* --- ガイド --- */}
       <h2 style={{ fontSize: '1.10em', margin: '18px 0 8px' }}>{t('guide')}</h2>
       <ul style={{ fontSize: '0.98em', marginTop: 8, paddingLeft: 18, marginBottom: 0, color: '#222' }}>
         <li>
@@ -198,26 +198,18 @@ export default function Settings({
         <li>{t('no_ads_no_account')}</li>
         <li>{t('accuracy_note')}</li>
       </ul>
+
       <div style={{ marginTop: 16, fontSize: '0.97em' }}>
-        <a href="https://www.kujitonari.net/" target="_blank" rel="noopener noreferrer">
-          {t('blog')}
-        </a><br />
-        <a href="https://note.com/kujitonari" target="_blank" rel="noopener noreferrer">
-          {t('note')}
-        </a><br />
-        <a href="https://x.com/tkjtonari" target="_blank" rel="noopener noreferrer">
-          {t('x')}
-        </a><br />
-        <a href="https://www.youtube.com/@%E3%81%8F%E3%81%98%E3%81%A8%E3%81%AA%E3%82%8A" target="_blank" rel="noopener noreferrer">
-          {t('youtube')}
-        </a>
+        <a href="https://www.kujitonari.net/" target="_blank" rel="noopener noreferrer">{t('blog')}</a><br />
+        <a href="https://note.com/kujitonari" target="_blank" rel="noopener noreferrer">{t('note')}</a><br />
+        <a href="https://x.com/tkjtonari" target="_blank" rel="noopener noreferrer">{t('x')}</a><br />
+        <a href="https://www.youtube.com/@%E3%81%8F%E3%81%98%E3%81%A8%E3%81%AA%E3%82%8A" target="_blank" rel="noopener noreferrer">{t('youtube')}</a>
       </div>
+
       <div style={{ marginTop: 18, color: '#888', fontSize: '0.96em', display: 'flex', justifyContent: 'space-between' }}>
-         <span>
+        <span>
           {t('disclaimer').split('\n').map((line, i) => <span key={i}>{line}<br /></span>)}
-          <span style={{ fontSize: '0.92em', display: 'inline-block', marginTop: 2 }}>
-            {t('version')}
-          </span>
+          <span style={{ fontSize: '0.92em', display: 'inline-block', marginTop: 2 }}>{t('version')}</span>
         </span>
       </div>
     </div>
