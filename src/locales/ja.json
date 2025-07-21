@@ -179,7 +179,8 @@
   "bonus_names": {
     "ボーナス数字": "ボーナス数字",
     "BONUS数字1": "BONUS数字1",
-    "BONUS数字2": "BONUS数字2",
+    "BONUS数字2": "BONUS数字2"
+  },
 
   "desc_with_consecutive_numbers": "連続した数字（例：24・25など）を含む構成です。",
   "desc_with_same_last_digit": "同じ下一桁（例：11・21・31など）が複数含まれる構成です。",
@@ -198,5 +199,4 @@
   "desc_low_sum_loto7": "7つの本数字の合計が160未満の構成です。",
   "desc_high_sum_loto7": "7つの本数字の合計が160以上の構成です。",
   "desc_high_low_mix": "10未満と30以上の数字が両方含まれる構成です。"
-  }
 }

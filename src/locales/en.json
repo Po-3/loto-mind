@@ -173,7 +173,8 @@
   "bonus_names": {
     "ボーナス数字": "Bonus",
     "BONUS数字1": "Bonus 1",
-    "BONUS数字2": "Bonus 2",
+    "BONUS数字2": "Bonus 2"
+  },
 
   "desc_with_consecutive_numbers": "A set including consecutive numbers (e.g. 24, 25, etc).",
   "desc_with_same_last_digit": "A set including multiple numbers with the same last digit (e.g. 11, 21, 31, etc).",
@@ -192,5 +193,4 @@
   "desc_low_sum_loto7": "A set where the 7 main numbers sum to less than 160.",
   "desc_high_sum_loto7": "A set where the 7 main numbers sum to 160 or higher.",
   "desc_high_low_mix": "A set containing both numbers below 10 and above 30."
-  }
 }
