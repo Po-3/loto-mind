@@ -175,6 +175,7 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
     const head = [
       t('round'), t('date'),
       ...Array(config.main).fill(0).map((_, i) => t('main_num', { num: i + 1 })),
+        ...config.bonusNames.map((name, i) => t('bonus_num', { num: i + 1 })),
       ...config.bonusNames, t('features'),
       ...(lotoType === 'loto6' || lotoType === 'loto7' ? [t('carryover')] : []),
       ...config.ranks.flatMap(rank => [t('rank_count', { rank: rank.rank }), t('rank_prize', { rank: rank.rank })])
@@ -327,7 +328,7 @@ const handleInfo = (label, e) => {
         style={{ display: 'inline-block' }}
       >
         {/* ▼ここを修正（説明も多言語化） */}
-        <InfoIcon onClick={ev => handleInfo(t(featureInfo[label] || label), ev)} />
+       <InfoIcon onClick={ev => handleInfo(label, ev)} />
       </span>
     </span>
   );
