@@ -50,7 +50,6 @@
   "result": "結果",
   "feature_label": "特徵標籤",
 
-  // 診斷模式
   "pattern_notAppeared": "最近未出現的號碼",
   "pattern_notAppeared_desc": "從最近30期未出現的號碼中抽出",
   "pattern_appeared": "常出現號碼",
@@ -94,7 +93,6 @@
   "pattern_carry": "有累積獎金",
   "pattern_carry_desc": "僅抽有累積獎金的期數",
 
-  // 特徵標籤說明
   "label_consecutive": "包含連號",
   "label_sameLast": "同尾數號碼",
   "label_carry": "有累積獎金",
@@ -114,7 +112,6 @@
   "label_sumLarge_loto7": "總和值偏大（7個號碼總和值大於160）",
   "label_highLowMix": "高低區混合（同時有10以下與30以上）",
 
-  // 一般訊息
   "select_lototype_message": "請選擇彩種",
   "select_feature_message": "請選擇功能",
   "diagnosis_in_progress": "診斷中…",

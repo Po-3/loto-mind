@@ -50,7 +50,6 @@
   "result": "结果",
   "feature_label": "特征标签",
 
-  // 診断パターン
   "pattern_notAppeared": "最近未出现的号码",
   "pattern_notAppeared_desc": "从最近30期未出现的号码中抽取",
   "pattern_appeared": "频繁出现的号码",
@@ -94,7 +93,6 @@
   "pattern_carry": "有滚存奖金",
   "pattern_carry_desc": "仅抽取有滚存奖金的期次",
 
-  // 特徴ラベル説明
   "label_consecutive": "包含连续号码",
   "label_sameLast": "末位相同号码",
   "label_carry": "有滚存奖金",
@@ -114,7 +112,6 @@
   "label_sumLarge_loto7": "总和较大（7个号码总和大于160）",
   "label_highLowMix": "高低区混合（含10以下和30以上）",
 
-  // 一般メッセージ
   "select_lototype_message": "请选择彩种",
   "select_feature_message": "请选择功能",
   "diagnosis_in_progress": "诊断中…",

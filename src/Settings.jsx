@@ -18,6 +18,12 @@ const COLOR_PRESETS = [
   { name: 'ホワイト', value: '#ffffff' }
 ];
 
+// 言語選択肢
+const LANG_OPTIONS = [
+  { label: '日本語', value: 'ja' },
+  { label: 'English', value: 'en' }
+];
+
 const PaletteIcon = ({ size = 27 }) => (
   <svg width={size} height={size} viewBox="0 0 22 22" style={{ verticalAlign: 'middle', marginRight: 2 }}>
     <circle cx="11" cy="11" r="10" fill="#f7c873" stroke="#be9000" strokeWidth="1.2"/>
@@ -39,7 +45,10 @@ export default function Settings({
   onFontChange,
   onThemeColorChange,
 }) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+
+  // ▼追加：言語状態管理
+  const [selectedLang, setSelectedLang] = useState(i18n.language || 'ja');
 
   const [selectedLoto, setSelectedLoto] = useState(defaultLotoType || 'loto6');
   const [selectedMenu, setSelectedMenu] = useState(defaultMenu || 'past');
@@ -49,6 +58,12 @@ export default function Settings({
 
   const [isUserSelectedLoto, setIsUserSelectedLoto] = useState(false);
   const [isUserSelectedMenu, setIsUserSelectedMenu] = useState(false);
+
+  // ▼追加：言語切替処理
+  const handleLangChange = lang => {
+    setSelectedLang(lang);
+    i18n.changeLanguage(lang);
+  };
 
   useEffect(() => {
     if (!isUserSelectedLoto) setSelectedLoto(defaultLotoType || 'loto6');
@@ -94,6 +109,16 @@ export default function Settings({
   return (
     <div style={{ width: '100%', boxSizing: 'border-box' }}>
       <h2 style={{ fontSize: '1.10em', margin: '8px 0' }}>{t('settings')}</h2>
+
+      {/* ▼ 言語選択 */}
+      <div style={settingBlock}>
+        <strong>{t('language') || '表示言語'}</strong>
+        <select value={selectedLang} onChange={e => handleLangChange(e.target.value)} style={selectStyle}>
+          {LANG_OPTIONS.map(opt => (
+            <option key={opt.value} value={opt.value}>{opt.label}</option>
+          ))}
+        </select>
+      </div>
 
       {/* デフォルトロト種別 */}
       <div style={settingBlock}>
