@@ -8,11 +8,14 @@ const FONT_OPTIONS = [
   { labelKey: 'font_monospace', value: 'monospace, "Menlo", "Consolas", "Liberation Mono", "Courier New"' },
 ];
 
-// カラー
-const FONT_OPTIONS = [
-  { labelKey: 'font_standard', value: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, "Noto Sans JP", sans-serif' },
-  { labelKey: 'font_serif', value: 'serif, "Times New Roman", "Noto Serif JP", "YuMincho", "ヒラギノ明朝 ProN", "MS P明朝"' },
-  { labelKey: 'font_monospace', value: 'monospace, "Menlo", "Consolas", "Liberation Mono", "Courier New"' }
+// カラー（i18n対応）
+const COLOR_PRESETS = [
+  { labelKey: 'color_tonari', value: '#fafcff' },
+  { labelKey: 'color_ivory', value: '#f9f6ee' },
+  { labelKey: 'color_gray', value: '#eeeeee' },
+  { labelKey: 'color_sakura', value: '#ffe4e1' },
+  { labelKey: 'color_blue', value: '#d1f0ff' },
+  { labelKey: 'color_white', value: '#ffffff' }
 ];
 
 // 言語選択肢
