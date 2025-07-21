@@ -323,7 +323,7 @@ export default function Diagnosis({ jsonUrl }) {
               padding: '5px 16px',
               borderRadius: 6,
               border: '1px solid #bbb',
-              marginRight: 10
+              mmarginBottom: 4
             }}
           >
             {patternList.map(p => (
