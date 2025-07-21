@@ -1,0 +1,117 @@
+{
+  // --- 共通 ---
+  "app_title": "LotoMind",
+  "by_tonari": "by となり",
+  "select": "選択",
+  "ok": "OK",
+  "cancel": "キャンセル",
+  "close": "閉じる",
+  "reset": "リセット",
+  "search": "検索",
+  "loading": "読み込み中…",
+  "fetch_error": "データ取得エラー",
+  "not_found": "データが見つかりませんでした",
+  "csv_download": "CSV出力",
+  "update": "更新",
+  "yes": "はい",
+  "no": "いいえ",
+
+  // --- タブ/機能 ---
+  "miniloto": "ミニロト",
+  "loto6": "ロト6",
+  "loto7": "ロト7",
+  "past": "検索ツール",
+  "diagnosis": "となり診断",
+  "prediction": "ズバリ予想",
+  "settings_tab": "設定",
+
+  // --- タブ説明・補助 ---
+  "miniloto_desc": "1〜31の中から5個選ぶミニロト",
+  "loto6_desc": "1〜43の中から6個選ぶロト6",
+  "loto7_desc": "1〜37の中から7個選ぶロト7",
+
+  // --- メインヘッダー ---
+  "app_title_long": "ロト検索＆診断アプリ LotoMind",
+
+  // --- 診断 ---
+  "diagnosis_pattern": "診断パターン",
+  "update_diagnosis": "診断を更新",
+  "recommend_numbers": "おすすめ数字",
+  "diagnosis_comment": "コメント",
+  "switch_loto_type": "上のロト種ボタンで切替えられるよ！",
+  "tell_me_if_win": "「当たったら教えてね！」by となり",
+  "diagnosing": "診断中…",
+
+  // --- 予想 ---
+  "prediction_title": "となりのズバリ予想",
+  "latest_prediction": "最新予想",
+  "draw_picker": "開催回を選択",
+  "auto_fetch_hint": "開催回を選択すると自動で取得します。",
+  "selected_loto": "※現在「{lotoName}」が選択されています。",
+  "must_select_loto": "必ず対象ロトの開催回を選択してください。",
+  "score_title": "★予想実績（答え合わせ）",
+  "score_not_found": "実績データが見つかりませんでした。",
+  "no_prediction": "ズバリ予想が取得できませんでした。",
+
+  // --- 検索 ---
+  "search_result": "検索結果：{count}件",
+  "most_often": "最多本数字",
+  "least_often": "最少本数字",
+  "filter_round_from": "開催回From",
+  "filter_round_to": "To",
+  "filter_date_from": "開催日From",
+  "filter_date_to": "To",
+  "filter_include_numbers": "含む数字",
+  "filter_exclude_numbers": "除く数字",
+  "filter_features": "特徴ラベル",
+  "filter_sum_from": "合計値From",
+  "filter_sum_to": "To",
+  "filter_odd_even": "奇数・偶数構成",
+  "csv_export": "CSV出力",
+
+  // --- 設定 ---
+  "settings": "設定",
+  "default_loto_type": "デフォルトロト種別：",
+  "default_menu": "起動時の初期メニュー：",
+  "screen_font": "画面フォント：",
+  "background_color": "背景カラー：",
+  "custom_color": "カスタム色",
+  "selected_color": "選択中：{color}",
+  "guide": "ガイド",
+  "pwa_installable": "PWAとしてインストール可能：",
+  "pwa_guide_iphone": "iPhone（Safari）：画面下の「共有」ボタン → 「ホーム画面に追加」",
+  "pwa_guide_android": "Android（Chrome）：画面右上「︙」メニュー → 「ホーム画面に追加」",
+  "pwa_guide_pc": "PC（Chrome）：アドレスバー右端の「インストール」ボタンからアプリ化できます",
+  "pwa_icon_access": "ホーム画面アイコンからいつでもアプリ感覚でアクセス可能です",
+  "pwa_auto_update": "※ PWA対応なので、アップデートは自動で反映されます",
+  "auto_results": "最新のロト抽せん結果は自動で取得・反映されます。",
+  "all_free_features": "「となり流ズバリ予想」「となり診断」「過去結果検索ツール」など独自機能をすべて無料で利用可能です。",
+  "no_ads_no_account": "すべて広告表示なし、アカウント登録も不要。どなたでも安心して使えます。",
+  "accuracy_note": "当アプリの各種データ・分析結果は公式サイトから取得した過去結果一覧のCSVと照合済み、正確性を最優先しています。",
+  "disclaimer": "※ 本サービスはデータ検証およびエンタメ目的で提供しています。\n予想・分析の結果に基づく購入はご自身の判断・責任でお願いします。",
+  "version": "Ver 1.03（2025-07-21）",
+
+  // --- フッター/リンク ---
+  "blog": "宝くじのとなり 公式ブログ（出現傾向＆予想の詳しい解説はこちら）",
+  "note": "note版 くじとなり（考察・有料予想はこちら）",
+  "x": "X（旧Twitter）最新情報",
+  "youtube": "くじとなり公式YouTubeチャンネル（動画も配信中！）",
+
+  // --- テーブル ---
+  "draw": "回",
+  "date": "日付",
+  "main_number": "本数字{index}",
+  "bonus_number": "B数字{index}",
+  "features": "特徴",
+  "sum": "合計",
+  "carryover": "キャリーオーバー",
+  "count": "{rank}口数",
+  "prize": "{rank}賞金",
+
+  // --- ダイアログ ---
+  "close_dialog": "閉じる",
+
+  // --- Info ---
+  "info": "説明",
+  "see_more": "もっと見る"
+}

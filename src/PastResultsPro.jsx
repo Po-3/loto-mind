@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useEffect, useState, useRef } from 'react';
 
 // --- ロト種別ごとの設定（HTMLラベルに完全一致） ---
 const lotoConfig = {
@@ -7,12 +8,7 @@ const lotoConfig = {
     bonus: 1,
     bonusNames: ['ボーナス数字'],
     labels: [
-      '連番あり',
-      '奇数多め',
-      '偶数多め',
-      '下一桁かぶり',
-      '合計小さめ',
-      '合計大きめ'
+      '連番あり', '奇数多め', '偶数多め', '下一桁かぶり', '合計小さめ', '合計大きめ'
     ],
     min: 1,
     max: 31,
@@ -33,14 +29,8 @@ const lotoConfig = {
     bonus: 1,
     bonusNames: ['ボーナス数字'],
     labels: [
-      '連番あり',
-      '奇数多め',
-      '偶数多め',
-      'バランス型',
-      '下一桁かぶり',
-      '合計小さめ',
-      '合計大きめ',
-      'キャリーあり'
+      '連番あり', '奇数多め', '偶数多め', 'バランス型', '下一桁かぶり',
+      '合計小さめ', '合計大きめ', 'キャリーあり'
     ],
     min: 1,
     max: 43,
@@ -62,14 +52,7 @@ const lotoConfig = {
     bonus: 2,
     bonusNames: ['BONUS数字1', 'BONUS数字2'],
     labels: [
-      '連番あり',
-      '奇数多め',
-      '偶数多め',
-      '下一桁かぶり',
-      '合計小さめ',
-      '合計大きめ',
-      '高低ミックス',
-      'キャリーあり'
+      '連番あり', '奇数多め', '偶数多め', '下一桁かぶり', '合計小さめ', '合計大きめ', '高低ミックス', 'キャリーあり'
     ],
     min: 1,
     max: 37,
@@ -89,37 +72,13 @@ const lotoConfig = {
   }
 };
 
-// --- ラベル説明（ロト種別ごとに出し分け） ---
-const featureInfo = {
-  // 共通
-  '連番あり': '連続した数字（例：24・25など）を含む構成です。',
-  '下一桁かぶり': '同じ下一桁（例：11・21・31など）が複数含まれる構成です。',
-  'キャリーあり': 'キャリーオーバーが発生していた回です。',
-  // デフォルト（ミニロト）用
-  '奇数多め': '奇数が4個以上含まれる構成です。',
-  '偶数多め': '偶数が4個以上含まれる構成です。',
-  '合計小さめ': '本数字の合計が60未満の構成です。',
-  '合計大きめ': '本数字の合計が80以上の構成です。',
-  // ロト6用
-  'バランス型': '奇数と偶数が均等に含まれる構成です。',
-  '奇数多め_loto6': '奇数が4個以上含まれる構成です。',
-  '偶数多め_loto6': '偶数が4個以上含まれる構成です。',
-  '合計小さめ_loto6': '6つの本数字の合計が114未満の構成です。',
-  '合計大きめ_loto6': '6つの本数字の合計が151を超える構成です。',
-  // ロト7用
-  '奇数多め_loto7': '奇数が5個以上含まれる構成です。',
-  '偶数多め_loto7': '偶数が5個以上含まれる構成です。',
-  '合計小さめ_loto7': '7つの本数字の合計が160未満の構成です。',
-  '合計大きめ_loto7': '7つの本数字の合計が160以上の構成です。',
-  '高低ミックス': '10未満と30以上の数字が両方含まれる構成です。',
-};
-
 // --- アイコン ---
 const InfoIcon = ({ onClick }) => (
   <span style={{ display: 'inline-block', marginLeft: 6, cursor: 'pointer', color: '#e26580', fontSize: 15 }} onClick={onClick}>ⓘ</span>
 );
 
 export default function PastResultsPro({ jsonUrl, lotoType }) {
+  const { t } = useTranslation();
   const [data, setData] = useState([]);
   const [filter, setFilter] = useState({
     fromRound: '', toRound: '', fromDate: '', toDate: '',
@@ -129,18 +88,19 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
   });
   const [popup, setPopup] = useState({ show: false, text: '', x: 0, y: 0 });
   const [page, setPage] = useState(1);
+  const popupRef = useRef();
 
   const config = lotoConfig[lotoType] || lotoConfig.loto6;
 
-    function getFilterSummary() {
+  function getFilterSummary() {
     const out = [];
     if (filter.features.length > 0) out.push(filter.features.join('・'));
-    if (filter.includeNumbers) out.push(`含む数字:${filter.includeNumbers}`);
-    if (filter.excludeNumbers) out.push(`除く数字:${filter.excludeNumbers}`);
-    if (filter.fromRound || filter.toRound) out.push(`開催回:${filter.fromRound || '?'}〜${filter.toRound || '?'}`);
-    if (filter.fromDate || filter.toDate) out.push(`日付:${filter.fromDate || '?'}〜${filter.toDate || '?'}`);
-    if (filter.oddEven) out.push(`奇数・偶数:${filter.oddEven.replace('-', '対')}`);
-    if (filter.minSum || filter.maxSum) out.push(`合計値:${filter.minSum || '?'}〜${filter.maxSum || '?'}`);
+    if (filter.includeNumbers) out.push(`${t('include_numbers')}:${filter.includeNumbers}`);
+    if (filter.excludeNumbers) out.push(`${t('exclude_numbers')}:${filter.excludeNumbers}`);
+    if (filter.fromRound || filter.toRound) out.push(`${t('from_round')}:${filter.fromRound || '?'}〜${filter.toRound || '?'}`);
+    if (filter.fromDate || filter.toDate) out.push(`${t('from_date')}:${filter.fromDate || '?'}〜${filter.toDate || '?'}`);
+    if (filter.oddEven) out.push(`${t('odd_even')}:${filter.oddEven.replace('-', t('vs'))}`);
+    if (filter.minSum || filter.maxSum) out.push(`${t('sum')}:${filter.minSum || '?'}〜${filter.maxSum || '?'}`);
     if (out.length === 0) return '';
     return `（${out.join('，')}）`;
   }
@@ -192,11 +152,11 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
   }
   function toCSV(arr) {
     const head = [
-      '開催回', '日付',
-      ...Array(config.main).fill(0).map((_, i) => `第${i + 1}数字`),
-      ...config.bonusNames, '特徴',
-      ...(lotoType === 'loto6' || lotoType === 'loto7' ? ['キャリーオーバー'] : []),
-      ...config.ranks.flatMap(rank => [rank.countKey, rank.prizeKey])
+      t('round'), t('date'),
+      ...Array(config.main).fill(0).map((_, i) => t('main_num', { num: i + 1 })),
+      ...config.bonusNames, t('features'),
+      ...(lotoType === 'loto6' || lotoType === 'loto7' ? [t('carryover')] : []),
+      ...config.ranks.flatMap(rank => [t('rank_count', { rank: rank.rank }), t('rank_prize', { rank: rank.rank })])
     ];
     const rows = arr.map(row => [
       row['開催回'], row['日付'],
@@ -240,7 +200,7 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
   // --- Infoポップアップ ---
   const handleInfo = (text, e) => {
     e.stopPropagation();
-    if (!text || !text.trim()) return; // 空説明なら何もしない
+    if (!text || !text.trim()) return;
     // ポップアップを画面中央に表示
     const popupWidth = 240;
     const popupHeight = 80;
@@ -255,7 +215,7 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
   useEffect(() => {
     if (!popup.show) return;
     const handleClick = (e) => {
-      if (popupRef.current && popupRef.current.contains(e.target)) return; // ポップアップ自体なら無視
+      if (popupRef.current && popupRef.current.contains(e.target)) return;
       setPopup(popup => ({ ...popup, show: false }));
     };
     const handleScroll = () => {
@@ -301,31 +261,27 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
         boxSizing: 'border-box'
       }}>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 15, marginBottom: 15, alignItems: 'flex-end' }}>
-          <label>開催回From:
+          <label>{t('from_round')}:
             <input type="number" min={1} value={filter.fromRound} onChange={e => setFilter(f => ({ ...f, fromRound: e.target.value }))} style={filterInputStyle} />
           </label>
-          <label>To:
+          <label>{t('to_round')}:
             <input type="number" min={1} value={filter.toRound} onChange={e => setFilter(f => ({ ...f, toRound: e.target.value }))} style={filterInputStyle} />
           </label>
-          <label>開催日From:
+          <label>{t('from_date')}:
             <input type="date" value={filter.fromDate} onChange={e => setFilter(f => ({ ...f, fromDate: e.target.value }))} style={filterInputStyle} />
           </label>
-          <label>To:
+          <label>{t('to_date')}:
             <input type="date" value={filter.toDate} onChange={e => setFilter(f => ({ ...f, toDate: e.target.value }))} style={filterInputStyle} />
           </label>
-          <label>含む数字:
-            <input type="text" placeholder="例: 3,17,28" value={filter.includeNumbers} onChange={e => setFilter(f => ({ ...f, includeNumbers: e.target.value }))} style={filterInputStyle} />
+          <label>{t('include_numbers')}:
+            <input type="text" placeholder={t('example_numbers')} value={filter.includeNumbers} onChange={e => setFilter(f => ({ ...f, includeNumbers: e.target.value }))} style={filterInputStyle} />
           </label>
-          <label>除く数字:
-            <input type="text" placeholder="例: 1,12" value={filter.excludeNumbers} onChange={e => setFilter(f => ({ ...f, excludeNumbers: e.target.value }))} style={filterInputStyle} />
+          <label>{t('exclude_numbers')}:
+            <input type="text" placeholder={t('example_exclude')} value={filter.excludeNumbers} onChange={e => setFilter(f => ({ ...f, excludeNumbers: e.target.value }))} style={filterInputStyle} />
           </label>
         </div>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, alignItems: 'center', marginBottom: 7 }}>
           {config.labels.map(label => {
-            // 説明文の優先度：loto7→loto6→デフォルト
-            let info = featureInfo[label];
-            if (lotoType === 'loto6' && featureInfo[label + '_loto6']) info = featureInfo[label + '_loto6'];
-            if (lotoType === 'loto7' && featureInfo[label + '_loto7']) info = featureInfo[label + '_loto7'];
             return (
               <span key={label} style={{ marginRight: 3, display: 'inline-flex', alignItems: 'center' }}>
                 <label style={{ margin: 0, cursor: 'pointer' }}>
@@ -341,18 +297,18 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
                       }));
                     }}
                     style={{ cursor: 'pointer' }}
-                  /> {label}
+                  /> {t(label)}
                 </label>
                 <span
                   onMouseDown={e => e.stopPropagation()}
                   style={{ display: 'inline-block' }}
                 >
-                  <InfoIcon onClick={ev => handleInfo(info || '', ev)} />
+                  <InfoIcon onClick={ev => handleInfo(label, ev)} />
                 </span>
               </span>
             );
           })}
-          <label style={{ marginLeft: 6 }}>合計値From:
+          <label style={{ marginLeft: 6 }}>{t('from_sum')}:
             <input
               type="number"
               min={config.sumRange[0]}
@@ -362,7 +318,7 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
               style={filterInputStyle}
             />
           </label>
-          <label>To:
+          <label>{t('to_sum')}:
             <input
               type="number"
               min={config.sumRange[0]}
@@ -372,13 +328,13 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
               style={filterInputStyle}
             />
           </label>
-          <label>奇数・偶数構成:
+          <label>{t('odd_even')}:
             <select
               value={filter.oddEven}
               onChange={e => setFilter(f => ({ ...f, oddEven: e.target.value }))}
               style={{ ...filterInputStyle, width: 110 }}
             >
-              <option value="">全件</option>
+              <option value="">{t('all')}</option>
               {config.oddEvenPatterns.map(opt =>
                 <option key={opt.value} value={opt.value}>{opt.label}</option>
               )}
@@ -386,37 +342,37 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
           </label>
         </div>
         <div style={{ display: 'flex', gap: 8, margin: '9px 0 2px 0' }}>
-          <button onClick={() => setPage(1)} style={searchBtnStyle}><i className="fa fa-magnifying-glass"></i> 検索</button>
+          <button onClick={() => setPage(1)} style={searchBtnStyle}><i className="fa fa-magnifying-glass"></i> {t('search')}</button>
           <button onClick={() => {
             setFilter({
               fromRound: '', toRound: '', fromDate: '', toDate: '',
               includeNumbers: '', excludeNumbers: '', features: [], minSum: '', maxSum: '', oddEven: ''
             });
             setPage(1);
-          }} style={resetBtnStyle}><i className="fa fa-rotate-right"></i> リセット</button>
-          <button onClick={handleCSV} style={csvBtnStyle}><i className="fa fa-file-csv"></i> CSV出力</button>
+          }} style={resetBtnStyle}><i className="fa fa-rotate-right"></i> {t('reset')}</button>
+          <button onClick={handleCSV} style={csvBtnStyle}><i className="fa fa-file-csv"></i> {t('csv_export')}</button>
         </div>
-<div style={{ fontSize: '0.97em', margin: '8px 0' }}>
-  <span>
-    検索結果：<b>{filtered.length}</b>件
-    {getFilterSummary() && <span>{getFilterSummary()}</span>}
-  </span>
-  <br />
-  <span style={{ color: '#357' }}>
-    {filtered.length > 0 && (
-      <>
-        最多本数字：
-        {ranking.slice(0, 3).map(v =>
-          <b key={v.n} style={{ color: '#357', marginLeft: 6 }}>{v.n}（{v.c}回）</b>
-        )}<br />
-        最少本数字：
-        {ranking.slice(-3).map(v =>
-          <b key={v.n} style={{ color: '#d43', marginLeft: 6 }}>{v.n}（{v.c}回）</b>
-        )}
-      </>
-    )}
-  </span>
-</div>
+        <div style={{ fontSize: '0.97em', margin: '8px 0' }}>
+          <span>
+            {t('search_result')}：<b>{filtered.length}</b>{t('件')}
+            {getFilterSummary() && <span>{getFilterSummary()}</span>}
+          </span>
+          <br />
+          <span style={{ color: '#357' }}>
+            {filtered.length > 0 && (
+              <>
+                {t('most_frequent_numbers')}：
+                {ranking.slice(0, 3).map(v =>
+                  <b key={v.n} style={{ color: '#357', marginLeft: 6 }}>{v.n}（{v.c}{t('回')}）</b>
+                )}<br />
+                {t('least_frequent_numbers')}：
+                {ranking.slice(-3).map(v =>
+                  <b key={v.n} style={{ color: '#d43', marginLeft: 6 }}>{v.n}（{v.c}{t('回')}）</b>
+                )}
+              </>
+            )}
+          </span>
+        </div>
       </div>
 
       <div style={{
@@ -431,20 +387,20 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
         <table style={{ borderCollapse: 'collapse', width: '100%', minWidth: 850, fontSize: '0.96em' }}>
           <thead>
             <tr>
-              <th style={{ ...thStyle, ...stickyLeftStyle }}>回</th>
-              <th style={thStyle}>日付</th>
-              {Array(config.main).fill(0).map((_, i) => <th key={i} style={thStyle}>本数字{i + 1}</th>)}
-              {config.bonusNames.map((name, i) => <th key={name} style={thStyle}>B数字{i + 1}</th>)}
-              <th style={{ ...thStyle, minWidth: 180, width: '24%' }}>特徴</th>
-              <th style={thStyle}>合計</th>
+              <th style={{ ...thStyle, ...stickyLeftStyle }}>{t('round')}</th>
+              <th style={thStyle}>{t('date')}</th>
+              {Array(config.main).fill(0).map((_, i) => <th key={i} style={thStyle}>{t('main_num', { num: i + 1 })}</th>)}
+              {config.bonusNames.map((name, i) => <th key={name} style={thStyle}>{t('bonus_num', { num: i + 1 })}</th>)}
+              <th style={{ ...thStyle, minWidth: 180, width: '24%' }}>{t('features')}</th>
+              <th style={thStyle}>{t('sum')}</th>
               {(lotoType === 'loto6' || lotoType === 'loto7') && (
-                <th style={thStyle}>キャリーオーバー</th>
+                <th style={thStyle}>{t('carryover')}</th>
               )}
               {config.ranks.map(({ rank }) => (
-                <th key={rank} style={thStyle}>{rank}口数</th>
+                <th key={rank} style={thStyle}>{t('rank_count', { rank: rank.rank })}</th>
               ))}
               {config.ranks.map(({ rank }) => (
-                <th key={rank + '_prize'} style={thStyle}>{rank}賞金</th>
+                <th key={rank + '_prize'} style={thStyle}>{t('rank_prize', { rank: rank.rank })}</th>
               ))}
             </tr>
           </thead>

@@ -1,6 +1,7 @@
+import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
 
-// 開催回数取得（NaNや空配列にも完全対応）
+// --- 開催回数取得（NaNや空配列にも完全対応） ---
 async function fetchLatestDrawNo(lotoType) {
   const urls = {
     miniloto: 'https://po-3.github.io/miniloto-data/miniloto.json',
@@ -12,7 +13,6 @@ async function fetchLatestDrawNo(lotoType) {
   try {
     const res = await fetch(url);
     const data = await res.json();
-    // '開催回' or '回' or 'drawNo' のどれかを数値で取得
     const allDrawNos = data.map(row =>
       Number(row['回'] ?? row['開催回'] ?? row['drawNo'])
     ).filter(n => !isNaN(n) && isFinite(n));
@@ -30,7 +30,7 @@ function getPredictionUrl(lotoType, drawNo) {
   return `https://www.kujitonari.net/entry/${prefix}-${drawNo}-prediction-tonari`;
 }
 
-// ★予想実績データ取得
+// 予想実績データ取得
 async function fetchPredictionScore(lotoType, drawNo) {
   if (!lotoType || !drawNo) return '';
   const id = `${lotoType}-${drawNo}`;
@@ -40,13 +40,14 @@ async function fetchPredictionScore(lotoType, drawNo) {
     const doc = new window.DOMParser().parseFromString(html, 'text/html');
     const tr = doc.querySelector(`tr#${id}`);
     if (!tr) return '';
-    return tr.innerHTML; // tbodyの<tr>中身だけ返す
+    return tr.innerHTML;
   } catch {
     return '';
   }
 }
 
 export default function Prediction({ lotoType, latestDrawNoFromProps }) {
+  const { t } = useTranslation();
   const [latestDrawNo, setLatestDrawNo] = useState('');
   const [inputDrawNo, setInputDrawNo] = useState('');
   const [rows, setRows] = useState([]);
@@ -54,15 +55,14 @@ export default function Prediction({ lotoType, latestDrawNoFromProps }) {
   const [searched, setSearched] = useState(false);
   const [fetchingLatest, setFetchingLatest] = useState(false);
 
-  // ▼予想実績
+  // 予想実績
   const [scoreHtml, setScoreHtml] = useState('');
   const [scoreLoading, setScoreLoading] = useState(false);
 
-  // ロト種別が未定義や不正値の場合は即ガード
   if (!lotoType || !['miniloto', 'loto6', 'loto7'].includes(lotoType)) {
     return (
       <div style={{ color: 'red', padding: 20 }}>
-        ロト種別エラー（miniloto, loto6, loto7のみ対応）
+        {t('error_invalid_lototype')}
       </div>
     );
   }
@@ -83,7 +83,6 @@ export default function Prediction({ lotoType, latestDrawNoFromProps }) {
       }
     })();
     return () => { ignore = true; };
-    // eslint-disable-next-line
   }, [lotoType, latestDrawNoFromProps]);
 
   // inputDrawNoが変更された時に自動fetch
@@ -132,7 +131,7 @@ export default function Prediction({ lotoType, latestDrawNoFromProps }) {
       });
   }, [lotoType, inputDrawNo]);
 
-  // ★予想実績データ取得
+  // 予想実績データ取得
   useEffect(() => {
     if (!inputDrawNo || !lotoType) {
       setScoreHtml('');
@@ -164,7 +163,7 @@ export default function Prediction({ lotoType, latestDrawNoFromProps }) {
     setFetchingLatest(false);
   };
 
-  // ▼ピッカー用リスト生成（最新回から100回分降順）
+  // ピッカー用リスト生成（最新回から100回分降順）
   const pickerList = [];
   if (latestDrawNo && !isNaN(Number(latestDrawNo))) {
     for (let i = 0; i < 100; i++) {
@@ -174,7 +173,7 @@ export default function Prediction({ lotoType, latestDrawNoFromProps }) {
 
   return (
     <div style={outerStyle}>
-      <h2 style={titleStyle}>となりのズバリ予想</h2>
+      <h2 style={titleStyle}>{t('prediction_title')}</h2>
       <div style={searchRowStyle}>
         <select
           value={inputDrawNo}
@@ -190,14 +189,14 @@ export default function Prediction({ lotoType, latestDrawNoFromProps }) {
           onClick={handleLatest}
           disabled={fetchingLatest}
         >
-          {fetchingLatest ? '取得中…' : '最新予想'}
+          {fetchingLatest ? t('fetching') : t('latest_prediction')}
         </button>
       </div>
 
       {/* --- 結果表示 --- */}
-      {loading && <div>読み込み中…</div>}
+      {loading && <div>{t('loading')}</div>}
       {!loading && searched && !rows.length && (
-        <div>ズバリ予想が取得できませんでした。</div>
+        <div>{t('prediction_not_found')}</div>
       )}
       {!loading && rows.length > 0 && (
         <>
@@ -205,10 +204,10 @@ export default function Prediction({ lotoType, latestDrawNoFromProps }) {
             <table style={tableStyle}>
               <thead>
                 <tr>
-                  <th style={thStyle}>タイプ</th>
-                  <th style={thStyle}>予想数字</th>
-                  <th style={thStyle}>軸数字</th>
-                  <th style={thStyle}>特徴と狙い</th>
+                  <th style={thStyle}>{t('type')}</th>
+                  <th style={thStyle}>{t('prediction_numbers')}</th>
+                  <th style={thStyle}>{t('axis_number')}</th>
+                  <th style={thStyle}>{t('features_and_aim')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -224,13 +223,13 @@ export default function Prediction({ lotoType, latestDrawNoFromProps }) {
             </table>
           </div>
 
-          {/* --- ★予想実績（答え合わせ） --- */}
+          {/* --- 予想実績（答え合わせ） --- */}
           <div style={{ margin: '20px 0 0 0', background: '#fcfcf5', border: '1px solid #e4ddbc', borderRadius: 8, padding: 12 }}>
             <div style={{ fontWeight: 700, fontSize: '1.04em', marginBottom: 6, color: '#d0a33a' }}>
-              ★予想実績（答え合わせ）
+              {t('prediction_score')}
             </div>
             {scoreLoading ? (
-              <div>読み込み中…</div>
+              <div>{t('loading')}</div>
             ) : scoreHtml ? (
               <table style={{ width: '100%', fontSize: '0.97em', background: 'transparent' }}>
                 <tbody>
@@ -238,25 +237,27 @@ export default function Prediction({ lotoType, latestDrawNoFromProps }) {
                 </tbody>
               </table>
             ) : (
-              <div style={{ color: '#aaa', fontSize: '0.95em' }}>実績データが見つかりませんでした。</div>
+              <div style={{ color: '#aaa', fontSize: '0.95em' }}>{t('score_not_found')}</div>
             )}
           </div>
         </>
       )}
       {!searched && (
         <div style={{ color: '#888', fontSize: '0.98em', marginTop: 14 }}>
-          開催回を選択すると自動で取得します。
+          {t('auto_fetch_info')}
           <br />
           <span style={{ color: '#d0323a', fontWeight: 700 }}>
-            ※現在「{lotoType === 'miniloto'
-              ? 'ミニロト'
-              : lotoType === 'loto6'
-              ? 'ロト6'
-              : lotoType === 'loto7'
-              ? 'ロト7'
-              : lotoType}」が選択されています。
+            {t('current_selected', {
+              lotoname: lotoType === 'miniloto'
+                ? t('miniloto')
+                : lotoType === 'loto6'
+                ? t('loto6')
+                : lotoType === 'loto7'
+                ? t('loto7')
+                : lotoType
+            })}
             <br />
-            必ず対象ロトの開催回を選択してください。
+            {t('pick_correct_loto')}
           </span>
         </div>
       )}

@@ -1,24 +1,25 @@
+import './i18n';
+import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
 import PastResultsPro from './PastResultsPro';
 import Diagnosis from './Diagnosis';
 import Prediction from './Prediction';
 import Settings from './Settings';
 
+// 多言語化ラベルkey化（tabs, featuresはkeyのみ使う！）
 const tabs = [
-  { key: 'miniloto', label: 'ミニロト', url: 'https://po-3.github.io/miniloto-data/miniloto.json' },
-  { key: 'loto6', label: 'ロト6', url: 'https://po-3.github.io/loto6-data/loto6.json' },
-  { key: 'loto7', label: 'ロト7', url: 'https://po-3.github.io/loto7-data/loto7.json' },
+  { key: 'miniloto', label: 'miniloto', url: 'https://po-3.github.io/miniloto-data/miniloto.json' },
+  { key: 'loto6', label: 'loto6', url: 'https://po-3.github.io/loto6-data/loto6.json' },
+  { key: 'loto7', label: 'loto7', url: 'https://po-3.github.io/loto7-data/loto7.json' },
 ];
 const features = [
-  { key: 'past', label: '検索ツール' },
-  { key: 'diagnosis', label: 'となり診断' },
-  { key: 'prediction', label: 'ズバリ予想' },
-  { key: 'settings', label: '設定' }
+  { key: 'past', label: 'search_tool' },
+  { key: 'diagnosis', label: 'diagnosis' },
+  { key: 'prediction', label: 'prediction' },
+  { key: 'settings', label: 'settings' }
 ];
 const DEFAULT_BG_COLOR = '#fafcff';
 
-// --- ▼▼ ココ重要 ▼▼ ---
-// sessionStorage > localStorage(default) の順で初期値を使う
 function getStartupValue(key, defaultKey, fallback) {
   const session = sessionStorage.getItem('session_' + key);
   if (session) return session;
@@ -34,16 +35,16 @@ function getSettings() {
 }
 
 export default function App() {
+  const { t } = useTranslation();
+
   const [settings, setSettings] = useState(getSettings);
 
-  // 初期値は sessionStorage優先
   const [selectedTab, setSelectedTab] = useState(() => getStartupValue('LotoType', 'defaultLotoType', 'loto6'));
   const [feature, setFeature] = useState(() => getStartupValue('Menu', 'defaultMenu', 'past'));
   const [font, setFont] = useState(settings.font);
   const [themeColor, setThemeColor] = useState(settings.themeColor);
   const [showScrollBtns, setShowScrollBtns] = useState(true);
 
-  // 設定画面でデフォルト値が変わった時
   const handleDefaultLotoChange = (type) => {
     localStorage.setItem('defaultLotoType', type);
     setSettings(getSettings());
@@ -61,7 +62,6 @@ export default function App() {
     setThemeColor(colorVal);
   };
 
-  // タブ・機能切替時は sessionStorage にも保存（F5時のみ有効）
   const handleTabChange = (tabKey) => {
     setSelectedTab(tabKey);
     sessionStorage.setItem('session_LotoType', tabKey);
@@ -70,8 +70,6 @@ export default function App() {
     setFeature(menu);
     sessionStorage.setItem('session_Menu', menu);
   };
-
-  // 完全終了時（window/tab close）→ sessionStorage消える → 起動時は設定値に戻る
 
   useEffect(() => { document.body.style.fontFamily = font; }, [font]);
   useEffect(() => { document.body.style.backgroundColor = themeColor || DEFAULT_BG_COLOR; }, [themeColor]);
@@ -89,7 +87,6 @@ export default function App() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [feature]);
 
-  // 不正値対策
   const selectedTabObj = tabs.find(t => t.key === selectedTab) || tabs[1];
   const selectedUrl = selectedTabObj.url;
   const showPastScrollBtns = feature === 'past' && showScrollBtns;
@@ -99,13 +96,13 @@ export default function App() {
       {/* スクロールボタン */}
       {showPastScrollBtns && (
         <div style={scrollButtonContainer}>
-          <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} style={scrollCircleButtonStyle} title="最上段へ" aria-label="最上段へ" type="button">
+          <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} style={scrollCircleButtonStyle} title={t('scroll_top')} aria-label={t('scroll_top')} type="button">
             <svg width="22" height="22" viewBox="0 0 24 24" style={{ display: 'block', margin: 'auto' }}>
               <polyline points="12 6 12 18" fill="none" stroke="#fff" strokeWidth="2.8" strokeLinecap="round" />
               <polyline points="6 12 12 6 18 12" fill="none" stroke="#fff" strokeWidth="2.8" strokeLinejoin="round" />
             </svg>
           </button>
-          <button onClick={() => window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })} style={scrollCircleButtonStyle} title="最下段へ" aria-label="最下段へ" type="button">
+          <button onClick={() => window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })} style={scrollCircleButtonStyle} title={t('scroll_bottom')} aria-label={t('scroll_bottom')} type="button">
             <svg width="22" height="22" viewBox="0 0 24 24" style={{ display: 'block', margin: 'auto' }}>
               <polyline points="12 18 12 6" fill="none" stroke="#fff" strokeWidth="2.8" strokeLinecap="round" />
               <polyline points="6 12 12 18 18 12" fill="none" stroke="#fff" strokeWidth="2.8" strokeLinejoin="round" />
@@ -114,11 +111,11 @@ export default function App() {
         </div>
       )}
 
-      {/* アイコン＋見出し（ロゴ） */}
+      {/* ロゴ */}
       <div style={headerContainerStyle}>
         <div style={logoRowStyle}>
           <span style={logoTextLeft}>Loto</span>
-          <img src="/tonari.png" alt="となりアイコン" style={logoIconStyle} />
+          <img src="/tonari.png" alt={t('tonari_icon_alt')} style={logoIconStyle} />
           <span style={logoTextRight}>Mind</span>
         </div>
         <div style={logoByTonariStyle}>by tonari</div>
@@ -135,7 +132,7 @@ export default function App() {
               ...(selectedTab === tab.key ? activeTabStyle : {}),
             }}
           >
-            {tab.label}
+            {t(tab.label)}
           </button>
         ))}
       </div>
@@ -151,7 +148,7 @@ export default function App() {
               ...(feature === f.key ? activeFeatureTabStyle : {}),
             }}
           >
-            <span style={{ whiteSpace: 'pre-line', lineHeight: 1.15 }}>{f.label}</span>
+            <span style={{ whiteSpace: 'pre-line', lineHeight: 1.15 }}>{t(f.label)}</span>
           </button>
         ))}
       </div>
@@ -189,7 +186,7 @@ export default function App() {
           rel="noopener"
           style={{ color: '#1767a7', textDecoration: 'underline', fontWeight: 600 }}
         >
-          宝くじのとなりブログ
+          {t('tonari_blog')}
         </a>
       </div>
       <div
@@ -205,10 +202,10 @@ export default function App() {
           gap: 4,
         }}
       >
-        <span>となり</span>
+        <span>{t('tonari')}</span>
         <img
           src="/tonari.png"
-          alt="となりくん"
+          alt={t('tonari_icon_alt')}
           style={{
             width: 22,
             height: 22,
@@ -218,13 +215,13 @@ export default function App() {
             boxShadow: '0 1px 4px #bbb8',
           }}
         />
-        <span style={{ fontSize: '0.90em', marginLeft: 2 }}>がいつも応援中！</span> 
-</div>
+        <span style={{ fontSize: '0.90em', marginLeft: 2 }}>{t('always_supporting')}</span> 
+      </div>
     </div>
   );
 }
 
-// --- スタイル定義 ---
+// --- スタイル定義 ---（省略はOK/変更不要）
 const containerStyle = {
   width: '100%',
   maxWidth: 470,
@@ -238,7 +235,6 @@ const containerStyle = {
   marginTop: 10,
   boxShadow: '0 6px 24px #d2e4fa22',
 };
-
 const scrollButtonContainer = {
   position: 'fixed',
   bottom: 22,
@@ -248,7 +244,6 @@ const scrollButtonContainer = {
   flexDirection: 'column',
   gap: 12,
 };
-
 const scrollCircleButtonStyle = {
   background: '#337be8',
   color: '#fff',
@@ -268,8 +263,6 @@ const scrollCircleButtonStyle = {
   flexShrink: 0,
   padding: 0,
 };
-
-// ロゴ新スタイル
 const headerContainerStyle = {
   display: 'flex',
   flexDirection: 'column',
@@ -277,14 +270,12 @@ const headerContainerStyle = {
   marginBottom: 6,
   marginTop: -8,
 };
-
 const logoRowStyle = {
   display: 'flex',
   alignItems: 'center',
   gap: 13,
   justifyContent: 'center',
 };
-
 const logoTextLeft = {
   fontSize: '2.0em',
   fontWeight: '700',
@@ -294,7 +285,6 @@ const logoTextLeft = {
   marginRight: 2,
   userSelect: 'none',
 };
-
 const logoTextRight = {
   fontSize: '2.0em',
   fontWeight: '700',
@@ -304,7 +294,6 @@ const logoTextRight = {
   marginLeft: 2,
   userSelect: 'none',
 };
-
 const logoIconStyle = {
   width: 53,
   height: 53,
@@ -314,7 +303,6 @@ const logoIconStyle = {
   background: '#fff',
   margin: '0 2px',
 };
-
 const logoByTonariStyle = {
   fontSize: '0.98em',
   color: '#888',
@@ -324,7 +312,6 @@ const logoByTonariStyle = {
   textAlign: 'center',
   userSelect: 'none',
 };
-
 const tabRowStyle = {
   display: 'flex',
   gap: 12,
@@ -332,7 +319,6 @@ const tabRowStyle = {
   marginBottom: 15,
   width: '100%',
 };
-
 const tabStyle = {
   fontWeight: 400,
   background: '#fff',
@@ -345,14 +331,12 @@ const tabStyle = {
   fontSize: '1em',
   transition: 'all 0.14s',
 };
-
 const activeTabStyle = {
   background: '#ededed',
   fontWeight: 700,
   border: '1.5px solid #1767a7',
   color: '#1767a7',
 };
-
 const featureTabRowStyle = {
   display: 'flex',
   justifyContent: 'space-between',
@@ -362,7 +346,6 @@ const featureTabRowStyle = {
   marginLeft: 'auto',
   marginRight: 'auto',
 };
-
 const featureTabStyle = {
   flex: 1,
   background: '#f7f7f7',
@@ -378,7 +361,6 @@ const featureTabStyle = {
   boxShadow: 'none',
   transition: 'all 0.12s',
 };
-
 const activeFeatureTabStyle = {
   background: '#337be8',
   color: '#fff',
@@ -386,7 +368,6 @@ const activeFeatureTabStyle = {
   fontWeight: 700,
   boxShadow: '0 2px 8px #337be811',
 };
-
 const guideStyle = {
   background: '#f8fafd',
   borderRadius: 12,
