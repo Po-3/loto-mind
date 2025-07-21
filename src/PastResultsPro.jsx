@@ -411,8 +411,7 @@ const handleInfo = (label, e) => {
         <table style={{ borderCollapse: 'collapse', width: '100%', minWidth: 850, fontSize: '0.96em' }}>
          <thead>
   <tr>
-    <th style={{ ...thStyle, ...stickyLeftStyle }}>{t('draw')}</th>
-    <th style={thStyle}>{t('date')}</th>
+<th style={{ ...thStyle, minWidth: 130, whiteSpace: 'nowrap' }}>{t('features')}</th>    <th style={thStyle}>{t('date')}</th>
 {Array(config.main).fill(0).map((_, i) =>
   <th key={i} style={thStyle}>{t('main_num', { num: i + 1 })}</th>
 )}
