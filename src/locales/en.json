@@ -98,7 +98,7 @@
   "main_number": "Main Number",
   "B数字": "Bonus Number",
   "main_num": "Main Number {{num}}",
-  "bonus_number": "Bonus {index}",
+  "bonus_number": "Bonus {{index}}",
   "bonus_num": "Bonus Number {{num}}",
   "features": "Features",
   "sum": "Sum",
