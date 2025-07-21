@@ -1,44 +1,28 @@
 import { useEffect, useState } from 'react';
 
-// ▼診断パターンリスト（全ロト種対応・プルダウン生成用）
+// ▼診断パターンリスト（全部盛り！）
 const DIAGNOSIS_PATTERNS = [
-  {
-    id: 'notAppeared',
-    label: '最近出ていない数字',
-    desc: '過去30回で未出現の数字から抽出',
-    types: ['miniloto', 'loto6', 'loto7']
-  },
-  {
-    id: 'appeared',
-    label: 'よく出ている数字',
-    desc: '直近30回で出現頻度が高い数字から抽出',
-    types: ['miniloto', 'loto6', 'loto7']
-  },
-  {
-    id: 'random',
-    label: '完全ランダム',
-    desc: '完全無作為（すべての数字からランダム抽出）',
-    types: ['miniloto', 'loto6', 'loto7']
-  },
-  {
-    id: 'odd',
-    label: '奇数多め',
-    desc: '奇数が多い構成（ミニロト・ロト6:4個以上, ロト7:5個以上）',
-    types: ['miniloto', 'loto6', 'loto7']
-  },
-  {
-    id: 'even',
-    label: '偶数多め',
-    desc: '偶数が多い構成（ミニロト・ロト6:4個以上, ロト7:5個以上）',
-    types: ['miniloto', 'loto6', 'loto7']
-  },
-  {
-    id: 'balanced',
-    label: '奇数偶数バランス型',
-    desc: '奇数偶数が均等（例：ロト6は3:3）',
-    types: ['loto6']
-  },
-  // ここ以降も同様に拡張可
+  { id: 'notAppeared', label: '最近出ていない数字', desc: '過去30回で未出現の数字から抽出', types: ['miniloto', 'loto6', 'loto7'] },
+  { id: 'appeared', label: 'よく出ている数字', desc: '直近30回で出現頻度が高い数字から抽出', types: ['miniloto', 'loto6', 'loto7'] },
+  { id: 'random', label: '完全ランダム', desc: '完全無作為（すべての数字からランダム抽出）', types: ['miniloto', 'loto6', 'loto7'] },
+  { id: 'odd', label: '奇数多め', desc: '奇数が多い構成（ミニロト・ロト6:4個以上, ロト7:5個以上）', types: ['miniloto', 'loto6', 'loto7'] },
+  { id: 'even', label: '偶数多め', desc: '偶数が多い構成（ミニロト・ロト6:4個以上, ロト7:5個以上）', types: ['miniloto', 'loto6', 'loto7'] },
+  { id: 'balanced', label: '奇数偶数バランス型', desc: '奇数偶数が均等（例：ロト6は3:3）', types: ['loto6'] },
+  { id: 'consecutive', label: '連番入り', desc: '連続数字（例:24,25など）が必ず含まれる', types: ['miniloto', 'loto6', 'loto7'] },
+  { id: 'sameLast', label: '下一桁同じ数字入り', desc: '下一桁が同じ数字（例:11,21など）が複数含まれる', types: ['miniloto', 'loto6', 'loto7'] },
+  { id: 'lowZone', label: '低位ゾーン重視', desc: '最小ゾーン（1〜9等）の数字を多めに選ぶ', types: ['miniloto', 'loto6', 'loto7'] },
+  { id: 'midZone', label: '中位ゾーン重視', desc: '中央ゾーンの数字多め', types: ['miniloto', 'loto6', 'loto7'] },
+  { id: 'highZone', label: '高位ゾーン重視', desc: '最大ゾーン（例：ロト6は31〜43など）多め', types: ['miniloto', 'loto6', 'loto7'] },
+  { id: 'spread', label: 'まんべんなく全ゾーン', desc: '各ゾーンから最低1つは必ず選ぶ', types: ['miniloto', 'loto6', 'loto7'] },
+  { id: 'narrowRange', label: '範囲が狭い', desc: '最小～最大のレンジが小さい構成', types: ['miniloto', 'loto6', 'loto7'] },
+  { id: 'wideRange', label: '範囲が広い', desc: '最小～最大のレンジが大きい構成', types: ['miniloto', 'loto6', 'loto7'] },
+  { id: 'lastDup', label: '前回かぶりあり', desc: '前回当選数字と1つ以上重複', types: ['miniloto', 'loto6', 'loto7'] },
+  { id: 'lastUnique', label: '前回と完全非重複', desc: '前回当選数字と1つも重複しない', types: ['miniloto', 'loto6', 'loto7'] },
+  { id: 'sumSmall', label: '合計値小さめ', desc: '合計値が小さい構成（しきい値は種別で変わる）', types: ['miniloto', 'loto6', 'loto7'] },
+  { id: 'sumLarge', label: '合計値大きめ', desc: '合計値が大きい構成（しきい値は種別で変わる）', types: ['miniloto', 'loto6', 'loto7'] },
+  { id: 'prime', label: '素数のみ', desc: '全部素数！（完全ネタ枠／ファン向け）', types: ['miniloto', 'loto6', 'loto7'] },
+  { id: 'birthday', label: '誕生日数字縛り', desc: 'すべて「1〜31」の数字のみ', types: ['miniloto', 'loto6', 'loto7'] },
+  { id: 'carry', label: 'キャリーあり', desc: 'キャリー発生時・キャリー回のみ抽出', types: ['loto6', 'loto7'] },
 ];
 
 function getLotoTypeFromUrl(jsonUrl) {
@@ -47,6 +31,14 @@ function getLotoTypeFromUrl(jsonUrl) {
   if (jsonUrl.includes('loto7')) return 'loto7';
   return 'loto6'; // fallback
 }
+
+// ゾーン判定用
+const ZONE_DEF = {
+  miniloto: { low: [1, 9], mid: [10, 20], high: [21, 31] },
+  loto6: { low: [1, 9], mid: [10, 30], high: [31, 43] },
+  loto7: { low: [1, 9], mid: [10, 24], high: [25, 37] },
+};
+const PRIME_SET = new Set([2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43]);
 
 // 乱数ユーティリティ
 function getRandomNums(nums, count) {
@@ -72,7 +64,7 @@ export default function Diagnosis({ jsonUrl }) {
   // ロト種ごとにパターン選択肢を絞る
   const patternList = DIAGNOSIS_PATTERNS.filter(p => p.types.includes(lotoType));
 
-  // 選択状態初期化・切り替え時
+  // パターン初期化
   useEffect(() => {
     const obj = patternList.find(p => p.id === pattern) || patternList[0];
     setPattern(obj?.id || '');
@@ -86,7 +78,7 @@ export default function Diagnosis({ jsonUrl }) {
 
   // データ取得
   useEffect(() => {
-    setResult(null); // ローディング用
+    setResult(null);
     fetch(jsonUrl)
       .then(res => res.json())
       .then(json => {
@@ -94,15 +86,48 @@ export default function Diagnosis({ jsonUrl }) {
       });
   }, [jsonUrl]);
 
-  // 診断実行
-  function runDiagnosis(json, mode) {
+  function getZone(n, type) {
+    const { low, mid, high } = ZONE_DEF[type];
+    if (n >= low[0] && n <= low[1]) return 'low';
+    if (n >= mid[0] && n <= mid[1]) return 'mid';
+    if (n >= high[0] && n <= high[1]) return 'high';
+    return '';
+  }
+
+  function isConsecutive(nums) {
+    const sorted = [...nums].sort((a, b) => a - b);
+    return sorted.some((n, i) => i > 0 && n - sorted[i - 1] === 1);
+  }
+
+  function hasSameLast(nums) {
+    const ones = {};
+    nums.forEach(n => {
+      const last = n % 10;
+      ones[last] = (ones[last] || 0) + 1;
+    });
+    return Object.values(ones).some(v => v >= 2);
+  }
+
+  function isPrimeSet(nums) {
+    return nums.every(n => PRIME_SET.has(n));
+  }
+
+  // 合計値しきい値（公式・独自基準可）
+  function getSumThreshold(type) {
+    if (type === 'miniloto') return { small: 65, large: 105 };
+    if (type === 'loto6') return { small: 100, large: 170 };
+    if (type === 'loto7') return { small: 110, large: 180 };
+    return { small: 0, large: 9999 };
+  }
+
+  // 診断ロジック本体
+  function runDiagnosis(json, patternId) {
     let maxNum = 43, recommendCount = 6, numKeys = 6;
     if (lotoType === 'miniloto') {
       maxNum = 31; recommendCount = 5; numKeys = 5;
     } else if (lotoType === 'loto7') {
       maxNum = 37; recommendCount = 7; numKeys = 7;
     }
-    // --- 全開催回の本数字一覧 ---
     let allNums = [];
     json.forEach(row => {
       for (let i = 1; i <= numKeys; i++) {
@@ -115,59 +140,135 @@ export default function Diagnosis({ jsonUrl }) {
         }
       }
     });
-    // --- 抽出ロジック分岐（patternごとに最適化して拡張） ---
+    const all = Array.from({ length: maxNum }, (_, i) => i + 1);
     let nums = [];
-    if (pattern === 'notAppeared') {
-      const all = Array.from({ length: maxNum }, (_, i) => i + 1);
-      const notAppear = all.filter(n => !allNums.includes(n));
-      const pool = notAppear.length >= recommendCount ? notAppear : all;
-      nums = getRandomNums(pool, recommendCount);
-    } else if (pattern === 'appeared') {
-      // よく出ている数字を上位から抽出
-      const all = Array.from({ length: maxNum }, (_, i) => i + 1);
-      let freq = {};
-      all.forEach(n => { freq[n] = 0; });
-      allNums.forEach(n => { if (freq[n] !== undefined) freq[n]++; });
-      // 頻度ソート上位からランダム抽出
-      const sorted = all.sort((a, b) => freq[b] - freq[a]);
-      nums = getRandomNums(sorted.slice(0, recommendCount * 2), recommendCount);
-    } else if (pattern === 'random') {
-      const all = Array.from({ length: maxNum }, (_, i) => i + 1);
-      nums = getRandomNums(all, recommendCount);
-    } else if (pattern === 'odd') {
-      const all = Array.from({ length: maxNum }, (_, i) => i + 1);
-      let tries = 0;
-      do {
+    let tries = 0;
+    let sum, oddCount, evenCount;
+
+    while (++tries < 3000) {
+      // 初期セット（パターンに応じて調整）
+      if (patternId === 'notAppeared') {
+        const notAppear = all.filter(n => !allNums.includes(n));
+        const pool = notAppear.length >= recommendCount ? notAppear : all;
+        nums = getRandomNums(pool, recommendCount);
+      } else if (patternId === 'appeared') {
+        // 頻出数字上位から抽出
+        let freq = {};
+        all.forEach(n => { freq[n] = 0; });
+        allNums.forEach(n => { if (freq[n] !== undefined) freq[n]++; });
+        const sorted = all.sort((a, b) => freq[b] - freq[a]);
+        nums = getRandomNums(sorted.slice(0, recommendCount * 2), recommendCount);
+      } else if (patternId === 'random') {
         nums = getRandomNums(all, recommendCount);
-        const oddCount = nums.filter(n => n % 2 === 1).length;
+      } else if (patternId === 'odd') {
+        nums = getRandomNums(all, recommendCount);
+        oddCount = nums.filter(n => n % 2 === 1).length;
         if (
-          (lotoType === 'loto7' && oddCount >= 5) ||
-          ((lotoType === 'miniloto' || lotoType === 'loto6') && oddCount >= 4)
-        ) break;
-      } while (++tries < 2000);
-    } else if (pattern === 'even') {
-      const all = Array.from({ length: maxNum }, (_, i) => i + 1);
-      let tries = 0;
-      do {
+          (lotoType === 'loto7' && oddCount < 5) ||
+          ((lotoType === 'miniloto' || lotoType === 'loto6') && oddCount < 4)
+        ) continue;
+      } else if (patternId === 'even') {
         nums = getRandomNums(all, recommendCount);
-        const evenCount = nums.filter(n => n % 2 === 0).length;
+        evenCount = nums.filter(n => n % 2 === 0).length;
         if (
-          (lotoType === 'loto7' && evenCount >= 5) ||
-          ((lotoType === 'miniloto' || lotoType === 'loto6') && evenCount >= 4)
-        ) break;
-      } while (++tries < 2000);
-    } else if (pattern === 'balanced' && lotoType === 'loto6') {
-      const all = Array.from({ length: maxNum }, (_, i) => i + 1);
-      let tries = 0;
-      do {
+          (lotoType === 'loto7' && evenCount < 5) ||
+          ((lotoType === 'miniloto' || lotoType === 'loto6') && evenCount < 4)
+        ) continue;
+      } else if (patternId === 'balanced' && lotoType === 'loto6') {
         nums = getRandomNums(all, recommendCount);
-        const oddCount = nums.filter(n => n % 2 === 1).length;
-        if (oddCount === 3) break;
-      } while (++tries < 3000);
-    } else {
-      // --- デフォルト：完全ランダム ---
-      const all = Array.from({ length: maxNum }, (_, i) => i + 1);
-      nums = getRandomNums(all, recommendCount);
+        oddCount = nums.filter(n => n % 2 === 1).length;
+        if (oddCount !== 3) continue;
+      } else if (patternId === 'consecutive') {
+        nums = getRandomNums(all, recommendCount);
+        if (!isConsecutive(nums)) continue;
+      } else if (patternId === 'sameLast') {
+        nums = getRandomNums(all, recommendCount);
+        if (!hasSameLast(nums)) continue;
+      } else if (patternId === 'lowZone') {
+        nums = getRandomNums(all, recommendCount);
+        if (nums.filter(n => getZone(n, lotoType) === 'low').length < Math.max(2, Math.floor(recommendCount / 2)))
+          continue;
+      } else if (patternId === 'midZone') {
+        nums = getRandomNums(all, recommendCount);
+        if (nums.filter(n => getZone(n, lotoType) === 'mid').length < Math.max(2, Math.floor(recommendCount / 2)))
+          continue;
+      } else if (patternId === 'highZone') {
+        nums = getRandomNums(all, recommendCount);
+        if (nums.filter(n => getZone(n, lotoType) === 'high').length < Math.max(2, Math.floor(recommendCount / 2)))
+          continue;
+      } else if (patternId === 'spread') {
+        nums = getRandomNums(all, recommendCount);
+        const zoneSet = new Set(nums.map(n => getZone(n, lotoType)));
+        if (!(zoneSet.has('low') && zoneSet.has('mid') && zoneSet.has('high')))
+          continue;
+      } else if (patternId === 'narrowRange') {
+        nums = getRandomNums(all, recommendCount);
+        const sorted = [...nums].sort((a, b) => a - b);
+        if (sorted[sorted.length - 1] - sorted[0] > Math.floor(maxNum / 3))
+          continue;
+      } else if (patternId === 'wideRange') {
+        nums = getRandomNums(all, recommendCount);
+        const sorted = [...nums].sort((a, b) => a - b);
+        if (sorted[sorted.length - 1] - sorted[0] < Math.floor(maxNum * 0.8))
+          continue;
+      } else if (patternId === 'lastDup') {
+        nums = getRandomNums(all, recommendCount);
+        const prev = json[json.length - 1];
+        const prevNums = [];
+        for (let i = 1; i <= numKeys; i++) {
+          let raw = prev[`第${i}数字`];
+          if (typeof raw === "string") raw = raw.trim();
+          if (raw !== undefined && raw !== null && raw !== "" && !isNaN(raw)) {
+            prevNums.push(Number(raw));
+          }
+        }
+        if (!nums.some(n => prevNums.includes(n))) continue;
+      } else if (patternId === 'lastUnique') {
+        nums = getRandomNums(all, recommendCount);
+        const prev = json[json.length - 1];
+        const prevNums = [];
+        for (let i = 1; i <= numKeys; i++) {
+          let raw = prev[`第${i}数字`];
+          if (typeof raw === "string") raw = raw.trim();
+          if (raw !== undefined && raw !== null && raw !== "" && !isNaN(raw)) {
+            prevNums.push(Number(raw));
+          }
+        }
+        if (nums.some(n => prevNums.includes(n))) continue;
+      } else if (patternId === 'sumSmall') {
+        nums = getRandomNums(all, recommendCount);
+        sum = nums.reduce((a, b) => a + b, 0);
+        if (sum > getSumThreshold(lotoType).small) continue;
+      } else if (patternId === 'sumLarge') {
+        nums = getRandomNums(all, recommendCount);
+        sum = nums.reduce((a, b) => a + b, 0);
+        if (sum < getSumThreshold(lotoType).large) continue;
+      } else if (patternId === 'prime') {
+        nums = getRandomNums(all, recommendCount);
+        if (!isPrimeSet(nums)) continue;
+      } else if (patternId === 'birthday') {
+        const pool = all.filter(n => n >= 1 && n <= 31);
+        nums = getRandomNums(pool, recommendCount);
+      } else if (patternId === 'carry' && (lotoType === 'loto6' || lotoType === 'loto7')) {
+        // キャリー発生回のみからランダム
+        const carryRows = json.filter(row =>
+          Number(row['キャリーオーバー'] || 0) > 0
+        );
+        if (!carryRows.length) continue;
+        const sel = pickRandom(carryRows);
+        nums = [];
+        for (let i = 1; i <= numKeys; i++) {
+          let raw = sel[`第${i}数字`];
+          if (typeof raw === "string") raw = raw.trim();
+          if (raw !== undefined && raw !== null && raw !== "" && !isNaN(raw)) {
+            nums.push(Number(raw));
+          }
+        }
+      } else {
+        nums = getRandomNums(all, recommendCount);
+      }
+      // 条件満たしていたら抜ける
+      break;
     }
 
     setResult({
@@ -176,16 +277,15 @@ export default function Diagnosis({ jsonUrl }) {
     });
   }
 
-  // コメント生成（旧ロジックそのまま）
   function generateComment(nums, maxNum) {
     const sorted = [...nums].sort((a, b) => a - b);
     const min = sorted[0], max = sorted[sorted.length - 1];
     const range = max - min;
     const oddCount = nums.filter(n => n % 2 === 1).length;
     const evenCount = nums.length - oddCount;
-    const hasConsecutive = sorted.some((n, i) => i > 0 && n - sorted[i - 1] === 1);
-    const lowCount = nums.filter(n => n <= Math.floor(maxNum / 3)).length;
-    const highCount = nums.filter(n => n > Math.floor((maxNum * 2) / 3)).length;
+    const hasConsecutive = isConsecutive(nums);
+    const lowCount = nums.filter(n => getZone(n, lotoType) === 'low').length;
+    const highCount = nums.filter(n => getZone(n, lotoType) === 'high').length;
     const allOdd = oddCount === nums.length;
     const allEven = evenCount === nums.length;
     const isBalanced = oddCount === evenCount;
@@ -197,8 +297,8 @@ export default function Diagnosis({ jsonUrl }) {
       { check: () => allOdd, comments: ["全て奇数！波乱の予感漂うアグレッシブ診断。","オッズ型フルスロットル！攻めの日です。"] },
       { check: () => allEven, comments: ["全て偶数！堅実・安定感マックス。","偶数オンリー。落ち着いた構成で勝負！"] },
       { check: () => isBalanced, comments: ["奇数偶数バランス型。大穴狙いでも鉄板狙いでもイケる！","バランス型！何が来てもおかしくない絶妙ライン。"] },
-      { check: () => lowCount >= nums.length - 1, comments: ["低位ゾーンに集中。地に足ついた堅実型！","1ケタばかりの慎重派。小さな当たりも積み重ね！"] },
-      { check: () => highCount >= nums.length - 1, comments: ["高位ゾーンで夢を見ろ！一発逆転狙いの攻め型。","30番台中心のジャンボ狙い。"] },
+      { check: () => lowCount >= Math.max(2, Math.floor(nums.length / 2)), comments: ["低位ゾーンに集中。地に足ついた堅実型！","1ケタばかりの慎重派。小さな当たりも積み重ね！"] },
+      { check: () => highCount >= Math.max(2, Math.floor(nums.length / 2)), comments: ["高位ゾーンで夢を見ろ！一発逆転狙いの攻め型。","高位ゾーン中心のジャンボ狙い。"] },
       { check: () => isNarrow, comments: ["数字のまとまり感がスゴい！結束力バツグン。","レンジが狭い…団結力で当たりを呼ぶパターン!?"] },
       { check: () => isWide, comments: ["広範囲カバー型。どこからでも“当たり”を拾いに行ける！","ばらけている時こそ、意外な一発に期待！"] },
     ];
@@ -217,7 +317,6 @@ export default function Diagnosis({ jsonUrl }) {
     return pickRandom(randomComments);
   }
 
-  // 初回 or パターン選択変更時に診断
   useEffect(() => {
     if (data && pattern) runDiagnosis(data, pattern);
   }, [data, pattern]);
@@ -280,7 +379,7 @@ export default function Diagnosis({ jsonUrl }) {
   );
 }
 
-// スタイル定義
+// スタイル
 const outerStyle = {
   width: '100%',
   padding: '0 12px',
