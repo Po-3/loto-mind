@@ -194,7 +194,6 @@
   "desc_high_sum_loto7": "A set where the 7 main numbers sum to 160 or higher.",
   "desc_high_low_mix": "A set containing both numbers below 10 and above 30.",
 
-  // === ▼ Diagnosisパターン ラベル・説明（label/desc） ===
   "最近出ていない数字": "Numbers Not Recently Drawn",
   "過去30回で未出現の数字から抽出": "Select numbers not drawn in the last 30 draws",
   "よく出ている数字": "Frequently Drawn Numbers",
@@ -238,7 +237,6 @@
   "キャリーあり": "With Carryover",
   "キャリー発生時・キャリー回のみ抽出": "Draws with carryover only",
 
-  // === ▼ Diagnosis コメント群（コンポーネント内でt()されるもの全て） ===
   "連番アタック！流れに乗る日は大きく当たる日。": "Consecutive number attack! When the flow is right, it's a big win day.",
   "連続数字が熱い！波に乗れそうな予感。": "Consecutive numbers are hot! Feels like a good wave.",
   "連番多め。勢い重視のギャンブラー型診断！": "Many consecutive numbers. For gamblers who love momentum!",
@@ -259,6 +257,7 @@
   "今日は完全ランダム型。こういう時こそ神頼み！": "Today is completely random. Time to rely on luck!",
   "狙いはランダム、当たりもランダム!?": "Random picks, random wins!?",
   "“運”という名のギャンブル診断！": "A gamble called luck!",
-  "選ばれし数字たちに身を委ねよう。": "Let fate pick your numbers.",
-  "今日の運勢はガチャガチャ仕様です。": "Today's fortune is like a capsule toy."
+    "今日の運勢はガチャガチャ仕様です。": "Today's fortune is like a capsule toy.",
+  "選ばれし数字たちに身を委ねよう。": "Let fate pick your numbers."
+
 }
