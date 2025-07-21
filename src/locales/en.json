@@ -123,6 +123,12 @@
   "回": "times",
   "vs": "vs",
 
+    "連番あり": "Contains Consecutive Numbers",
+  "バランス型": "Balanced Odd/Even",
+  "下一桁かぶり": "Contains Same Last Digit",
+  "合計小さめ": "Low Sum",
+  "合計大きめ": "High Sum",
+
   "language_label": "Language",
 
   "最近出ていない数字": "Not Appeared Recently",
