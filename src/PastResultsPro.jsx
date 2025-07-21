@@ -1,7 +1,9 @@
+そしたら完璧に直して全文でください
+
 import { useTranslation } from 'react-i18next';
 import { useEffect, useState, useRef } from 'react';
 
-// --- ロト種別ごとの設定 ---
+// --- ロト種別ごとの設定（HTMLラベルに完全一致） ---
 const lotoConfig = {
   miniloto: {
     main: 5,
@@ -92,8 +94,6 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
 
   const config = lotoConfig[lotoType] || lotoConfig.loto6;
 
-  // ...フィルター・ロジック等は今まで通り...
-
   function getFilterSummary() {
     const out = [];
     if (filter.features.length > 0) out.push(filter.features.join('・'));
@@ -156,13 +156,9 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
     const head = [
       t('round'), t('date'),
       ...Array(config.main).fill(0).map((_, i) => t('main_num', { num: i + 1 })),
-      ...config.bonusNames.map((_, i) => t('bonus_num', { num: i + 1 })),
-      t('features'),
+      ...config.bonusNames, t('features'),
       ...(lotoType === 'loto6' || lotoType === 'loto7' ? [t('carryover')] : []),
-      ...config.ranks.flatMap(rank => [
-        t('rank_count', { rank: rank.rank }),
-        t('rank_prize', { rank: rank.rank })
-      ])
+      ...config.ranks.flatMap(rank => [t('rank_count', { rank: rank.rank }), t('rank_prize', { rank: rank.rank })])
     ];
     const rows = arr.map(row => [
       row['開催回'], row['日付'],
@@ -266,7 +262,119 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
         padding: '4vw 2vw 3vw 2vw',
         boxSizing: 'border-box'
       }}>
-        {/* フィルターUIは省略（前回通り） */}
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 15, marginBottom: 15, alignItems: 'flex-end' }}>
+          <label>{t('from_round')}:
+            <input type="number" min={1} value={filter.fromRound} onChange={e => setFilter(f => ({ ...f, fromRound: e.target.value }))} style={filterInputStyle} />
+          </label>
+          <label>{t('to_round')}:
+            <input type="number" min={1} value={filter.toRound} onChange={e => setFilter(f => ({ ...f, toRound: e.target.value }))} style={filterInputStyle} />
+          </label>
+          <label>{t('from_date')}:
+            <input type="date" value={filter.fromDate} onChange={e => setFilter(f => ({ ...f, fromDate: e.target.value }))} style={filterInputStyle} />
+          </label>
+          <label>{t('to_date')}:
+            <input type="date" value={filter.toDate} onChange={e => setFilter(f => ({ ...f, toDate: e.target.value }))} style={filterInputStyle} />
+          </label>
+          <label>{t('include_numbers')}:
+            <input type="text" placeholder={t('example_numbers')} value={filter.includeNumbers} onChange={e => setFilter(f => ({ ...f, includeNumbers: e.target.value }))} style={filterInputStyle} />
+          </label>
+          <label>{t('exclude_numbers')}:
+            <input type="text" placeholder={t('example_exclude')} value={filter.excludeNumbers} onChange={e => setFilter(f => ({ ...f, excludeNumbers: e.target.value }))} style={filterInputStyle} />
+          </label>
+        </div>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, alignItems: 'center', marginBottom: 7 }}>
+          {config.labels.map(label => {
+            return (
+              <span key={label} style={{ marginRight: 3, display: 'inline-flex', alignItems: 'center' }}>
+                <label style={{ margin: 0, cursor: 'pointer' }}>
+                  <input
+                    type="checkbox"
+                    checked={filter.features.includes(label)}
+                    onChange={e => {
+                      setFilter(f => ({
+                        ...f,
+                        features: e.target.checked
+                          ? [...f.features, label]
+                          : f.features.filter(l => l !== label)
+                      }));
+                    }}
+                    style={{ cursor: 'pointer' }}
+                  /> {t(label)}
+                </label>
+                <span
+                  onMouseDown={e => e.stopPropagation()}
+                  style={{ display: 'inline-block' }}
+                >
+                  <InfoIcon onClick={ev => handleInfo(label, ev)} />
+                </span>
+              </span>
+            );
+          })}
+          <label style={{ marginLeft: 6 }}>{t('from_sum')}:
+            <input
+              type="number"
+              min={config.sumRange[0]}
+              max={config.sumRange[1]}
+              value={filter.minSum}
+              onChange={e => setFilter(f => ({ ...f, minSum: e.target.value }))}
+              style={filterInputStyle}
+            />
+          </label>
+          <label>{t('to_sum')}:
+            <input
+              type="number"
+              min={config.sumRange[0]}
+              max={config.sumRange[1]}
+              value={filter.maxSum}
+              onChange={e => setFilter(f => ({ ...f, maxSum: e.target.value }))}
+              style={filterInputStyle}
+            />
+          </label>
+          <label>{t('odd_even')}:
+            <select
+              value={filter.oddEven}
+              onChange={e => setFilter(f => ({ ...f, oddEven: e.target.value }))}
+              style={{ ...filterInputStyle, width: 110 }}
+            >
+              <option value="">{t('all')}</option>
+              {config.oddEvenPatterns.map(opt =>
+                <option key={opt.value} value={opt.value}>{opt.label}</option>
+              )}
+            </select>
+          </label>
+        </div>
+        <div style={{ display: 'flex', gap: 8, margin: '9px 0 2px 0' }}>
+          <button onClick={() => setPage(1)} style={searchBtnStyle}><i className="fa fa-magnifying-glass"></i> {t('search')}</button>
+          <button onClick={() => {
+            setFilter({
+              fromRound: '', toRound: '', fromDate: '', toDate: '',
+              includeNumbers: '', excludeNumbers: '', features: [], minSum: '', maxSum: '', oddEven: ''
+            });
+            setPage(1);
+          }} style={resetBtnStyle}><i className="fa fa-rotate-right"></i> {t('reset')}</button>
+          <button onClick={handleCSV} style={csvBtnStyle}><i className="fa fa-file-csv"></i> {t('csv_export')}</button>
+        </div>
+        <div style={{ fontSize: '0.97em', margin: '8px 0' }}>
+          <span>
+            {t('search_result')}：<b>{filtered.length}</b>{t('件')}
+            {getFilterSummary() && <span>{getFilterSummary()}</span>}
+          </span>
+          <br />
+          <span style={{ color: '#357' }}>
+            {filtered.length > 0 && (
+              <>
+                {t('most_frequent_numbers')}：
+                {ranking.slice(0, 3).map(v =>
+                  <b key={v.n} style={{ color: '#357', marginLeft: 6 }}>{v.n}（{v.c}{t('回')}）</b>
+                )}<br />
+                {t('least_frequent_numbers')}：
+                {ranking.slice(-3).map(v =>
+                  <b key={v.n} style={{ color: '#d43', marginLeft: 6 }}>{v.n}（{v.c}{t('回')}）</b>
+                )}
+              </>
+            )}
+          </span>
+        </div>
       </div>
 
       <div style={{
@@ -284,7 +392,7 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
               <th style={{ ...thStyle, ...stickyLeftStyle }}>{t('round')}</th>
               <th style={thStyle}>{t('date')}</th>
               {Array(config.main).fill(0).map((_, i) => <th key={i} style={thStyle}>{t('main_num', { num: i + 1 })}</th>)}
-              {config.bonusNames.map((_, i) => <th key={i} style={thStyle}>{t('bonus_num', { num: i + 1 })}</th>)}
+              {config.bonusNames.map((name, i) => <th key={name} style={thStyle}>{t('bonus_num', { num: i + 1 })}</th>)}
               <th style={{ ...thStyle, minWidth: 180, width: '24%' }}>{t('features')}</th>
               <th style={thStyle}>{t('sum')}</th>
               {(lotoType === 'loto6' || lotoType === 'loto7') && (
