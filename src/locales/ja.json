@@ -97,7 +97,7 @@
   "date": "日付",
   "main_number": "本数字",
   "B数字": "ボーナス数字",
-  "main_num": "本数字{num}",
+  "main_num": "本数字{{num}}",
   "bonus_number": "ボーナス{index}",
   "bonus_num": "ボーナス数字{num}",
   "features": "特徴",
