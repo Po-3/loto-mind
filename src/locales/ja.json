@@ -62,6 +62,7 @@
   "language_label": "言語",
     "lang_ja": "日本語",
   "lang_en": "英語",
+    "label_language": "言語",
 
   "type": "タイプ",
   "prediction_numbers": "予想数字",

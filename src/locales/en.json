@@ -139,6 +139,7 @@
   "language_label": "Language",
     "lang_ja": "Japanese",
   "lang_en": "English",
+  "label_language": "Language",
     "prediction_not_found": "No prediction article has been written.",
         "標準（推奨・全端末未対応）": "Standard (Recommended / Not supported on all devices)",
             "明朝体（標準）": "Serif (Standard)",
