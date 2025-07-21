@@ -3,7 +3,6 @@ import PastResultsPro from './PastResultsPro';
 import Diagnosis from './Diagnosis';
 import Prediction from './Prediction';
 import Settings from './Settings';
-import NinjaCounter from './NinjaCounter';
 
 const tabs = [
   { key: 'miniloto', label: 'ミニロト', url: 'https://po-3.github.io/miniloto-data/miniloto.json' },
@@ -219,7 +218,19 @@ export default function App() {
             boxShadow: '0 1px 4px #bbb8',
           }}
         />
-        <span style={{ fontSize: '0.90em', marginLeft: 2 }}>がいつも応援中！</span> <NinjaCounter />
+        <span style={{ fontSize: '0.90em', marginLeft: 2 }}>がいつも応援中！</span> 
+        <a
+  href="https://xa.shinobi.jp/bin/gg?192060200"
+  target="_blank"
+  rel="noopener noreferrer"
+  style={{ marginLeft: 6, display: 'inline-block', verticalAlign: 'middle' }}
+>
+  <img
+    src="https://xa.shinobi.jp/bin/ll?192060200"
+    alt="アクセスカウンター"
+    style={{ height: 18, verticalAlign: 'middle', border: 0 }}
+  />
+</a>
 </div>
     </div>
   );
