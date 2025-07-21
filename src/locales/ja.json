@@ -117,36 +117,7 @@
   "least_frequent_numbers": "最少本数字",
 
   "rank_count": "{rank}口数",
-  "rank_prize": "{rank}賞金"
-}
-
-{
-  "main_num": "本数字{num}",
-  "bonus_num": "B数字{num}",
-  "rank_count": "{rank}口数",
   "rank_prize": "{rank}賞金",
-  "from_round": "開催回From",
-  "to_round": "To",
-  "from_date": "開催日From",
-  "to_date": "To",
-  "include_numbers": "含む数字",
-  "exclude_numbers": "除く数字",
-  "sum": "合計",
-  "features": "特徴",
-  "carryover": "キャリーオーバー",
-  "search": "検索",
-  "reset": "リセット",
-  "csv_export": "CSV出力",
-  "search_result": "検索結果",
-  "most_frequent_numbers": "最多本数字",
-  "least_frequent_numbers": "最少本数字",
-  "round": "回",
-  "date": "日付",
-  "odd_even": "奇数・偶数構成",
-  "all": "全件",
-  "example_numbers": "例: 3,17,28",
-  "example_exclude": "例: 1,12",
-  "件": "件",
-  "回": "回",
+
   "vs": "対"
 }

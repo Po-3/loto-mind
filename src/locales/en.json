@@ -96,9 +96,9 @@
   "draw": "Draw",
   "date": "Date",
   "main_number": "Number {index}",
-  "main_num": "Number {num}",
+  "main_num": "Main Number {num}",
   "bonus_number": "Bonus {index}",
-  "bonus_num": "Bonus {num}",
+  "bonus_num": "Bonus Number {num}",
   "features": "Features",
   "sum": "Sum",
   "carryover": "Carryover",
@@ -112,12 +112,16 @@
   "times": "times",
   "items": "items",
 
-  "search_result": "Search result",
+  "search_result": "Search Result",
   "most_frequent_numbers": "Most Frequent Numbers",
   "least_frequent_numbers": "Least Frequent Numbers",
 
   "rank_count": "{rank} Winners",
   "rank_prize": "{rank} Prize",
+
+  "件": "items",
+  "回": "times",
+  "vs": "vs",
 
   "最近出ていない数字": "Not Appeared Recently",
   "過去30回で未出現の数字から抽出": "Selected from numbers not appeared in the last 30 draws",
