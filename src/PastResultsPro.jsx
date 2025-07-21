@@ -303,33 +303,34 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
           </label>
         </div>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, alignItems: 'center', marginBottom: 7 }}>
-          {config.labels.map(label => {
-            return (
-              <span key={label} style={{ marginRight: 3, display: 'inline-flex', alignItems: 'center' }}>
-                <label style={{ margin: 0, cursor: 'pointer' }}>
-                  <input
-                    type="checkbox"
-                    checked={filter.features.includes(label)}
-                    onChange={e => {
-                      setFilter(f => ({
-                        ...f,
-                        features: e.target.checked
-                          ? [...f.features, label]
-                          : f.features.filter(l => l !== label)
-                      }));
-                    }}
-                    style={{ cursor: 'pointer' }}
-                  /> {t(label)}
-                </label>
-                <span
-                  onMouseDown={e => e.stopPropagation()}
-                  style={{ display: 'inline-block' }}
-                >
-                  <InfoIcon onClick={ev => handleInfo(label, ev)} />
-                </span>
-              </span>
-            );
-          })}
+{config.labels.map(label => {
+  return (
+    <span key={label} style={{ marginRight: 3, display: 'inline-flex', alignItems: 'center' }}>
+      <label style={{ margin: 0, cursor: 'pointer' }}>
+        <input
+          type="checkbox"
+          checked={filter.features.includes(label)}
+          onChange={e => {
+            setFilter(f => ({
+              ...f,
+              features: e.target.checked
+                ? [...f.features, label]
+                : f.features.filter(l => l !== label)
+            }));
+          }}
+          style={{ cursor: 'pointer' }}
+        /> {t(label)}
+      </label>
+      <span
+        onMouseDown={e => e.stopPropagation()}
+        style={{ display: 'inline-block' }}
+      >
+        {/* ▼ここを修正（説明も多言語化） */}
+        <InfoIcon onClick={ev => handleInfo(t(featureInfo[label] || label), ev)} />
+      </span>
+    </span>
+  );
+})}
           <label style={{ marginLeft: 6 }}>{t('from_sum')}:
             <input
               type="number"
