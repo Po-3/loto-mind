@@ -99,12 +99,12 @@
   "B数字": "ボーナス数字",
   "main_num": "本数字{{num}}",
   "bonus_number": "ボーナス{index}",
-  "bonus_num": "ボーナス数字{num}",
+  "bonus_num": "ボーナス数字{{num}}",
   "features": "特徴",
   "sum": "合計",
   "carryover": "キャリーオーバー",
-  "count": "{rank}口",
-  "prize": "{rank}賞金",
+  "count": "{{rank}}口",
+  "prize": "{{rank}}賞金",
 
   "close_dialog": "閉じる",
 
@@ -113,8 +113,8 @@
   "times": "回",
   "items": "件",
 
-  "rank_count": "{rank}口",
-  "rank_prize": "{rank}賞金",
+  "rank_count": "{{rank}}口",
+  "rank_prize": "{{rank}}賞金",
 
   "vs": "vs",
 

@@ -99,12 +99,12 @@
   "B数字": "Bonus Number",
   "main_num": "Main Number {{num}}",
   "bonus_number": "Bonus {index}",
-  "bonus_num": "Bonus Number {num}",
+  "bonus_num": "Bonus Number {{num}}",
   "features": "Features",
   "sum": "Sum",
   "carryover": "Carryover",
-  "count": "{rank} Winners",
-  "prize": "{rank} Prize",
+  "count": "{{rank}} Winners",
+  "prize": "{{rank}} Prize",
 
   "close_dialog": "Close",
 
@@ -113,8 +113,8 @@
   "times": "times",
   "items": "items",
 
-  "rank_count": "{rank} Winners",
-  "rank_prize": "{rank} Prize",
+  "rank_count": "{{rank}} Winners",
+  "rank_prize": "{{rank}} Prize",
 
   "vs": "vs",
 
