@@ -48,6 +48,13 @@
   "score_not_found": "実績データが見つかりませんでした。",
   "no_prediction": "ズバリ予想が取得できませんでした。",
 
+    "color_tonari": "となりカラー",
+  "color_ivory": "アイボリー",
+  "color_gray": "シンプルグレー",
+  "color_sakura": "桜ピンク",
+  "color_blue": "ライトブルー",
+  "color_white": "ホワイト",
+
   "search_result": "検索結果：{count}件",
   "most_often": "最多本数字",
   "least_often": "最少本数字",

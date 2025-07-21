@@ -123,6 +123,13 @@
   "回": "times",
   "vs": "vs",
 
+    "color_tonari": "Tonari Color",
+  "color_ivory": "Ivory",
+  "color_gray": "Simple Gray",
+  "color_sakura": "Sakura Pink",
+  "color_blue": "Light Blue",
+  "color_white": "White",
+
     "連番あり": "Contains Consecutive Numbers",
   "バランス型": "Balanced Odd/Even",
   "下一桁かぶり": "Contains Same Last Digit",
