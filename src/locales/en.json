@@ -96,7 +96,8 @@
 
   "draw": "Draw",
   "date": "Date",
-  "main_number": "Number {index}",
+  "main_number": "Main Number",
+  "B数字": "Bonus Number",
   "main_num": "Main Number {num}",
   "bonus_number": "Bonus {index}",
   "bonus_num": "Bonus Number {num}",
@@ -134,20 +135,7 @@
   "font_serif": "Serif (Standard)",
   "font_monospace": "Monospace (For numbers/tables)",
 
-  "ranks": {
-    "1等": "1st Prize",
-    "2等": "2nd Prize",
-    "3等": "3rd Prize",
-    "4等": "4th Prize",
-    "5等": "5th Prize",
-    "6等": "6th Prize"
-  },
-  "bonus_names": {
-    "ボーナス数字": "Bonus",
-    "BONUS数字1": "Bonus 1",
-    "BONUS数字2": "Bonus 2",
-
-      "本数字": "Main Number",
+  "本数字": "Main Number",
   "B数字": "Bonus Number",
   "1等口数": "1st Prize Winners",
   "2等口数": "2nd Prize Winners",
@@ -155,7 +143,6 @@
   "4等口数": "4th Prize Winners",
   "5等口数": "5th Prize Winners",
   "6等口数": "6th Prize Winners",
-
   "1等賞金": "1st Prize",
   "2等賞金": "2nd Prize",
   "3等賞金": "3rd Prize",
@@ -173,6 +160,19 @@
   "合計大きめ": "High Sum",
   "バランス型": "Balanced",
   "キャリーあり": "With Carryover",
-  "高低ミックス": "High-Low Mix"
+  "高低ミックス": "High-Low Mix",
+
+  "ranks": {
+    "1等": "1st Prize",
+    "2等": "2nd Prize",
+    "3等": "3rd Prize",
+    "4等": "4th Prize",
+    "5等": "5th Prize",
+    "6等": "6th Prize"
+  },
+  "bonus_names": {
+    "ボーナス数字": "Bonus",
+    "BONUS数字1": "Bonus 1",
+    "BONUS数字2": "Bonus 2"
   }
 }
