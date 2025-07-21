@@ -12,7 +12,7 @@ const tabs = [
   { key: 'loto7', labelKey: 'loto7', url: 'https://po-3.github.io/loto7-data/loto7.json' },
 ];
 const features = [
-  { key: 'past', labelKey: 'past' },
+  { key: 'past', labelKey: 'pasto' },
   { key: 'diagnosis', labelKey: 'diagnosis' },
   { key: 'prediction', labelKey: 'prediction' },
   { key: 'settings', labelKey: 'settings_tab' }
