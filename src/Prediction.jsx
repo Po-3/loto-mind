@@ -30,12 +30,32 @@ function getPredictionUrl(lotoType, drawNo) {
   return `https://www.kujitonari.net/entry/${prefix}-${drawNo}-prediction-tonari`;
 }
 
+// ★予想実績データ取得
+async function fetchPredictionScore(lotoType, drawNo) {
+  if (!lotoType || !drawNo) return '';
+  const id = `${lotoType}-${drawNo}`;
+  try {
+    const res = await fetch('https://www.kujitonari.net/loto-prediction-score');
+    const html = await res.text();
+    const doc = new window.DOMParser().parseFromString(html, 'text/html');
+    const tr = doc.querySelector(`tr#${id}`);
+    if (!tr) return '';
+    return tr.innerHTML; // tbodyの<tr>中身だけ返す
+  } catch {
+    return '';
+  }
+}
+
 export default function Prediction({ lotoType, latestDrawNoFromProps }) {
   const [inputDrawNo, setInputDrawNo] = useState('');
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(false);
   const [searched, setSearched] = useState(false);
   const [fetchingLatest, setFetchingLatest] = useState(false);
+
+  // ▼予想実績
+  const [scoreHtml, setScoreHtml] = useState('');
+  const [scoreLoading, setScoreLoading] = useState(false);
 
   // ロト種別が未定義や不正値の場合は即ガード
   if (!lotoType || !['miniloto', 'loto6', 'loto7'].includes(lotoType)) {
@@ -92,6 +112,24 @@ export default function Prediction({ lotoType, latestDrawNoFromProps }) {
       });
   }, [lotoType, inputDrawNo]);
 
+  // ★予想実績データ取得
+  useEffect(() => {
+    if (!inputDrawNo || !lotoType) {
+      setScoreHtml('');
+      return;
+    }
+    setScoreLoading(true);
+    fetchPredictionScore(lotoType, inputDrawNo)
+      .then(html => {
+        setScoreHtml(html || '');
+        setScoreLoading(false);
+      })
+      .catch(() => {
+        setScoreHtml('');
+        setScoreLoading(false);
+      });
+  }, [inputDrawNo, lotoType]);
+
   // 最新予想ボタン押下時
   const handleLatest = async () => {
     setFetchingLatest(true);
@@ -132,28 +170,48 @@ export default function Prediction({ lotoType, latestDrawNoFromProps }) {
         <div>ズバリ予想が取得できませんでした。</div>
       )}
       {!loading && rows.length > 0 && (
-        <div style={scrollStyle}>
-          <table style={tableStyle}>
-            <thead>
-              <tr>
-                <th style={thStyle}>タイプ</th>
-                <th style={thStyle}>予想数字</th>
-                <th style={thStyle}>軸数字</th>
-                <th style={thStyle}>特徴と狙い</th>
-              </tr>
-            </thead>
-            <tbody>
-              {rows.map((row, idx) => (
-                <tr key={idx}>
-                  <td style={tdStyle}>{row.type}</td>
-                  <td style={tdStyle}>{row.nums}</td>
-                  <td style={{ ...tdStyle, fontWeight: 700 }}>{row.axis}</td>
-                  <td style={{ ...tdStyle, textAlign: 'left' }}>{row.feature}</td>
+        <>
+          <div style={scrollStyle}>
+            <table style={tableStyle}>
+              <thead>
+                <tr>
+                  <th style={thStyle}>タイプ</th>
+                  <th style={thStyle}>予想数字</th>
+                  <th style={thStyle}>軸数字</th>
+                  <th style={thStyle}>特徴と狙い</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody>
+                {rows.map((row, idx) => (
+                  <tr key={idx}>
+                    <td style={tdStyle}>{row.type}</td>
+                    <td style={tdStyle}>{row.nums}</td>
+                    <td style={{ ...tdStyle, fontWeight: 700 }}>{row.axis}</td>
+                    <td style={{ ...tdStyle, textAlign: 'left' }}>{row.feature}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {/* --- ★予想実績（答え合わせ） --- */}
+          <div style={{ margin: '20px 0 0 0', background: '#fcfcf5', border: '1px solid #e4ddbc', borderRadius: 8, padding: 12 }}>
+            <div style={{ fontWeight: 700, fontSize: '1.04em', marginBottom: 6, color: '#d0a33a' }}>
+              ★予想実績（答え合わせ）
+            </div>
+            {scoreLoading ? (
+              <div>読み込み中…</div>
+            ) : scoreHtml ? (
+              <table style={{ width: '100%', fontSize: '0.97em', background: 'transparent' }}>
+                <tbody>
+                  <tr dangerouslySetInnerHTML={{ __html: scoreHtml }} />
+                </tbody>
+              </table>
+            ) : (
+              <div style={{ color: '#aaa', fontSize: '0.95em' }}>実績データが見つかりませんでした。</div>
+            )}
+          </div>
+        </>
       )}
       {!searched && (
         <div style={{ color: '#888', fontSize: '0.98em', marginTop: 14 }}>
