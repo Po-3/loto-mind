@@ -123,6 +123,8 @@
   "回": "times",
   "vs": "vs",
 
+  "language_label": "Language",
+
   "最近出ていない数字": "Not Appeared Recently",
   "過去30回で未出現の数字から抽出": "Selected from numbers not appeared in the last 30 draws",
   "よく出ている数字": "Frequent Numbers",
