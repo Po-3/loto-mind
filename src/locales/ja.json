@@ -98,7 +98,7 @@
   "main_number": "本数字",
   "B数字": "ボーナス数字",
   "main_num": "本数字{{num}}",
-  "bonus_number": "ボーナス{index}",
+  "bonus_number": "ボーナス{{index}}",
   "bonus_num": "B数字{{num}}",
   "features": "特徴",
   "sum": "合計",
@@ -113,7 +113,7 @@
   "times": "回",
   "items": "件",
 
-  "rank_count": "{{rank}}口",
+  "rank_count": "{{rank}}口数",
   "rank_prize": "{{rank}}賞金",
 
   "vs": "vs",
