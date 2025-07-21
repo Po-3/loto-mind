@@ -47,6 +47,7 @@ async function fetchPredictionScore(lotoType, drawNo) {
 }
 
 export default function Prediction({ lotoType, latestDrawNoFromProps }) {
+  const [latestDrawNo, setLatestDrawNo] = useState('');
   const [inputDrawNo, setInputDrawNo] = useState('');
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -65,6 +66,25 @@ export default function Prediction({ lotoType, latestDrawNoFromProps }) {
       </div>
     );
   }
+
+  // 最新回を取得し、+1で初期値・ピッカー範囲生成
+  useEffect(() => {
+    let ignore = false;
+    (async () => {
+      let latestNo = '';
+      if (latestDrawNoFromProps && isFinite(Number(latestDrawNoFromProps))) {
+        latestNo = Number(latestDrawNoFromProps);
+      } else {
+        latestNo = await fetchLatestDrawNo(lotoType);
+      }
+      if (!ignore) {
+        setLatestDrawNo(latestNo ? Number(latestNo) + 1 : '');
+        setInputDrawNo(latestNo ? String(Number(latestNo) + 1) : '');
+      }
+    })();
+    return () => { ignore = true; };
+    // eslint-disable-next-line
+  }, [lotoType, latestDrawNoFromProps]);
 
   // inputDrawNoが変更された時に自動fetch
   useEffect(() => {
@@ -132,30 +152,39 @@ export default function Prediction({ lotoType, latestDrawNoFromProps }) {
 
   // 最新予想ボタン押下時
   const handleLatest = async () => {
-  setFetchingLatest(true);
-  let latestNo = '';
-  // propsで最新開催回番号をもらった場合はそれを優先
-  if (latestDrawNoFromProps && isFinite(Number(latestDrawNoFromProps))) {
-    latestNo = Number(latestDrawNoFromProps) + 1;
-  } else {
-    const fetched = await fetchLatestDrawNo(lotoType);
-    latestNo = isFinite(fetched) ? Number(fetched) + 1 : '';
+    setFetchingLatest(true);
+    let latestNo = '';
+    if (latestDrawNoFromProps && isFinite(Number(latestDrawNoFromProps))) {
+      latestNo = Number(latestDrawNoFromProps) + 1;
+    } else {
+      const fetched = await fetchLatestDrawNo(lotoType);
+      latestNo = isFinite(fetched) ? Number(fetched) + 1 : '';
+    }
+    setInputDrawNo(latestNo && isFinite(latestNo) ? String(latestNo) : '');
+    setFetchingLatest(false);
+  };
+
+  // ▼ピッカー用リスト生成（最新回から100回分降順）
+  const pickerList = [];
+  if (latestDrawNo && !isNaN(Number(latestDrawNo))) {
+    for (let i = 0; i < 100; i++) {
+      pickerList.push(Number(latestDrawNo) - i);
+    }
   }
-  setInputDrawNo(latestNo && isFinite(latestNo) ? String(latestNo) : '');
-  setFetchingLatest(false);
-};
 
   return (
     <div style={outerStyle}>
       <h2 style={titleStyle}>となりのズバリ予想</h2>
       <div style={searchRowStyle}>
-        <input
-          type="number"
+        <select
           value={inputDrawNo}
           onChange={e => setInputDrawNo(e.target.value)}
-          placeholder="（例：2018）"
           style={inputStyle}
-        />
+        >
+          {pickerList.map(no =>
+            <option value={no} key={no}>{no}</option>
+          )}
+        </select>
         <button
           style={buttonStyle}
           onClick={handleLatest}
@@ -216,7 +245,7 @@ export default function Prediction({ lotoType, latestDrawNoFromProps }) {
       )}
       {!searched && (
         <div style={{ color: '#888', fontSize: '0.98em', marginTop: 14 }}>
-          開催回を入力すると自動で取得します。
+          開催回を選択すると自動で取得します。
           <br />
           <span style={{ color: '#d0323a', fontWeight: 700 }}>
             ※現在「{lotoType === 'miniloto'
@@ -227,7 +256,7 @@ export default function Prediction({ lotoType, latestDrawNoFromProps }) {
               ? 'ロト7'
               : lotoType}」が選択されています。
             <br />
-            必ず対象ロトの開催回を入力してください。
+            必ず対象ロトの開催回を選択してください。
           </span>
         </div>
       )}
