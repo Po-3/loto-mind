@@ -25,6 +25,7 @@ const DIAGNOSIS_PATTERNS = [
   { id: 'carry', label: 'キャリーあり', desc: 'キャリー発生時・キャリー回のみ抽出', types: ['loto6', 'loto7'] },
 ];
 
+// ロト種取得
 function getLotoTypeFromUrl(jsonUrl) {
   if (jsonUrl.includes('miniloto')) return 'miniloto';
   if (jsonUrl.includes('loto6')) return 'loto6';
@@ -32,7 +33,7 @@ function getLotoTypeFromUrl(jsonUrl) {
   return 'loto6'; // fallback
 }
 
-// ゾーン判定用
+// ゾーン判定
 const ZONE_DEF = {
   miniloto: { low: [1, 9], mid: [10, 20], high: [21, 31] },
   loto6: { low: [1, 9], mid: [10, 30], high: [31, 43] },
@@ -40,7 +41,7 @@ const ZONE_DEF = {
 };
 const PRIME_SET = new Set([2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43]);
 
-// 乱数ユーティリティ
+// 乱数
 function getRandomNums(nums, count) {
   const arr = [...nums];
   for (let i = arr.length - 1; i > 0; i--) {
@@ -55,16 +56,14 @@ function pickRandom(arr) {
 
 export default function Diagnosis({ jsonUrl }) {
   const [result, setResult] = useState(null);
-  const [data, setData] = useState(null); // 直近30回データ
+  const [data, setData] = useState(null);
   const [pattern, setPattern] = useState('');
   const [desc, setDesc] = useState('');
 
   const lotoType = getLotoTypeFromUrl(jsonUrl);
-
-  // ロト種ごとにパターン選択肢を絞る
   const patternList = DIAGNOSIS_PATTERNS.filter(p => p.types.includes(lotoType));
 
-  // パターン初期化
+  // 初期化
   useEffect(() => {
     const obj = patternList.find(p => p.id === pattern) || patternList[0];
     setPattern(obj?.id || '');
@@ -76,7 +75,6 @@ export default function Diagnosis({ jsonUrl }) {
     setDesc(obj?.desc || '');
   }, [pattern, patternList]);
 
-  // データ取得
   useEffect(() => {
     setResult(null);
     fetch(jsonUrl)
@@ -86,6 +84,7 @@ export default function Diagnosis({ jsonUrl }) {
       });
   }, [jsonUrl]);
 
+  // ゾーン
   function getZone(n, type) {
     const { low, mid, high } = ZONE_DEF[type];
     if (n >= low[0] && n <= low[1]) return 'low';
@@ -93,12 +92,10 @@ export default function Diagnosis({ jsonUrl }) {
     if (n >= high[0] && n <= high[1]) return 'high';
     return '';
   }
-
   function isConsecutive(nums) {
     const sorted = [...nums].sort((a, b) => a - b);
     return sorted.some((n, i) => i > 0 && n - sorted[i - 1] === 1);
   }
-
   function hasSameLast(nums) {
     const ones = {};
     nums.forEach(n => {
@@ -107,12 +104,9 @@ export default function Diagnosis({ jsonUrl }) {
     });
     return Object.values(ones).some(v => v >= 2);
   }
-
   function isPrimeSet(nums) {
     return nums.every(n => PRIME_SET.has(n));
   }
-
-  // 合計値しきい値（公式・独自基準可）
   function getSumThreshold(type) {
     if (type === 'miniloto') return { small: 65, large: 105 };
     if (type === 'loto6') return { small: 100, large: 170 };
@@ -120,7 +114,7 @@ export default function Diagnosis({ jsonUrl }) {
     return { small: 0, large: 9999 };
   }
 
-  // 診断ロジック本体
+  // 診断本体
   function runDiagnosis(json, patternId) {
     let maxNum = 43, recommendCount = 6, numKeys = 6;
     if (lotoType === 'miniloto') {
@@ -146,13 +140,11 @@ export default function Diagnosis({ jsonUrl }) {
     let sum, oddCount, evenCount;
 
     while (++tries < 3000) {
-      // 初期セット（パターンに応じて調整）
       if (patternId === 'notAppeared') {
         const notAppear = all.filter(n => !allNums.includes(n));
         const pool = notAppear.length >= recommendCount ? notAppear : all;
         nums = getRandomNums(pool, recommendCount);
       } else if (patternId === 'appeared') {
-        // 頻出数字上位から抽出
         let freq = {};
         all.forEach(n => { freq[n] = 0; });
         allNums.forEach(n => { if (freq[n] !== undefined) freq[n]++; });
@@ -250,7 +242,6 @@ export default function Diagnosis({ jsonUrl }) {
         const pool = all.filter(n => n >= 1 && n <= 31);
         nums = getRandomNums(pool, recommendCount);
       } else if (patternId === 'carry' && (lotoType === 'loto6' || lotoType === 'loto7')) {
-        // キャリー発生回のみからランダム
         const carryRows = json.filter(row =>
           Number(row['キャリーオーバー'] || 0) > 0
         );
@@ -267,7 +258,6 @@ export default function Diagnosis({ jsonUrl }) {
       } else {
         nums = getRandomNums(all, recommendCount);
       }
-      // 条件満たしていたら抜ける
       break;
     }
 
