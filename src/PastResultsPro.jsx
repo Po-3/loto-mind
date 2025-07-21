@@ -390,18 +390,19 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
               <th style={{ ...thStyle, ...stickyLeftStyle }}>{t('round')}</th>
               <th style={thStyle}>{t('date')}</th>
               {Array(config.main).fill(0).map((_, i) => <th key={i} style={thStyle}>本数字{i + 1}</th>)}
-              {config.bonusNames.map((name, i) => <th key={name} style={thStyle}>{t('bonus_num', { num: i + 1 })}</th>)}
-              <th style={{ ...thStyle, minWidth: 180, width: '24%' }}>{t('features')}</th>
+{config.bonusNames.map((name, i) => (
+  <th key={name} style={thStyle}>B数字{i + 1}</th>
+))}              <th style={{ ...thStyle, minWidth: 180, width: '24%' }}>{t('features')}</th>
               <th style={thStyle}>{t('sum')}</th>
               {(lotoType === 'loto6' || lotoType === 'loto7') && (
                 <th style={thStyle}>{t('carryover')}</th>
               )}
               {config.ranks.map(({ rank }) => (
-                <th key={rank} style={thStyle}>{t('rank_count', { rank: rank.rank })}</th>
-              ))}
+  <th key={rank} style={thStyle}>{rank}口数</th>
+))}
               {config.ranks.map(({ rank }) => (
-                <th key={rank + '_prize'} style={thStyle}>{t('rank_prize', { rank: rank.rank })}</th>
-              ))}
+  <th key={rank + '_prize'} style={thStyle}>{rank}賞金</th>
+))}
             </tr>
           </thead>
           <tbody>
