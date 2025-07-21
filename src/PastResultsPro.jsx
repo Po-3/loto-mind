@@ -427,12 +427,16 @@ const handleInfo = (label, e) => {
     {(lotoType === 'loto6' || lotoType === 'loto7') && (
       <th style={thStyle}>{t('carryover')}</th>
     )}
-    {config.ranks.map(({ rank }) => (
-      <th key={rank} style={thStyle}>{t('rank_count', { rank: t(rank.rank) })}</th>
-    ))}
-    {config.ranks.map(({ rank }) => (
-      <th key={rank + '_prize'} style={thStyle}>{t('rank_prize', { rank: t(rank.rank) })}</th>
-    ))}
+{config.ranks.map(({ rank }) => (
+  <th key={rank} style={thStyle}>
+    {t('rank_count', { rank: t(`ranks.${rank.rank}`) })}
+  </th>
+))}
+{config.ranks.map(({ rank }) => (
+  <th key={rank + '_prize'} style={thStyle}>
+    {t('rank_prize', { rank: t(`ranks.${rank.rank}`) })}
+  </th>
+))}
   </tr>
 </thead>
           <tbody>
