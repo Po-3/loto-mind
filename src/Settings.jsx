@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
 
-// フォント選択肢
+// フォント選択肢（i18nラベル対応）
 const FONT_OPTIONS = [
   { label: 'default_font', value: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, "Noto Sans JP", sans-serif' },
   { label: 'serif_font', value: 'serif, "Times New Roman", "Noto Serif JP", "YuMincho", "ヒラギノ明朝 ProN", "MS P明朝"' },
@@ -39,7 +39,7 @@ export default function Settings({
   onFontChange,
   onThemeColorChange,
 }) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [selectedLoto, setSelectedLoto] = useState(defaultLotoType || 'loto6');
   const [selectedMenu, setSelectedMenu] = useState(defaultMenu || 'past');
   const [selectedFont, setSelectedFont] = useState(font || FONT_OPTIONS[0].value);
@@ -51,11 +51,9 @@ export default function Settings({
 
   useEffect(() => {
     if (!isUserSelectedLoto) setSelectedLoto(defaultLotoType || 'loto6');
-    // eslint-disable-next-line
   }, [defaultLotoType]);
   useEffect(() => {
     if (!isUserSelectedMenu) setSelectedMenu(defaultMenu || 'past');
-    // eslint-disable-next-line
   }, [defaultMenu]);
   useEffect(() => { setSelectedFont(font || FONT_OPTIONS[0].value); }, [font]);
   useEffect(() => {
@@ -92,8 +90,40 @@ export default function Settings({
     return <div>{t('settings_loading')}</div>;
   }
 
+  // ▼ 言語切替ボタンリスト
+  const languages = [
+    { code: 'ja', label: '日本語' },
+    { code: 'en', label: 'English' },
+    { code: 'zh', label: '简体中文' },
+    { code: 'zh-TW', label: '繁體中文' },
+  ];
+
   return (
     <div style={{ width: '100%', boxSizing: 'border-box' }}>
+      {/* 言語切替ボタン */}
+      <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end', marginBottom: 6 }}>
+        {languages.map(lang => (
+          <button
+            key={lang.code}
+            onClick={() => i18n.changeLanguage(lang.code)}
+            style={{
+              padding: '4px 13px',
+              fontSize: '1em',
+              borderRadius: 8,
+              border: i18n.language === lang.code ? '2px solid #337be8' : '1px solid #bbb',
+              background: i18n.language === lang.code ? '#337be8' : '#fff',
+              color: i18n.language === lang.code ? '#fff' : '#444',
+              fontWeight: i18n.language === lang.code ? 700 : 400,
+              cursor: 'pointer',
+              transition: 'all .13s',
+            }}
+            aria-pressed={i18n.language === lang.code}
+          >
+            {lang.label}
+          </button>
+        ))}
+      </div>
+
       <h2 style={{ fontSize: '1.10em', margin: '8px 0' }}>{t('settings')}</h2>
 
       <div style={settingBlock}>
