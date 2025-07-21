@@ -7,7 +7,7 @@ const DIAGNOSIS_PATTERNS = [
   { id: 'random', label: '完全ランダム', desc: '完全無作為（すべての数字からランダム抽出）', types: ['miniloto', 'loto6', 'loto7'] },
   { id: 'odd', label: '奇数多め', desc: '奇数が多い構成（ミニロト・ロト6:4個以上, ロト7:5個以上）', types: ['miniloto', 'loto6', 'loto7'] },
   { id: 'even', label: '偶数多め', desc: '偶数が多い構成（ミニロト・ロト6:4個以上, ロト7:5個以上）', types: ['miniloto', 'loto6', 'loto7'] },
-  { id: 'balanced', label: '奇数偶数バランス型', desc: '奇数偶数が均等（例：ロト6は3:3）', types: ['loto6'] },
+  { id: 'balanced', label: '奇数偶数バランス型', desc: '奇数:偶数が3:3', types: ['loto6'] },
   { id: 'consecutive', label: '連番入り', desc: '連続数字（例:24,25など）が必ず含まれる', types: ['miniloto', 'loto6', 'loto7'] },
   { id: 'sameLast', label: '下一桁同じ数字入り', desc: '下一桁が同じ数字（例:11,21など）が複数含まれる', types: ['miniloto', 'loto6', 'loto7'] },
   { id: 'lowZone', label: '低位ゾーン重視', desc: '最小ゾーン（1〜9）の数字を多めに選ぶ', types: ['miniloto', 'loto6', 'loto7'] },
