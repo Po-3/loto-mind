@@ -1,5 +1,3 @@
-そしたら完璧に直して全文でください
-
 import { useTranslation } from 'react-i18next';
 import { useEffect, useState, useRef } from 'react';
 
