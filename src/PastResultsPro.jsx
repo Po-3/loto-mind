@@ -1,25 +1,25 @@
 import { useTranslation } from 'react-i18next';
 import { useEffect, useState, useRef } from 'react';
 
-// --- 特徴ごとの説明 ---
+// --- 特徴ごとの説明 (i18nキー版) ---
 const featureInfo = {
-  '連番あり': '連続した数字（例：24・25など）を含む構成です。',
-  '下一桁かぶり': '同じ下一桁（例：11・21・31など）が複数含まれる構成です。',
-  'キャリーあり': 'キャリーオーバーが発生していた回です。',
-  '奇数多め': '奇数が4個以上含まれる構成です。',
-  '偶数多め': '偶数が4個以上含まれる構成です。',
-  '合計小さめ': '本数字の合計が60未満の構成です。',
-  '合計大きめ': '本数字の合計が80以上の構成です。',
-  'バランス型': '奇数と偶数が均等に含まれる構成です。',
-  '奇数多め_loto6': '奇数が4個以上含まれる構成です。',
-  '偶数多め_loto6': '偶数が4個以上含まれる構成です。',
-  '合計小さめ_loto6': '6つの本数字の合計が114未満の構成です。',
-  '合計大きめ_loto6': '6つの本数字の合計が151を超える構成です。',
-  '奇数多め_loto7': '奇数が5個以上含まれる構成です。',
-  '偶数多め_loto7': '偶数が5個以上含まれる構成です。',
-  '合計小さめ_loto7': '7つの本数字の合計が160未満の構成です。',
-  '合計大きめ_loto7': '7つの本数字の合計が160以上の構成です。',
-  '高低ミックス': '10未満と30以上の数字が両方含まれる構成です。',
+  '連番あり': 'desc_with_consecutive_numbers',
+  '下一桁かぶり': 'desc_with_same_last_digit',
+  'キャリーあり': 'desc_with_carryover',
+  '奇数多め': 'desc_odd_heavy',
+  '偶数多め': 'desc_even_heavy',
+  '合計小さめ': 'desc_low_sum',
+  '合計大きめ': 'desc_high_sum',
+  'バランス型': 'desc_balanced',
+  '奇数多め_loto6': 'desc_odd_heavy_loto6',
+  '偶数多め_loto6': 'desc_even_heavy_loto6',
+  '合計小さめ_loto6': 'desc_low_sum_loto6',
+  '合計大きめ_loto6': 'desc_high_sum_loto6',
+  '奇数多め_loto7': 'desc_odd_heavy_loto7',
+  '偶数多め_loto7': 'desc_even_heavy_loto7',
+  '合計小さめ_loto7': 'desc_low_sum_loto7',
+  '合計大きめ_loto7': 'desc_high_sum_loto7',
+  '高低ミックス': 'desc_highlow_mix'
 };
 
 // --- ロト種別ごとの設定（HTMLラベルに完全一致） ---
