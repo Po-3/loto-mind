@@ -132,17 +132,18 @@ export default function Prediction({ lotoType, latestDrawNoFromProps }) {
 
   // 最新予想ボタン押下時
   const handleLatest = async () => {
-    setFetchingLatest(true);
-    let latestNo = '';
-    // propsで最新開催回番号をもらった場合はそれを優先
-    if (latestDrawNoFromProps && isFinite(Number(latestDrawNoFromProps))) {
-      latestNo = latestDrawNoFromProps;
-    } else {
-      latestNo = await fetchLatestDrawNo(lotoType);
-    }
-    setInputDrawNo(latestNo && isFinite(latestNo) ? String(latestNo) : '');
-    setFetchingLatest(false);
-  };
+  setFetchingLatest(true);
+  let latestNo = '';
+  // propsで最新開催回番号をもらった場合はそれを優先
+  if (latestDrawNoFromProps && isFinite(Number(latestDrawNoFromProps))) {
+    latestNo = Number(latestDrawNoFromProps) + 1;
+  } else {
+    const fetched = await fetchLatestDrawNo(lotoType);
+    latestNo = isFinite(fetched) ? Number(fetched) + 1 : '';
+  }
+  setInputDrawNo(latestNo && isFinite(latestNo) ? String(latestNo) : '');
+  setFetchingLatest(false);
+};
 
   return (
     <div style={outerStyle}>
