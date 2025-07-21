@@ -189,6 +189,11 @@
   "キャリーあり": "With Carryover",
   "キャリー発生時・キャリー回のみ抽出": "Draws with a carryover only",
 
+    "type": "Type",
+  "prediction_numbers": "Prediction Numbers",
+  "axis_number": "Axis Number",
+  "features_and_aim": "Features & Aim",
+
   "診断を更新": "Update Diagnosis",
   "上のロト種ボタンで切替えられるよ！": "Switch using the lottery type buttons above!",
   "「当たったら教えてね！」by となり": "\"Let me know if you win!\" by Tonari",
