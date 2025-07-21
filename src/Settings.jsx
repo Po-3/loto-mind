@@ -191,7 +191,7 @@ export default function Settings({
           予想・分析の結果に基づく購入はご自身の判断・責任でお願いします。<br />
           <span style={{ fontSize: '0.92em', display: 'inline-block', marginTop: 2 }}>
             <a href="https://www.kujitonari.net/LotoMind" target="_blank" rel="noopener noreferrer" style={{ color: '#888' }}>
-              Ver 1.01（2025-07-20）
+              Ver 1.02（2025-07-21）
             </a>
           </span>
         </span>
