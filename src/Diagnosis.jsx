@@ -21,7 +21,7 @@ const DIAGNOSIS_PATTERNS = [
   { id: 'sumSmall', label: '合計値小さめ', desc: '合計値が小さい構成（しきい値は種別で変わる）', types: ['miniloto', 'loto6', 'loto7'] },
   { id: 'sumLarge', label: '合計値大きめ', desc: '合計値が大きい構成（しきい値は種別で変わる）', types: ['miniloto', 'loto6', 'loto7'] },
   { id: 'prime', label: '素数のみ', desc: '全部素数！（完全ネタ枠／ファン向け）', types: ['miniloto', 'loto6', 'loto7'] },
-  { id: 'birthday', label: '誕生日数字縛り', desc: 'すべて「1〜31」の数字のみ', types: ['miniloto', 'loto6', 'loto7'] },
+  { id: 'birthday', label: '誕生日数字縛り', desc: 'すべて「1〜31」の数字のみ', types: ['loto6', 'loto7'] },
   { id: 'carry', label: 'キャリーあり', desc: 'キャリー発生時・キャリー回のみ抽出', types: ['loto6', 'loto7'] },
 ];
 
