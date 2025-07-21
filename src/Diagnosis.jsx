@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
 
 // ▼診断パターンリスト（全部盛り！）
@@ -25,15 +26,13 @@ const DIAGNOSIS_PATTERNS = [
   { id: 'carry', label: 'キャリーあり', desc: 'キャリー発生時・キャリー回のみ抽出', types: ['loto6', 'loto7'] },
 ];
 
-// ロト種取得
 function getLotoTypeFromUrl(jsonUrl) {
   if (jsonUrl.includes('miniloto')) return 'miniloto';
   if (jsonUrl.includes('loto6')) return 'loto6';
   if (jsonUrl.includes('loto7')) return 'loto7';
-  return 'loto6'; // fallback
+  return 'loto6';
 }
 
-// ゾーン判定
 const ZONE_DEF = {
   miniloto: { low: [1, 9], mid: [10, 20], high: [21, 31] },
   loto6: { low: [1, 9], mid: [10, 30], high: [31, 43] },
@@ -41,7 +40,6 @@ const ZONE_DEF = {
 };
 const PRIME_SET = new Set([2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43]);
 
-// 乱数
 function getRandomNums(nums, count) {
   const arr = [...nums];
   for (let i = arr.length - 1; i > 0; i--) {
@@ -55,6 +53,7 @@ function pickRandom(arr) {
 }
 
 export default function Diagnosis({ jsonUrl }) {
+  const { t } = useTranslation(); // ←ここ追加
   const [result, setResult] = useState(null);
   const [data, setData] = useState(null);
   const [pattern, setPattern] = useState('');
@@ -63,7 +62,6 @@ export default function Diagnosis({ jsonUrl }) {
   const lotoType = getLotoTypeFromUrl(jsonUrl);
   const patternList = DIAGNOSIS_PATTERNS.filter(p => p.types.includes(lotoType));
 
-  // 初期化
   useEffect(() => {
     const obj = patternList.find(p => p.id === pattern) || patternList[0];
     setPattern(obj?.id || '');
@@ -84,7 +82,6 @@ export default function Diagnosis({ jsonUrl }) {
       });
   }, [jsonUrl]);
 
-  // ゾーン
   function getZone(n, type) {
     const { low, mid, high } = ZONE_DEF[type];
     if (n >= low[0] && n <= low[1]) return 'low';
@@ -114,7 +111,6 @@ export default function Diagnosis({ jsonUrl }) {
     return { small: 0, large: 9999 };
   }
 
-  // 診断本体
   function runDiagnosis(json, patternId) {
     let maxNum = 43, recommendCount = 6, numKeys = 6;
     if (lotoType === 'miniloto') {
@@ -283,14 +279,14 @@ export default function Diagnosis({ jsonUrl }) {
     const isWide = range >= Math.floor(maxNum * 0.8);
 
     const patterns = [
-      { check: () => hasConsecutive, comments: ["連番アタック！流れに乗る日は大きく当たる日。","連続数字が熱い！波に乗れそうな予感。","連番多め。勢い重視のギャンブラー型診断！"] },
-      { check: () => allOdd, comments: ["全て奇数！波乱の予感漂うアグレッシブ診断。","オッズ型フルスロットル！攻めの日です。"] },
-      { check: () => allEven, comments: ["全て偶数！堅実・安定感マックス。","偶数オンリー。落ち着いた構成で勝負！"] },
-      { check: () => isBalanced, comments: ["奇数偶数バランス型。大穴狙いでも鉄板狙いでもイケる！","バランス型！何が来てもおかしくない絶妙ライン。"] },
-      { check: () => lowCount >= Math.max(2, Math.floor(nums.length / 2)), comments: ["低位ゾーンに集中。地に足ついた堅実型！","1ケタばかりの慎重派。小さな当たりも積み重ね！"] },
-      { check: () => highCount >= Math.max(2, Math.floor(nums.length / 2)), comments: ["高位ゾーンで夢を見ろ！一発逆転狙いの攻め型。","高位ゾーン中心のジャンボ狙い。"] },
-      { check: () => isNarrow, comments: ["数字のまとまり感がスゴい！結束力バツグン。","レンジが狭い…団結力で当たりを呼ぶパターン!?"] },
-      { check: () => isWide, comments: ["広範囲カバー型。どこからでも“当たり”を拾いに行ける！","ばらけている時こそ、意外な一発に期待！"] },
+      { check: () => hasConsecutive, comments: [t("連番アタック！流れに乗る日は大きく当たる日。"),t("連続数字が熱い！波に乗れそうな予感。"),t("連番多め。勢い重視のギャンブラー型診断！")] },
+      { check: () => allOdd, comments: [t("全て奇数！波乱の予感漂うアグレッシブ診断。"),t("オッズ型フルスロットル！攻めの日です。")] },
+      { check: () => allEven, comments: [t("全て偶数！堅実・安定感マックス。"),t("偶数オンリー。落ち着いた構成で勝負！")] },
+      { check: () => isBalanced, comments: [t("奇数偶数バランス型。大穴狙いでも鉄板狙いでもイケる！"),t("バランス型！何が来てもおかしくない絶妙ライン。")] },
+      { check: () => lowCount >= Math.max(2, Math.floor(nums.length / 2)), comments: [t("低位ゾーンに集中。地に足ついた堅実型！"),t("1ケタばかりの慎重派。小さな当たりも積み重ね！")] },
+      { check: () => highCount >= Math.max(2, Math.floor(nums.length / 2)), comments: [t("高位ゾーンで夢を見ろ！一発逆転狙いの攻め型。"),t("高位ゾーン中心のジャンボ狙い。")] },
+      { check: () => isNarrow, comments: [t("数字のまとまり感がスゴい！結束力バツグン。"),t("レンジが狭い…団結力で当たりを呼ぶパターン!?")] },
+      { check: () => isWide, comments: [t("広範囲カバー型。どこからでも“当たり”を拾いに行ける！"),t("ばらけている時こそ、意外な一発に期待！")] },
     ];
     for (const pattern of patterns) {
       if (pattern.check()) {
@@ -298,11 +294,11 @@ export default function Diagnosis({ jsonUrl }) {
       }
     }
     const randomComments = [
-      "今日は完全ランダム型。こういう時こそ神頼み！",
-      "狙いはランダム、当たりもランダム!?",
-      "“運”という名のギャンブル診断！",
-      "選ばれし数字たちに身を委ねよう。",
-      "今日の運勢はガチャガチャ仕様です。"
+      t("今日は完全ランダム型。こういう時こそ神頼み！"),
+      t("狙いはランダム、当たりもランダム!?"),
+      t("“運”という名のギャンブル診断！"),
+      t("選ばれし数字たちに身を委ねよう。"),
+      t("今日の運勢はガチャガチャ仕様です。")
     ];
     return pickRandom(randomComments);
   }
@@ -313,7 +309,7 @@ export default function Diagnosis({ jsonUrl }) {
 
   return (
     <div style={outerStyle}>
-<div style={{ marginBottom: 12, display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+      <div style={{ marginBottom: 12, display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
         <label>
           <select
             value={pattern}
@@ -327,12 +323,12 @@ export default function Diagnosis({ jsonUrl }) {
             }}
           >
             {patternList.map(p => (
-              <option key={p.id} value={p.id}>{p.label}</option>
+              <option key={p.id} value={p.id}>{t(p.label)}</option>
             ))}
           </select>
         </label>
         <span style={{ color: '#666', fontSize: '0.98em', marginLeft: 4 }}>
-          ※ {desc}
+          ※ {t(desc)}
         </span>
       </div>
       <button
@@ -347,7 +343,7 @@ export default function Diagnosis({ jsonUrl }) {
         }}
         onClick={() => data && runDiagnosis(data, pattern)}
       >
-        診断を更新
+        {t('診断を更新')}
       </button>
       {result ? (
         <>
@@ -362,14 +358,17 @@ export default function Diagnosis({ jsonUrl }) {
             color: '#ca3',
             fontWeight: 500
           }}>{result.comment}</p>
-          <p style={footerStyle}>上のロト種ボタンで切替えられるよ！<br />「当たったら教えてね！」by となり</p>
+          <p style={footerStyle}>
+            {t('上のロト種ボタンで切替えられるよ！')}
+            <br />
+            {t('「当たったら教えてね！」by となり')}
+          </p>
         </>
-      ) : <p>診断中…</p>}
+      ) : <p>{t('診断中…')}</p>}
     </div>
   );
 }
 
-// スタイル
 const outerStyle = {
   width: '100%',
   padding: '0 12px',

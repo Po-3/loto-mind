@@ -1,5 +1,4 @@
 {
-  // --- 共通 ---
   "app_title": "LotoMind",
   "by_tonari": "by となり",
   "select": "選択",
@@ -16,7 +15,6 @@
   "yes": "はい",
   "no": "いいえ",
 
-  // --- タブ/機能 ---
   "miniloto": "ミニロト",
   "loto6": "ロト6",
   "loto7": "ロト7",
@@ -25,15 +23,12 @@
   "prediction": "ズバリ予想",
   "settings_tab": "設定",
 
-  // --- タブ説明・補助 ---
   "miniloto_desc": "1〜31の中から5個選ぶミニロト",
   "loto6_desc": "1〜43の中から6個選ぶロト6",
   "loto7_desc": "1〜37の中から7個選ぶロト7",
 
-  // --- メインヘッダー ---
   "app_title_long": "ロト検索＆診断アプリ LotoMind",
 
-  // --- 診断 ---
   "diagnosis_pattern": "診断パターン",
   "update_diagnosis": "診断を更新",
   "recommend_numbers": "おすすめ数字",
@@ -42,7 +37,6 @@
   "tell_me_if_win": "「当たったら教えてね！」by となり",
   "diagnosing": "診断中…",
 
-  // --- 予想 ---
   "prediction_title": "となりのズバリ予想",
   "latest_prediction": "最新予想",
   "draw_picker": "開催回を選択",
@@ -53,7 +47,6 @@
   "score_not_found": "実績データが見つかりませんでした。",
   "no_prediction": "ズバリ予想が取得できませんでした。",
 
-  // --- 検索 ---
   "search_result": "検索結果：{count}件",
   "most_often": "最多本数字",
   "least_often": "最少本数字",
@@ -69,7 +62,6 @@
   "filter_odd_even": "奇数・偶数構成",
   "csv_export": "CSV出力",
 
-  // --- 設定 ---
   "settings": "設定",
   "default_loto_type": "デフォルトロト種別：",
   "default_menu": "起動時の初期メニュー：",
@@ -91,13 +83,11 @@
   "disclaimer": "※ 本サービスはデータ検証およびエンタメ目的で提供しています。\n予想・分析の結果に基づく購入はご自身の判断・責任でお願いします。",
   "version": "Ver 1.03（2025-07-21）",
 
-  // --- フッター/リンク ---
   "blog": "宝くじのとなり 公式ブログ（出現傾向＆予想の詳しい解説はこちら）",
   "note": "note版 くじとなり（考察・有料予想はこちら）",
   "x": "X（旧Twitter）最新情報",
   "youtube": "くじとなり公式YouTubeチャンネル（動画も配信中！）",
 
-  // --- テーブル ---
   "draw": "回",
   "date": "日付",
   "main_number": "本数字{index}",
@@ -108,10 +98,8 @@
   "count": "{rank}口数",
   "prize": "{rank}賞金",
 
-  // --- ダイアログ ---
   "close_dialog": "閉じる",
 
-  // --- Info ---
   "info": "説明",
   "see_more": "もっと見る"
 }
