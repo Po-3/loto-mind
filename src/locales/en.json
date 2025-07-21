@@ -130,7 +130,11 @@
   "合計大きめ": "High Sum",
 
   "language_label": "Language",
-    "最近出ていない数字": "No prediction article has been written.",
+    "予想記事が書かれていません": "No prediction article has been written.",
+        "標準（推奨・全端末未対応）": "Standard (Recommended / Not supported on all devices)",
+            "明朝体（標準）": "Serif (Standard)",
+                "等幅（数字・表用）": "Monospace (Numbers / Tables)",
+
 
   "最近出ていない数字": "Not Appeared Recently",
   "過去30回で未出現の数字から抽出": "Selected from numbers not appeared in the last 30 draws",
