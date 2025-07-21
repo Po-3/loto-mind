@@ -200,5 +200,19 @@
   "狙いはランダム、当たりもランダム!?": "Random picks, random wins!?",
   "“運”という名のギャンブル診断！": "A gamble diagnosis called 'Luck'!",
   "選ばれし数字たちに身を委ねよう。": "Surrender to the chosen numbers.",
-  "今日の運勢はガチャガチャ仕様です。": "Today's fortune: pure gacha (capsule toy) mode."
-}
+  "今日の運勢はガチャガチャ仕様です。": "Today's fortune: pure gacha (capsule toy) mode.",
+
+  "ranks": {
+    "1等": "1st Prize",
+    "2等": "2nd Prize",
+    "3等": "3rd Prize",
+    "4等": "4th Prize",
+    "5等": "5th Prize",
+    "6等": "6th Prize"
+  },
+  "bonus_names": {
+    "ボーナス数字": "Bonus",
+    "BONUS数字1": "Bonus 1",
+    "BONUS数字2": "Bonus 2"
+  }
+   }
