@@ -313,7 +313,7 @@ export default function Diagnosis({ jsonUrl }) {
 
   return (
     <div style={outerStyle}>
-      <div style={{ marginBottom: 12 }}>
+<div style={{ marginBottom: 12, display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
         <label>
           <select
             value={pattern}
