@@ -25,14 +25,16 @@ const LANG_OPTIONS = [
 ];
 
 const PaletteIcon = ({ size = 27 }) => (
-  <svg width={size} height={size} viewBox="0 0 22 22" style={{ verticalAlign: 'middle', marginRight: 2 }}>
-    <circle cx="11" cy="11" r="10" fill="#f7c873" stroke="#be9000" strokeWidth="1.2"/>
-    <circle cx="7.5" cy="8" r="1.5" fill="#ed3a45"/>
-    <circle cx="11.5" cy="6.8" r="1.2" fill="#42c6ff"/>
-    <circle cx="15.1" cy="9.3" r="1.2" fill="#74e088"/>
-    <circle cx="13.8" cy="13.4" r="1.2" fill="#fff78d"/>
-    <circle cx="8.3" cy="14.1" r="1.2" fill="#e883d3"/>
-  </svg>
+<svg width="22" height="22" viewBox="0 0 22 22">
+  {/* 大きなまんまる */}
+  <circle cx="11" cy="11" r="10" fill="#f7c873" stroke="#be9000" strokeWidth="1.2"/>
+  {/* 中央付近に小まんまる */}
+  <circle cx="9" cy="10" r="1.5" fill="#ed3a45"/>
+  <circle cx="13" cy="9.3" r="1.2" fill="#42c6ff"/>
+  <circle cx="12.2" cy="13.3" r="1.2" fill="#74e088"/>
+  <circle cx="10.4" cy="13.8" r="1.2" fill="#fff78d"/>
+  <circle cx="12.2" cy="11.7" r="1.2" fill="#e883d3"/>
+</svg>
 );
 
 // ▼ 言語切替カスタムUI
