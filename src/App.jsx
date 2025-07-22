@@ -271,21 +271,6 @@ export default function App() {
   );
 }
 
-// --- スタイル定義 ---（省略部分はそのまま）
-const containerStyle = {
-  width: '100%',
-  maxWidth: 470,
-  margin: '0 auto 0 auto',
-  padding: '12px 8px 10px 8px',
-  boxSizing: 'border-box',
-  fontSize: '16px',
-  background: 'transparent',
-  borderRadius: 16,
-  border: '1px solid #e0e8f3',
-  marginTop: 10,
-  boxShadow: '0 6px 24px #d2e4fa22',
-};
-
 // --- スタイル定義 ---（以下、質問欄のまま省略せずOK。前と同じ）
 const containerStyle = {
   width: '100%',
