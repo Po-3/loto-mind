@@ -1,13 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
 
-// フォント選択肢
-const FONT_OPTIONS = [
-  { labelKey: 'font_standard', value: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, "Noto Sans JP", sans-serif' },
-  { labelKey: 'font_serif', value: 'serif, "Times New Roman", "Noto Serif JP", "YuMincho", "ヒラギノ明朝 ProN", "MS P明朝"' },
-  { labelKey: 'font_monospace', value: 'monospace, "Menlo", "Consolas", "Liberation Mono", "Courier New"' },
-];
-
 // ▼ 背景色プリセット
 const BG_COLOR_PRESETS = [
   { labelKey: 'color_tonari', value: '#fafcff' },
@@ -57,7 +50,6 @@ const PaletteIcon = ({ size = 27 }) => (
   </svg>
 );
 
-// ▼ 言語切替カスタムUI
 function LanguageDropdown({ selectedLang, onChange }) {
   const [open, setOpen] = useState(false);
   const sorted = [...LANG_OPTIONS].sort((a, b) =>
@@ -138,21 +130,14 @@ export default function Settings({
   const [selectedLang, setSelectedLang] = useState(i18n.language || 'ja');
   const [selectedLoto, setSelectedLoto] = useState(defaultLotoType || 'loto6');
   const [selectedMenu, setSelectedMenu] = useState(defaultMenu || 'past');
-  const [selectedFont, setSelectedFont] = useState(font || FONT_OPTIONS[0].value);
-  const [selectedColor, setSelectedColor] = useState(themeColor || '#fafcff');
+  const [selectedFont, setSelectedFont] = useState(font || '');
+  const [selectedColor, setSelectedColor] = useState(themeColor || BG_COLOR_PRESETS[0].value);
   const [customColor, setCustomColor] = useState('');
-
-  // ▼追加：文字色用
-  const [selectedTextColor, setSelectedTextColor] = useState(localStorage.getItem('textColor') || '#191919');
+  const [selectedTextColor, setSelectedTextColor] = useState(localStorage.getItem('textColor') || TEXT_COLOR_PRESETS[0].value);
   const [customTextColor, setCustomTextColor] = useState('');
 
   const [isUserSelectedLoto, setIsUserSelectedLoto] = useState(false);
   const [isUserSelectedMenu, setIsUserSelectedMenu] = useState(false);
-
-  const handleLangChange = lang => {
-    setSelectedLang(lang);
-    i18n.changeLanguage(lang);
-  };
 
   useEffect(() => {
     if (!isUserSelectedLoto) setSelectedLoto(defaultLotoType || 'loto6');
@@ -161,18 +146,20 @@ export default function Settings({
     if (!isUserSelectedMenu) setSelectedMenu(defaultMenu || 'past');
   }, [defaultMenu]);
   useEffect(() => {
-    setSelectedFont(font || FONT_OPTIONS[0].value);
+    setSelectedFont(font || '');
   }, [font]);
   useEffect(() => {
-    setSelectedColor(themeColor || '#fafcff');
+    setSelectedColor(themeColor || BG_COLOR_PRESETS[0].value);
     setCustomColor('');
   }, [themeColor]);
-
-  // ▼文字色をbody直反映したい場合（or ルートdivに直接style指定でも可）
   useEffect(() => {
     document.body.style.color = selectedTextColor;
   }, [selectedTextColor]);
 
+  const handleLangChange = lang => {
+    setSelectedLang(lang);
+    i18n.changeLanguage(lang);
+  };
   const handleLotoChange = val => {
     setIsUserSelectedLoto(true);
     setSelectedLoto(val);
@@ -197,14 +184,11 @@ export default function Settings({
     setCustomColor(color);
     onThemeColorChange?.(color);
   };
-
-  // ▼文字色（プリセット）
   const handlePresetTextColor = color => {
     setSelectedTextColor(color);
     setCustomTextColor('');
     localStorage.setItem('textColor', color);
   };
-  // ▼文字色（カスタムパレット）
   const handleCustomTextColor = color => {
     setSelectedTextColor(color);
     setCustomTextColor(color);
@@ -215,7 +199,6 @@ export default function Settings({
     return <div>{t('loading')}</div>;
   }
 
-  // ★ここがポイント！
   const langLabel = selectedLang === 'ja' ? 'Language' : '言語';
 
   return (
@@ -261,7 +244,7 @@ export default function Settings({
       <div style={settingBlock}>
         <strong>{t('background_color')}</strong>
         <span style={{ display: 'inline-flex', gap: 4, verticalAlign: 'middle', alignItems: 'center' }}>
-          {COLOR_PRESETS.map(c => (
+          {BG_COLOR_PRESETS.map(c => (
             <button key={c.value} title={t(c.labelKey)} style={{
               width: 28, height: 28, borderRadius: 8,
               border: selectedColor === c.value ? '2.5px solid #333' : '1px solid #ccc',
@@ -288,7 +271,7 @@ export default function Settings({
       <div style={settingBlock}>
         <strong>{t('text_color')}</strong>
         <span style={{ display: 'inline-flex', gap: 4, verticalAlign: 'middle', alignItems: 'center' }}>
-          {COLOR_PRESETS.map(c => (
+          {TEXT_COLOR_PRESETS.map(c => (
             <button key={c.value} title={t(c.labelKey)} style={{
               width: 28, height: 28, borderRadius: 8,
               border: selectedTextColor === c.value ? '2.5px solid #333' : '1px solid #ccc',
@@ -322,7 +305,6 @@ const selectStyle = {
   borderRadius: 6,
   border: '1px solid #bbb'
 };
-
 const settingBlock = {
   margin: '14px 0 10px'
 };
