@@ -300,7 +300,7 @@ export default function Settings({
           {t('disclaimer').split('\n').map((line, i) => <span key={i}>{line}<br /></span>)}
           <span style={{ fontSize: '0.92em', display: 'inline-block', marginTop: 2 }}>{t('version')}</span>
         <a href="https://www.kujitonari.net/LotoMind" target="_blank" rel="noopener noreferrer" style={{ color: '#888' }}>
-              1.07（2025-07-22）
+              1.08（2025-07-22）
             </a>
         </span>
       </div>

@@ -309,5 +309,10 @@
   "狙いはランダム、当たりもランダム!?": "Random picks, random wins!?",
   "“運”という名のギャンブル診断！": "A gamble called luck!",
   "今日の運勢はガチャガチャ仕様です。": "Today's fortune is like a capsule toy.",
-  "選ばれし数字たちに身を委ねよう。": "Let fate pick your numbers."
+  "選ばれし数字たちに身を委ねよう。": "Let fate pick your numbers.",
+
+  "label_type": "Type",
+  "label_prediction_numbers": "Prediction Numbers",
+  "label_axis_number": "Axis Number",
+  "label_features_and_aim": "Features & Aim"
 }
