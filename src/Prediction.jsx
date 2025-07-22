@@ -204,10 +204,10 @@ export default function Prediction({ lotoType, latestDrawNoFromProps }) {
             <table style={tableStyle}>
               <thead>
                 <tr>
-                  <th style={thStyle}>{t('type')}</th>
-                  <th style={thStyle}>{t('prediction_numbers')}</th>
-                  <th style={thStyle}>{t('axis_number')}</th>
-                  <th style={thStyle}>{t('features_and_aim')}</th>
+<th style={thStyle}>{t('label_type')}</th>
+<th style={thStyle}>{t('label_prediction_numbers')}</th>
+<th style={thStyle}>{t('label_axis_number')}</th>
+<th style={thStyle}>{t('label_axis_number')}</th>
                 </tr>
               </thead>
               <tbody>
