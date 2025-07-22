@@ -179,7 +179,7 @@ export default function App() {
             transition: 'all 0.14s',
           }}
         >
-          高額当選売場情報
+  {t('winning_outlet')}
         </button>
       </div>
 
