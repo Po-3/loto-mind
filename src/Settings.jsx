@@ -127,17 +127,17 @@ export default function Settings({
 }) {
   const { t, i18n } = useTranslation();
 
-  const [selectedLang, setSelectedLang] = useState(i18n.language || 'ja');
-  const [selectedLoto, setSelectedLoto] = useState(defaultLotoType || 'loto6');
-  const [selectedMenu, setSelectedMenu] = useState(defaultMenu || 'past');
-  const [selectedFont, setSelectedFont] = useState(font || '');
-  const [selectedColor, setSelectedColor] = useState(themeColor || BG_COLOR_PRESETS[0].value);
-  const [customColor, setCustomColor] = useState('');
-  const [selectedTextColor, setSelectedTextColor] = useState(localStorage.getItem('textColor') || TEXT_COLOR_PRESETS[0].value);
-  const [customTextColor, setCustomTextColor] = useState('');
+const [selectedLang, setSelectedLang] = useState(i18n.language || 'ja');
+const [selectedLoto, setSelectedLoto] = useState(defaultLotoType || 'loto6');
+const [selectedMenu, setSelectedMenu] = useState(defaultMenu || 'past');
+const [selectedFont, setSelectedFont] = useState(font || FONT_OPTIONS[0].value);
+const [selectedColor, setSelectedColor] = useState(themeColor || BG_COLOR_PRESETS[0].value);
+const [customColor, setCustomColor] = useState('');
+const [selectedTextColor, setSelectedTextColor] = useState(localStorage.getItem('textColor') || TEXT_COLOR_PRESETS[0].value);
+const [customTextColor, setCustomTextColor] = useState('');
 
-  const [isUserSelectedLoto, setIsUserSelectedLoto] = useState(false);
-  const [isUserSelectedMenu, setIsUserSelectedMenu] = useState(false);
+const [isUserSelectedLoto, setIsUserSelectedLoto] = useState(false);
+const [isUserSelectedMenu, setIsUserSelectedMenu] = useState(false);
 
   useEffect(() => {
     if (!isUserSelectedLoto) setSelectedLoto(defaultLotoType || 'loto6');
