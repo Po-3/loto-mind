@@ -280,8 +280,7 @@ export default function App() {
             boxShadow: '0 1px 4px #bbb8',
           }}
         />
-        <span style={{ fontSize: '0.90em', marginLeft: 2 }}>{t('応援中', { defaultValue: 'がいつも応援中！' })}</span>
-      </div>
+<span style={{ fontSize: '0.90em', marginLeft: 2 }}>{t('tonari_supports')}</span>      </div>
     </div>
   );
 }
