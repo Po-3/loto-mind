@@ -314,5 +314,6 @@
   "label_type": "Type",
   "label_prediction_numbers": "Prediction Numbers",
   "label_axis_number": "Axis Number",
-  "label_features_and_aim": "Features & Aim"
+  "label_features_and_aim": "Features & Aim",
+  "prediction_score": "Prediction Score"
 }
