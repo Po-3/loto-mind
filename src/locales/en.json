@@ -133,6 +133,13 @@
   "color_sakura": "Sakura Pink",
   "color_blue": "Light Blue",
   "color_white": "White",
+  "text_color": "Text Color",
+  "selected_color": "Selected: {{color}}",
+  "color_black": "Black",
+  "color_red": "Red",
+  "color_green": "Green",
+  "color_brown": "Brown",
+  "custom_color": "Custom Color",
 
   "language_label": "Language",
   "lang_ja": "Japanese",

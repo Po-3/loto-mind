@@ -8,14 +8,18 @@ const FONT_OPTIONS = [
   { labelKey: 'font_monospace', value: 'monospace, "Menlo", "Consolas", "Liberation Mono", "Courier New"' },
 ];
 
-// カラー（i18n対応）
+// 共通カラープリセット
 const COLOR_PRESETS = [
   { labelKey: 'color_tonari', value: '#fafcff' },
   { labelKey: 'color_ivory', value: '#f9f6ee' },
   { labelKey: 'color_gray', value: '#eeeeee' },
   { labelKey: 'color_sakura', value: '#ffe4e1' },
   { labelKey: 'color_blue', value: '#d1f0ff' },
-  { labelKey: 'color_white', value: '#ffffff' }
+  { labelKey: 'color_white', value: '#ffffff' },
+  { labelKey: 'color_black', value: '#191919' },
+  { labelKey: 'color_red', value: '#ca2323' },
+  { labelKey: 'color_green', value: '#009b6b' },
+  { labelKey: 'color_brown', value: '#946800' }
 ];
 
 // 言語選択肢
@@ -25,39 +29,33 @@ const LANG_OPTIONS = [
 ];
 
 const PaletteIcon = ({ size = 27 }) => (
-<svg width="22" height="22" viewBox="0 0 22 22">
-  {/* 大きな角丸四角 */}
-  <rect
-    x="2"
-    y="2"
-    width="18"
-    height="18"
-    rx="6"
-    ry="6"
-    fill="#f7c873"
-    stroke="#be9000"
-    strokeWidth="1.2"
-  />
-  {/* 等間隔で小まんまる（四角の中心円周上に5つ配置） */}
-  {
-    [0,1,2,3,4].map(i => {
+  <svg width="22" height="22" viewBox="0 0 22 22">
+    <rect
+      x="2"
+      y="2"
+      width="18"
+      height="18"
+      rx="6"
+      ry="6"
+      fill="#f7c873"
+      stroke="#be9000"
+      strokeWidth="1.2"
+    />
+    {[0,1,2,3,4].map(i => {
       const angle = (Math.PI * 2 * i) / 5 - Math.PI / 2;
-      const cx = 11 + 7.5 * Math.cos(angle); // 中心は四角でも同じ
+      const cx = 11 + 7.5 * Math.cos(angle);
       const cy = 11 + 7.5 * Math.sin(angle);
       const colors = ["#ed3a45","#42c6ff","#74e088","#fff78d","#e883d3"];
       return (
         <circle key={i} cx={cx} cy={cy} r="1.2" fill={colors[i]} />
       );
-    })
-  }
-</svg>
+    })}
+  </svg>
 );
 
 // ▼ 言語切替カスタムUI
 function LanguageDropdown({ selectedLang, onChange }) {
   const [open, setOpen] = useState(false);
-
-  // 選択中を上、非選択を下に
   const sorted = [...LANG_OPTIONS].sort((a, b) =>
     a.value === selectedLang ? -1 : b.value === selectedLang ? 1 : 0
   );
@@ -140,6 +138,10 @@ export default function Settings({
   const [selectedColor, setSelectedColor] = useState(themeColor || '#fafcff');
   const [customColor, setCustomColor] = useState('');
 
+  // ▼追加：文字色用
+  const [selectedTextColor, setSelectedTextColor] = useState(localStorage.getItem('textColor') || '#191919');
+  const [customTextColor, setCustomTextColor] = useState('');
+
   const [isUserSelectedLoto, setIsUserSelectedLoto] = useState(false);
   const [isUserSelectedMenu, setIsUserSelectedMenu] = useState(false);
 
@@ -151,47 +153,58 @@ export default function Settings({
   useEffect(() => {
     if (!isUserSelectedLoto) setSelectedLoto(defaultLotoType || 'loto6');
   }, [defaultLotoType]);
-
   useEffect(() => {
     if (!isUserSelectedMenu) setSelectedMenu(defaultMenu || 'past');
   }, [defaultMenu]);
-
   useEffect(() => {
     setSelectedFont(font || FONT_OPTIONS[0].value);
   }, [font]);
-
   useEffect(() => {
     setSelectedColor(themeColor || '#fafcff');
     setCustomColor('');
   }, [themeColor]);
+
+  // ▼文字色をbody直反映したい場合（or ルートdivに直接style指定でも可）
+  useEffect(() => {
+    document.body.style.color = selectedTextColor;
+  }, [selectedTextColor]);
 
   const handleLotoChange = val => {
     setIsUserSelectedLoto(true);
     setSelectedLoto(val);
     onDefaultLotoChange?.(val);
   };
-
   const handleMenuChange = val => {
     setIsUserSelectedMenu(true);
     setSelectedMenu(val);
     onDefaultMenuChange?.(val);
   };
-
   const handleFontChange = val => {
     setSelectedFont(val);
     onFontChange?.(val);
   };
-
   const handlePresetColor = color => {
     setSelectedColor(color);
     setCustomColor('');
     onThemeColorChange?.(color);
   };
-
   const handleCustomColor = color => {
     setSelectedColor(color);
     setCustomColor(color);
     onThemeColorChange?.(color);
+  };
+
+  // ▼文字色（プリセット）
+  const handlePresetTextColor = color => {
+    setSelectedTextColor(color);
+    setCustomTextColor('');
+    localStorage.setItem('textColor', color);
+  };
+  // ▼文字色（カスタムパレット）
+  const handleCustomTextColor = color => {
+    setSelectedTextColor(color);
+    setCustomTextColor(color);
+    localStorage.setItem('textColor', color);
   };
 
   if (!selectedLoto || !selectedMenu || !selectedFont || !selectedColor) {
@@ -240,19 +253,16 @@ export default function Settings({
         </span>
       </div>
 
+      {/* 背景色選択 */}
       <div style={settingBlock}>
         <strong>{t('background_color')}</strong>
         <span style={{ display: 'inline-flex', gap: 4, verticalAlign: 'middle', alignItems: 'center' }}>
           {COLOR_PRESETS.map(c => (
             <button key={c.value} title={t(c.labelKey)} style={{
-  width: 28,
-  height: 28,
-  borderRadius: '8px',    // ← ここを  '7px' などに変更！
-  border: selectedColor === c.value ? '2px solid #333' : '1px solid #ccc',
-  background: c.value,
-  cursor: 'pointer',
-  marginRight: 2
-}} onClick={() => handlePresetColor(c.value)} />
+              width: 28, height: 28, borderRadius: 8,
+              border: selectedColor === c.value ? '2.5px solid #333' : '1px solid #ccc',
+              background: c.value, cursor: 'pointer', marginRight: 2
+            }} onClick={() => handlePresetColor(c.value)} />
           ))}
           <label style={{
             display: 'inline-flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer',
@@ -265,43 +275,35 @@ export default function Settings({
               aria-label={t('custom_color')} />
           </label>
         </span>
-        <span style={{ marginLeft: 10, fontSize: '0.93em', color: '#888' }}>
+        <span style={{ marginLeft: 10, fontSize: '0.93em', color: selectedColor }}>
           {t('selected_color', { color: selectedColor })}
         </span>
       </div>
 
-      <h2 style={{ fontSize: '1.10em', margin: '18px 0 8px' }}>{t('guide')}</h2>
-      <ul style={{ fontSize: '0.98em', marginTop: 8, paddingLeft: 18, marginBottom: 0, color: '#222' }}>
-        <li>
-          <strong>{t('pwa_installable')}</strong>
-          <ul style={{ margin: '8px 0 10px 1.1em', paddingLeft: '1.1em' }}>
-            <li>{t('pwa_guide_iphone')}</li>
-            <li>{t('pwa_guide_android')}</li>
-            <li>{t('pwa_guide_pc')}</li>
-            <li>{t('pwa_icon_access')}</li>
-            <li style={{ color:'#248', fontSize:'0.96em' }}>{t('pwa_auto_update')}</li>
-          </ul>
-        </li>
-        <li>{t('auto_results')}</li>
-        <li>{t('all_free_features')}</li>
-        <li>{t('no_ads_no_account')}</li>
-        <li>{t('accuracy_note')}</li>
-      </ul>
-
-      <div style={{ marginTop: 16, fontSize: '0.97em' }}>
-        <a href="https://www.kujitonari.net/" target="_blank" rel="noopener noreferrer">{t('blog')}</a><br />
-        <a href="https://note.com/kujitonari" target="_blank" rel="noopener noreferrer">{t('note')}</a><br />
-        <a href="https://x.com/tkjtonari" target="_blank" rel="noopener noreferrer">{t('x')}</a><br />
-        <a href="https://www.youtube.com/@%E3%81%8F%E3%81%98%E3%81%A8%E3%81%AA%E3%82%8A" target="_blank" rel="noopener noreferrer">{t('youtube')}</a>
-      </div>
-
-      <div style={{ marginTop: 18, color: '#888', fontSize: '0.96em', display: 'flex', justifyContent: 'space-between' }}>
-        <span>
-          {t('disclaimer').split('\n').map((line, i) => <span key={i}>{line}<br /></span>)}
-          <span style={{ fontSize: '0.92em', display: 'inline-block', marginTop: 2 }}>{t('version')}</span>
-        <a href="https://www.kujitonari.net/LotoMind" target="_blank" rel="noopener noreferrer" style={{ color: '#888' }}>
-              1.08（2025-07-22）
-            </a>
+      {/* 文字色選択 */}
+      <div style={settingBlock}>
+        <strong>{t('text_color')}</strong>
+        <span style={{ display: 'inline-flex', gap: 4, verticalAlign: 'middle', alignItems: 'center' }}>
+          {COLOR_PRESETS.map(c => (
+            <button key={c.value} title={t(c.labelKey)} style={{
+              width: 28, height: 28, borderRadius: 8,
+              border: selectedTextColor === c.value ? '2.5px solid #333' : '1px solid #ccc',
+              background: c.value, cursor: 'pointer', marginRight: 2
+            }} onClick={() => handlePresetTextColor(c.value)} />
+          ))}
+          <label style={{
+            display: 'inline-flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer',
+            border: customTextColor ? '2px solid #333' : '1.4px solid #aaa', borderRadius: 7, padding: '2px 6px',
+            marginLeft: 4, background: '#fff', transition: 'border .13s'
+          }}>
+            <PaletteIcon size={22} />
+            <input type="color" tabIndex={-1} value={customTextColor || selectedTextColor} onChange={e => handleCustomTextColor(e.target.value)}
+              style={{ width: 24, height: 22, border: 'none', background: 'none', marginLeft: -4, cursor: 'pointer', opacity: 0, position: 'absolute' }}
+              aria-label={t('custom_color')} />
+          </label>
+        </span>
+        <span style={{ marginLeft: 10, fontSize: '0.93em', color: selectedTextColor }}>
+          {t('selected_color', { color: selectedTextColor })}
         </span>
       </div>
     </div>

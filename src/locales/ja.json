@@ -133,6 +133,14 @@
   "color_sakura": "さくらピンク",
   "color_blue": "ライトブルー",
   "color_white": "ホワイト",
+  "text_color": "文字色",
+  "selected_color": "選択中: {{color}}",
+  "color_black": "ブラック",
+  "color_red": "レッド",
+  "color_green": "グリーン",
+  "color_brown": "ブラウン",
+  "custom_color": "カスタム色",
+
 
   "language_label": "言語",
   "lang_ja": "日本語",
