@@ -134,24 +134,23 @@ export default function Diagnosis({ jsonUrl }) {
     let nums = [];
     let tries = 0;
 
-    while (++tries < 3000) {
-      if (patternId === 'notAppeared') {
-        const notAppear = all.filter(n => !allNums.includes(n));
-        const pool = notAppear.length >= recommendCount ? notAppear : all;
-        nums = getRandomNums(pool, recommendCount);
-      } else if (patternId === 'appeared') {
-        let freq = {};
-        all.forEach(n => { freq[n] = 0; });
-        allNums.forEach(n => { if (freq[n] !== undefined) freq[n]++; });
-        const sorted = all.sort((a, b) => freq[b] - freq[a]);
-        nums = getRandomNums(sorted.slice(0, recommendCount * 2), recommendCount);
-      } else if (patternId === 'random') {
-        nums = getRandomNums(all, recommendCount);
-      } else {
-        nums = getRandomNums(all, recommendCount);
-      }
-      break;
-    }
+ while (++tries < 3000) {
+  if (patternId === 'birthday') {
+    // 誕生日縛りは1〜31のみから選ぶ
+    nums = getRandomNums(Array.from({ length: 31 }, (_, i) => i + 1), recommendCount);
+    break;
+  }
+  if (patternId === 'notAppeared') {
+    // ...省略...
+  } else if (patternId === 'appeared') {
+    // ...省略...
+  } else if (patternId === 'random') {
+    nums = getRandomNums(all, recommendCount);
+  } else {
+    nums = getRandomNums(all, recommendCount);
+  }
+  break;
+}
 
     setResult({
       recommend: nums,
