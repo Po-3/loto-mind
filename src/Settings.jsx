@@ -245,10 +245,14 @@ export default function Settings({
         <span style={{ display: 'inline-flex', gap: 4, verticalAlign: 'middle', alignItems: 'center' }}>
           {COLOR_PRESETS.map(c => (
             <button key={c.value} title={t(c.labelKey)} style={{
-              width: 28, height: 28, borderRadius: '50%',
-              border: selectedColor === c.value ? '2px solid #333' : '1px solid #ccc',
-              background: c.value, cursor: 'pointer', marginRight: 2
-            }} onClick={() => handlePresetColor(c.value)} />
+  width: 28,
+  height: 28,
+  borderRadius: '50%',    // ← ここを  '7px' などに変更！
+  border: selectedColor === c.value ? '2px solid #333' : '1px solid #ccc',
+  background: c.value,
+  cursor: 'pointer',
+  marginRight: 2
+}} onClick={() => handlePresetColor(c.value)} />
           ))}
           <label style={{
             display: 'inline-flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer',
