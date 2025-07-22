@@ -276,7 +276,7 @@ const handleInfo = (label, e) => {
 
       <div style={{
         background: '#f9f9fd',
-        color: '#222'
+        color: '#222',
         border: '1px solid #cde',
         borderRadius: 12,
         boxShadow: '0 1px 16px #eef3ff44',
