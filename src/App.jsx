@@ -5,6 +5,7 @@ import PastResultsPro from './PastResultsPro';
 import Diagnosis from './Diagnosis';
 import Prediction from './Prediction';
 import Settings from './Settings';
+import WinningOutlet from './components/WinningOutlet'; // ★追加
 
 const tabs = [
   { key: 'miniloto', labelKey: 'miniloto', url: 'https://po-3.github.io/miniloto-data/miniloto.json' },
@@ -20,7 +21,6 @@ const features = [
 const DEFAULT_BG_COLOR = '#fafcff';
 
 // --- ▼▼ ココ重要 ▼▼ ---
-// sessionStorage > localStorage(default) の順で初期値を使う
 function getStartupValue(key, defaultKey, fallback) {
   const session = sessionStorage.getItem('session_' + key);
   if (session) return session;
@@ -36,20 +36,15 @@ function getSettings() {
 }
 
 export default function App() {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const [settings, setSettings] = useState(getSettings);
 
-  // 初期値は sessionStorage優先
   const [selectedTab, setSelectedTab] = useState(() => getStartupValue('LotoType', 'defaultLotoType', 'loto6'));
   const [feature, setFeature] = useState(() => getStartupValue('Menu', 'defaultMenu', 'past'));
   const [font, setFont] = useState(settings.font);
   const [themeColor, setThemeColor] = useState(settings.themeColor);
   const [showScrollBtns, setShowScrollBtns] = useState(true);
 
-  // 言語切替（設定画面で切替できる仕様ならここで対応）
-  // 例: 設定で language を state管理→ i18n.changeLanguage(language) で反映
-
-  // 設定画面でデフォルト値が変わった時
   const handleDefaultLotoChange = (type) => {
     localStorage.setItem('defaultLotoType', type);
     setSettings(getSettings());
@@ -67,7 +62,6 @@ export default function App() {
     setThemeColor(colorVal);
   };
 
-  // タブ・機能切替時は sessionStorage にも保存（F5時のみ有効）
   const handleTabChange = (tabKey) => {
     setSelectedTab(tabKey);
     sessionStorage.setItem('session_LotoType', tabKey);
@@ -76,8 +70,6 @@ export default function App() {
     setFeature(menu);
     sessionStorage.setItem('session_Menu', menu);
   };
-
-  // 完全終了時（window/tab close）→ sessionStorage消える → 起動時は設定値に戻る
 
   useEffect(() => { document.body.style.fontFamily = font; }, [font]);
   useEffect(() => { document.body.style.backgroundColor = themeColor || DEFAULT_BG_COLOR; }, [themeColor]);
@@ -95,7 +87,6 @@ export default function App() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [feature]);
 
-  // 不正値対策
   const selectedTabObj = tabs.find(t => t.key === selectedTab) || tabs[1];
   const selectedUrl = selectedTabObj.url;
   const showPastScrollBtns = feature === 'past' && showScrollBtns;
@@ -162,6 +153,36 @@ export default function App() {
         ))}
       </div>
 
+      {/* 高額当選売場情報ボタン（横幅100%・中央） */}
+      <div style={{
+        width: '100%',
+        maxWidth: 440,
+        margin: '0 auto 16px auto',
+        textAlign: 'center',
+        display: 'flex',
+        justifyContent: 'center',
+      }}>
+        <button
+          onClick={() => handleFeatureChange('winning')}
+          style={{
+            width: '100%',
+            background: feature === 'winning' ? '#f8de97' : '#fffdfa',
+            color: '#ad8800',
+            border: '2.2px solid #e7d0b6',
+            borderRadius: 13,
+            fontWeight: 700,
+            fontSize: '1.16em',
+            letterSpacing: '0.08em',
+            padding: '16px 0',
+            boxShadow: '0 2px 12px #f5e5b533',
+            cursor: 'pointer',
+            transition: 'all 0.14s',
+          }}
+        >
+          高額当選売場情報
+        </button>
+      </div>
+
       {/* メイン表示エリア */}
       <div style={{ width: '100%', position: 'relative' }}>
         {feature === 'past' && (
@@ -185,6 +206,7 @@ export default function App() {
             font={font}
           />
         )}
+        {feature === 'winning' && <WinningOutlet />}
       </div>
 
       {/* ガイド文＆リンク */}
@@ -230,7 +252,7 @@ export default function App() {
   );
 }
 
-// --- スタイル定義 ---
+// --- スタイル定義 ---（以下、質問欄のまま省略せずOK。前と同じ）
 const containerStyle = {
   width: '100%',
   maxWidth: 470,
@@ -244,7 +266,6 @@ const containerStyle = {
   marginTop: 10,
   boxShadow: '0 6px 24px #d2e4fa22',
 };
-
 const scrollButtonContainer = {
   position: 'fixed',
   bottom: 22,
@@ -254,7 +275,6 @@ const scrollButtonContainer = {
   flexDirection: 'column',
   gap: 12,
 };
-
 const scrollCircleButtonStyle = {
   background: '#337be8',
   color: '#fff',
@@ -274,8 +294,6 @@ const scrollCircleButtonStyle = {
   flexShrink: 0,
   padding: 0,
 };
-
-// ロゴ新スタイル
 const headerContainerStyle = {
   display: 'flex',
   flexDirection: 'column',
@@ -283,14 +301,12 @@ const headerContainerStyle = {
   marginBottom: 6,
   marginTop: -8,
 };
-
 const logoRowStyle = {
   display: 'flex',
   alignItems: 'center',
   gap: 13,
   justifyContent: 'center',
 };
-
 const logoTextLeft = {
   fontSize: '2.0em',
   fontWeight: '700',
@@ -300,7 +316,6 @@ const logoTextLeft = {
   marginRight: 2,
   userSelect: 'none',
 };
-
 const logoTextRight = {
   fontSize: '2.0em',
   fontWeight: '700',
@@ -310,7 +325,6 @@ const logoTextRight = {
   marginLeft: 2,
   userSelect: 'none',
 };
-
 const logoIconStyle = {
   width: 53,
   height: 53,
@@ -320,7 +334,6 @@ const logoIconStyle = {
   background: '#fff',
   margin: '0 2px',
 };
-
 const logoByTonariStyle = {
   fontSize: '0.98em',
   color: '#888',
@@ -330,7 +343,6 @@ const logoByTonariStyle = {
   textAlign: 'center',
   userSelect: 'none',
 };
-
 const tabRowStyle = {
   display: 'flex',
   gap: 12,
@@ -338,7 +350,6 @@ const tabRowStyle = {
   marginBottom: 15,
   width: '100%',
 };
-
 const tabStyle = {
   fontWeight: 400,
   background: '#fff',
@@ -351,14 +362,12 @@ const tabStyle = {
   fontSize: '1em',
   transition: 'all 0.14s',
 };
-
 const activeTabStyle = {
   background: '#ededed',
   fontWeight: 700,
   border: '1.5px solid #1767a7',
   color: '#1767a7',
 };
-
 const featureTabRowStyle = {
   display: 'flex',
   justifyContent: 'space-between',
@@ -368,7 +377,6 @@ const featureTabRowStyle = {
   marginLeft: 'auto',
   marginRight: 'auto',
 };
-
 const featureTabStyle = {
   flex: 1,
   background: '#f7f7f7',
@@ -384,7 +392,6 @@ const featureTabStyle = {
   boxShadow: 'none',
   transition: 'all 0.12s',
 };
-
 const activeFeatureTabStyle = {
   background: '#337be8',
   color: '#fff',
@@ -392,7 +399,6 @@ const activeFeatureTabStyle = {
   fontWeight: 700,
   boxShadow: '0 2px 8px #337be811',
 };
-
 const guideStyle = {
   background: '#f8fafd',
   borderRadius: 12,
