@@ -8,17 +8,21 @@ const FONT_OPTIONS = [
   { labelKey: 'font_monospace', value: 'monospace, "Menlo", "Consolas", "Liberation Mono", "Courier New"' },
 ];
 
-// 共通カラープリセット
-const COLOR_PRESETS = [
+// ▼ 背景色プリセット
+const BG_COLOR_PRESETS = [
   { labelKey: 'color_tonari', value: '#fafcff' },
   { labelKey: 'color_ivory', value: '#f9f6ee' },
   { labelKey: 'color_gray', value: '#eeeeee' },
   { labelKey: 'color_sakura', value: '#ffe4e1' },
   { labelKey: 'color_blue', value: '#d1f0ff' },
-  { labelKey: 'color_white', value: '#ffffff' },
+  { labelKey: 'color_white', value: '#ffffff' }
+];
+
+// ▼ 文字色プリセット
+const TEXT_COLOR_PRESETS = [
   { labelKey: 'color_black', value: '#191919' },
-  { labelKey: 'color_red', value: '#ca2323' },
-  { labelKey: 'color_green', value: '#009b6b' },
+  { labelKey: 'color_white', value: '#ffffff' },
+  { labelKey: 'color_gray', value: '#555555' },
   { labelKey: 'color_brown', value: '#946800' }
 ];
 
