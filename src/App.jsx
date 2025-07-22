@@ -207,7 +207,7 @@ export default function App() {
         }}
       >
         <Trans i18nKey="tonari_supports">
-          by Tonari <img
+          <img
             src="/tonari.png"
             alt="Tonari"
             style={{
