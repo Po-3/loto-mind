@@ -19,8 +19,8 @@ const features = [
   { key: 'settings', labelKey: 'settings_tab' }
 ];
 const DEFAULT_BG_COLOR = '#fafcff';
+const DEFAULT_TEXT_COLOR = '#191919'; // 文字色プリセットのデフォ
 
-// --- ▼▼ ココ重要 ▼▼ ---
 function getStartupValue(key, defaultKey, fallback) {
   const session = sessionStorage.getItem('session_' + key);
   if (session) return session;
@@ -32,6 +32,7 @@ function getSettings() {
     defaultMenu: localStorage.getItem('defaultMenu') || 'past',
     font: localStorage.getItem('font') || 'system-ui, Avenir, Helvetica, Arial, sans-serif',
     themeColor: localStorage.getItem('themeColor') || DEFAULT_BG_COLOR,
+    textColor: localStorage.getItem('textColor') || DEFAULT_TEXT_COLOR
   };
 }
 
@@ -43,8 +44,10 @@ export default function App() {
   const [feature, setFeature] = useState(() => getStartupValue('Menu', 'defaultMenu', 'past'));
   const [font, setFont] = useState(settings.font);
   const [themeColor, setThemeColor] = useState(settings.themeColor);
+  const [textColor, setTextColor] = useState(settings.textColor);
   const [showScrollBtns, setShowScrollBtns] = useState(true);
 
+  // --- Settingsハンドラ群 ---
   const handleDefaultLotoChange = (type) => {
     localStorage.setItem('defaultLotoType', type);
     setSettings(getSettings());
@@ -61,6 +64,10 @@ export default function App() {
     localStorage.setItem('themeColor', colorVal);
     setThemeColor(colorVal);
   };
+  const handleTextColorChange = (colorVal) => {
+    localStorage.setItem('textColor', colorVal);
+    setTextColor(colorVal);
+  };
 
   const handleTabChange = (tabKey) => {
     setSelectedTab(tabKey);
@@ -71,8 +78,10 @@ export default function App() {
     sessionStorage.setItem('session_Menu', menu);
   };
 
+  // --- グローバル反映用 ---
   useEffect(() => { document.body.style.fontFamily = font; }, [font]);
   useEffect(() => { document.body.style.backgroundColor = themeColor || DEFAULT_BG_COLOR; }, [themeColor]);
+  useEffect(() => { document.body.style.color = textColor || DEFAULT_TEXT_COLOR; }, [textColor]);
   useEffect(() => {
     if (feature !== 'past') {
       setShowScrollBtns(true);
@@ -91,8 +100,16 @@ export default function App() {
   const selectedUrl = selectedTabObj.url;
   const showPastScrollBtns = feature === 'past' && showScrollBtns;
 
+  // --- App全体（root div）にもstyle反映 ---
   return (
-    <div style={containerStyle}>
+    <div
+      style={{
+        ...containerStyle,
+        background: themeColor,
+        color: textColor,
+        fontFamily: font,
+      }}
+    >
       {/* スクロールボタン */}
       {showPastScrollBtns && (
         <div style={scrollButtonContainer}>
@@ -179,7 +196,7 @@ export default function App() {
             transition: 'all 0.14s',
           }}
         >
-  {t('winning_outlet')}
+          {t('winning_outlet')}
         </button>
       </div>
 
@@ -198,12 +215,14 @@ export default function App() {
           <Settings
             onThemeColorChange={handleThemeColorChange}
             onFontChange={handleFontChange}
+            onTextColorChange={handleTextColorChange}
             onDefaultLotoChange={handleDefaultLotoChange}
             onDefaultMenuChange={handleDefaultMenuChange}
             defaultLotoType={settings.defaultLotoType}
             defaultMenu={settings.defaultMenu}
             themeColor={themeColor}
             font={font}
+            textColor={textColor}
           />
         )}
         {feature === 'winning' && <WinningOutlet />}
@@ -251,6 +270,21 @@ export default function App() {
     </div>
   );
 }
+
+// --- スタイル定義 ---（省略部分はそのまま）
+const containerStyle = {
+  width: '100%',
+  maxWidth: 470,
+  margin: '0 auto 0 auto',
+  padding: '12px 8px 10px 8px',
+  boxSizing: 'border-box',
+  fontSize: '16px',
+  background: 'transparent',
+  borderRadius: 16,
+  border: '1px solid #e0e8f3',
+  marginTop: 10,
+  boxShadow: '0 6px 24px #d2e4fa22',
+};
 
 // --- スタイル定義 ---（以下、質問欄のまま省略せずOK。前と同じ）
 const containerStyle = {
