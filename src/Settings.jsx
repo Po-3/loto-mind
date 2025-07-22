@@ -247,7 +247,7 @@ export default function Settings({
             <button key={c.value} title={t(c.labelKey)} style={{
   width: 28,
   height: 28,
-  borderRadius: '50%',    // ← ここを  '7px' などに変更！
+  borderRadius: '8px',    // ← ここを  '7px' などに変更！
   border: selectedColor === c.value ? '2px solid #333' : '1px solid #ccc',
   background: c.value,
   cursor: 'pointer',
