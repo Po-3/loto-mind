@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 export default function WinningOutlet() {
   const [shops, setShops] = useState([]);
@@ -17,31 +17,38 @@ export default function WinningOutlet() {
       .finally(() => setLoading(false));
   }, []);
 
-  // ←★ return内で条件分岐するのが安全
+  if (loading) {
+    return (
+      <div style={{ padding: '30px 0' }}>
+        ランキング読込中...
+      </div>
+    );
+  }
+
+  if (!shops.length) {
+    return (
+      <div style={{ padding: '30px 0' }}>
+        データがありません
+      </div>
+    );
+  }
+
   return (
     <div style={{ padding: '30px 0' }}>
-      {loading ? (
-        <div>ランキング読込中...</div>
-      ) : !shops.length ? (
-        <div>データがありません</div>
-      ) : (
-        <>
-          <h2 style={{ fontWeight: 'bold', fontSize: '1.4em', marginBottom: 18 }}>
-            総合高額当選 売場ランキング（仮表示）
-          </h2>
-          <ol>
-            {shops.map((s, i) => (
-              <li key={i} style={{ marginBottom: 13, fontSize: '1.11em' }}>
-                <strong>{s.売場名}</strong>
-                <span style={{ marginLeft: 10, color: '#be9000', fontWeight: 700 }}>
-                  {(s.ミニロト当選金額 + s.ロト6当選金額 + s.ロト7当選金額).toLocaleString()}円
-                </span>
-                <span style={{ marginLeft: 14, color: '#888' }}>{s.都道府県名}</span>
-              </li>
-            ))}
-          </ol>
-        </>
-      )}
+      <h2 style={{ fontWeight: 'bold', fontSize: '1.4em', marginBottom: 18 }}>
+        総合高額当選 売場ランキング（仮表示）
+      </h2>
+      <ol>
+        {shops.map((s, i) => (
+          <li key={i} style={{ marginBottom: 13, fontSize: '1.11em' }}>
+            <strong>{s.売場名}</strong>
+            <span style={{ marginLeft: 10, color: '#be9000', fontWeight: 700 }}>
+              {(s.ミニロト当選金額 + s.ロト6当選金額 + s.ロト7当選金額).toLocaleString()}円
+            </span>
+            <span style={{ marginLeft: 14, color: '#888' }}>{s.都道府県名}</span>
+          </li>
+        ))}
+      </ol>
     </div>
   );
 }
