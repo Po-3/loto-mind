@@ -26,17 +26,24 @@ const LANG_OPTIONS = [
 
 const PaletteIcon = ({ size = 27 }) => (
 <svg width="22" height="22" viewBox="0 0 22 22">
-  {/* 大きなまんまる */}
-  <circle cx="11" cy="11" r="10" fill="#f7c873" stroke="#be9000" strokeWidth="1.2"/>
-  {/* 等間隔で小まんまる（円周上に5つ配置） */}
+  {/* 大きな角丸四角 */}
+  <rect
+    x="2"
+    y="2"
+    width="18"
+    height="18"
+    rx="6"
+    ry="6"
+    fill="#f7c873"
+    stroke="#be9000"
+    strokeWidth="1.2"
+  />
+  {/* 等間隔で小まんまる（四角の中心円周上に5つ配置） */}
   {
     [0,1,2,3,4].map(i => {
-      // 角度（-90度からスタート、72度ずつ回転＝円周上で五等分）
-      const angle = (Math.PI * 2 * i) / 5 - Math.PI/2;
-      // 半径7.5で円周上に配置（大きなまんまる中心=11,11）
-      const cx = 11 + 7.5 * Math.cos(angle);
+      const angle = (Math.PI * 2 * i) / 5 - Math.PI / 2;
+      const cx = 11 + 7.5 * Math.cos(angle); // 中心は四角でも同じ
       const cy = 11 + 7.5 * Math.sin(angle);
-      // 色（好きなだけどうぞ、ここは例）
       const colors = ["#ed3a45","#42c6ff","#74e088","#fff78d","#e883d3"];
       return (
         <circle key={i} cx={cx} cy={cy} r="1.2" fill={colors[i]} />
