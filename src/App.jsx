@@ -1,6 +1,6 @@
 import './i18n';
 import { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useTranslation, Trans } from 'react-i18next';
 import PastResultsPro from './PastResultsPro';
 import Diagnosis from './Diagnosis';
 import Prediction from './Prediction';
@@ -36,7 +36,7 @@ function getSettings() {
 }
 
 export default function App() {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const [settings, setSettings] = useState(getSettings);
 
   // 初期値は sessionStorage優先
@@ -45,9 +45,6 @@ export default function App() {
   const [font, setFont] = useState(settings.font);
   const [themeColor, setThemeColor] = useState(settings.themeColor);
   const [showScrollBtns, setShowScrollBtns] = useState(true);
-
-  // 言語切替（設定画面で切替できる仕様ならここで対応）
-  // 例: 設定で language を state管理→ i18n.changeLanguage(language) で反映
 
   // 設定画面でデフォルト値が変わった時
   const handleDefaultLotoChange = (type) => {
@@ -76,8 +73,6 @@ export default function App() {
     setFeature(menu);
     sessionStorage.setItem('session_Menu', menu);
   };
-
-  // 完全終了時（window/tab close）→ sessionStorage消える → 起動時は設定値に戻る
 
   useEffect(() => { document.body.style.fontFamily = font; }, [font]);
   useEffect(() => { document.body.style.backgroundColor = themeColor || DEFAULT_BG_COLOR; }, [themeColor]);
@@ -211,26 +206,26 @@ export default function App() {
           gap: 4,
         }}
       >
-        <span>{t('by_tonari')}</span>
-        <img
-          src="/tonari.png"
-          alt="となりくん"
-          style={{
-            width: 22,
-            height: 22,
-            marginLeft: 2,
-            verticalAlign: 'middle',
-            borderRadius: '50%',
-            boxShadow: '0 1px 4px #bbb8',
-          }}
-        />
-        <span style={{ fontSize: '0.90em', marginLeft: 2 }}>{t('応援中', { defaultValue: 'がいつも応援中！' })}</span>
+        <Trans i18nKey="tonari_supports">
+          by Tonari <img
+            src="/tonari.png"
+            alt="Tonari"
+            style={{
+              width: 22,
+              height: 22,
+              marginLeft: 2,
+              verticalAlign: 'middle',
+              borderRadius: '50%',
+              boxShadow: '0 1px 4px #bbb8',
+            }}
+          /> がいつも応援中！
+        </Trans>
       </div>
     </div>
   );
 }
 
-// --- スタイル定義 ---
+// --- スタイル定義 ---（そのまま同じでOK）
 const containerStyle = {
   width: '100%',
   maxWidth: 470,
@@ -244,7 +239,6 @@ const containerStyle = {
   marginTop: 10,
   boxShadow: '0 6px 24px #d2e4fa22',
 };
-
 const scrollButtonContainer = {
   position: 'fixed',
   bottom: 22,
@@ -254,7 +248,6 @@ const scrollButtonContainer = {
   flexDirection: 'column',
   gap: 12,
 };
-
 const scrollCircleButtonStyle = {
   background: '#337be8',
   color: '#fff',
@@ -274,8 +267,7 @@ const scrollCircleButtonStyle = {
   flexShrink: 0,
   padding: 0,
 };
-
-// ロゴ新スタイル
+// ...（以下スタイルは変更なし）
 const headerContainerStyle = {
   display: 'flex',
   flexDirection: 'column',
@@ -283,14 +275,12 @@ const headerContainerStyle = {
   marginBottom: 6,
   marginTop: -8,
 };
-
 const logoRowStyle = {
   display: 'flex',
   alignItems: 'center',
   gap: 13,
   justifyContent: 'center',
 };
-
 const logoTextLeft = {
   fontSize: '2.0em',
   fontWeight: '700',
@@ -300,7 +290,6 @@ const logoTextLeft = {
   marginRight: 2,
   userSelect: 'none',
 };
-
 const logoTextRight = {
   fontSize: '2.0em',
   fontWeight: '700',
@@ -310,7 +299,6 @@ const logoTextRight = {
   marginLeft: 2,
   userSelect: 'none',
 };
-
 const logoIconStyle = {
   width: 53,
   height: 53,
@@ -320,7 +308,6 @@ const logoIconStyle = {
   background: '#fff',
   margin: '0 2px',
 };
-
 const logoByTonariStyle = {
   fontSize: '0.98em',
   color: '#888',
@@ -330,7 +317,6 @@ const logoByTonariStyle = {
   textAlign: 'center',
   userSelect: 'none',
 };
-
 const tabRowStyle = {
   display: 'flex',
   gap: 12,
@@ -338,7 +324,6 @@ const tabRowStyle = {
   marginBottom: 15,
   width: '100%',
 };
-
 const tabStyle = {
   fontWeight: 400,
   background: '#fff',
@@ -351,14 +336,12 @@ const tabStyle = {
   fontSize: '1em',
   transition: 'all 0.14s',
 };
-
 const activeTabStyle = {
   background: '#ededed',
   fontWeight: 700,
   border: '1.5px solid #1767a7',
   color: '#1767a7',
 };
-
 const featureTabRowStyle = {
   display: 'flex',
   justifyContent: 'space-between',
@@ -368,7 +351,6 @@ const featureTabRowStyle = {
   marginLeft: 'auto',
   marginRight: 'auto',
 };
-
 const featureTabStyle = {
   flex: 1,
   background: '#f7f7f7',
@@ -384,7 +366,6 @@ const featureTabStyle = {
   boxShadow: 'none',
   transition: 'all 0.12s',
 };
-
 const activeFeatureTabStyle = {
   background: '#337be8',
   color: '#fff',
@@ -392,7 +373,6 @@ const activeFeatureTabStyle = {
   fontWeight: 700,
   boxShadow: '0 2px 8px #337be811',
 };
-
 const guideStyle = {
   background: '#f8fafd',
   borderRadius: 12,
