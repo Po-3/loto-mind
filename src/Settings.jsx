@@ -1,21 +1,24 @@
 import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
 
-// ▼ 背景色プリセット
-const BG_COLOR_PRESETS = [
+// フォント選択肢
+const FONT_OPTIONS = [
+  { labelKey: 'font_standard', value: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, "Noto Sans JP", sans-serif' },
+  { labelKey: 'font_serif', value: 'serif, "Times New Roman", "Noto Serif JP", "YuMincho", "ヒラギノ明朝 ProN", "MS P明朝"' },
+  { labelKey: 'font_monospace', value: 'monospace, "Menlo", "Consolas", "Liberation Mono", "Courier New"' },
+];
+
+// 共通カラープリセット
+const COLOR_PRESETS = [
   { labelKey: 'color_tonari', value: '#fafcff' },
   { labelKey: 'color_ivory', value: '#f9f6ee' },
   { labelKey: 'color_gray', value: '#eeeeee' },
   { labelKey: 'color_sakura', value: '#ffe4e1' },
   { labelKey: 'color_blue', value: '#d1f0ff' },
-  { labelKey: 'color_white', value: '#ffffff' }
-];
-
-// ▼ 文字色プリセット
-const TEXT_COLOR_PRESETS = [
-  { labelKey: 'color_black', value: '#191919' },
   { labelKey: 'color_white', value: '#ffffff' },
-  { labelKey: 'color_gray', value: '#555555' },
+  { labelKey: 'color_black', value: '#191919' },
+  { labelKey: 'color_red', value: '#ca2323' },
+  { labelKey: 'color_green', value: '#009b6b' },
   { labelKey: 'color_brown', value: '#946800' }
 ];
 
@@ -50,6 +53,7 @@ const PaletteIcon = ({ size = 27 }) => (
   </svg>
 );
 
+// ▼ 言語切替カスタムUI
 function LanguageDropdown({ selectedLang, onChange }) {
   const [open, setOpen] = useState(false);
   const sorted = [...LANG_OPTIONS].sort((a, b) =>
@@ -127,17 +131,24 @@ export default function Settings({
 }) {
   const { t, i18n } = useTranslation();
 
-const [selectedLang, setSelectedLang] = useState(i18n.language || 'ja');
-const [selectedLoto, setSelectedLoto] = useState(defaultLotoType || 'loto6');
-const [selectedMenu, setSelectedMenu] = useState(defaultMenu || 'past');
-const [selectedFont, setSelectedFont] = useState(font || FONT_OPTIONS[0].value);
-const [selectedColor, setSelectedColor] = useState(themeColor || BG_COLOR_PRESETS[0].value);
-const [customColor, setCustomColor] = useState('');
-const [selectedTextColor, setSelectedTextColor] = useState(localStorage.getItem('textColor') || TEXT_COLOR_PRESETS[0].value);
-const [customTextColor, setCustomTextColor] = useState('');
+  const [selectedLang, setSelectedLang] = useState(i18n.language || 'ja');
+  const [selectedLoto, setSelectedLoto] = useState(defaultLotoType || 'loto6');
+  const [selectedMenu, setSelectedMenu] = useState(defaultMenu || 'past');
+  const [selectedFont, setSelectedFont] = useState(font || FONT_OPTIONS[0].value);
+  const [selectedColor, setSelectedColor] = useState(themeColor || '#fafcff');
+  const [customColor, setCustomColor] = useState('');
 
-const [isUserSelectedLoto, setIsUserSelectedLoto] = useState(false);
-const [isUserSelectedMenu, setIsUserSelectedMenu] = useState(false);
+  // ▼追加：文字色用
+  const [selectedTextColor, setSelectedTextColor] = useState(localStorage.getItem('textColor') || '#191919');
+  const [customTextColor, setCustomTextColor] = useState('');
+
+  const [isUserSelectedLoto, setIsUserSelectedLoto] = useState(false);
+  const [isUserSelectedMenu, setIsUserSelectedMenu] = useState(false);
+
+  const handleLangChange = lang => {
+    setSelectedLang(lang);
+    i18n.changeLanguage(lang);
+  };
 
   useEffect(() => {
     if (!isUserSelectedLoto) setSelectedLoto(defaultLotoType || 'loto6');
@@ -146,20 +157,18 @@ const [isUserSelectedMenu, setIsUserSelectedMenu] = useState(false);
     if (!isUserSelectedMenu) setSelectedMenu(defaultMenu || 'past');
   }, [defaultMenu]);
   useEffect(() => {
-    setSelectedFont(font || '');
+    setSelectedFont(font || FONT_OPTIONS[0].value);
   }, [font]);
   useEffect(() => {
-    setSelectedColor(themeColor || BG_COLOR_PRESETS[0].value);
+    setSelectedColor(themeColor || '#fafcff');
     setCustomColor('');
   }, [themeColor]);
+
+  // ▼文字色をbody直反映したい場合（or ルートdivに直接style指定でも可）
   useEffect(() => {
     document.body.style.color = selectedTextColor;
   }, [selectedTextColor]);
 
-  const handleLangChange = lang => {
-    setSelectedLang(lang);
-    i18n.changeLanguage(lang);
-  };
   const handleLotoChange = val => {
     setIsUserSelectedLoto(true);
     setSelectedLoto(val);
@@ -184,11 +193,14 @@ const [isUserSelectedMenu, setIsUserSelectedMenu] = useState(false);
     setCustomColor(color);
     onThemeColorChange?.(color);
   };
+
+  // ▼文字色（プリセット）
   const handlePresetTextColor = color => {
     setSelectedTextColor(color);
     setCustomTextColor('');
     localStorage.setItem('textColor', color);
   };
+  // ▼文字色（カスタムパレット）
   const handleCustomTextColor = color => {
     setSelectedTextColor(color);
     setCustomTextColor(color);
@@ -199,6 +211,7 @@ const [isUserSelectedMenu, setIsUserSelectedMenu] = useState(false);
     return <div>{t('loading')}</div>;
   }
 
+  // ★ここがポイント！
   const langLabel = selectedLang === 'ja' ? 'Language' : '言語';
 
   return (
@@ -244,7 +257,7 @@ const [isUserSelectedMenu, setIsUserSelectedMenu] = useState(false);
       <div style={settingBlock}>
         <strong>{t('background_color')}</strong>
         <span style={{ display: 'inline-flex', gap: 4, verticalAlign: 'middle', alignItems: 'center' }}>
-          {BG_COLOR_PRESETS.map(c => (
+          {COLOR_PRESETS.map(c => (
             <button key={c.value} title={t(c.labelKey)} style={{
               width: 28, height: 28, borderRadius: 8,
               border: selectedColor === c.value ? '2.5px solid #333' : '1px solid #ccc',
@@ -271,7 +284,7 @@ const [isUserSelectedMenu, setIsUserSelectedMenu] = useState(false);
       <div style={settingBlock}>
         <strong>{t('text_color')}</strong>
         <span style={{ display: 'inline-flex', gap: 4, verticalAlign: 'middle', alignItems: 'center' }}>
-          {TEXT_COLOR_PRESETS.map(c => (
+          {COLOR_PRESETS.map(c => (
             <button key={c.value} title={t(c.labelKey)} style={{
               width: 28, height: 28, borderRadius: 8,
               border: selectedTextColor === c.value ? '2.5px solid #333' : '1px solid #ccc',
@@ -305,6 +318,7 @@ const selectStyle = {
   borderRadius: 6,
   border: '1px solid #bbb'
 };
+
 const settingBlock = {
   margin: '14px 0 10px'
 };
