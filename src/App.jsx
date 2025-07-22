@@ -254,7 +254,7 @@ export default function App() {
           {t('blog')}
         </a>
       </div>
-            <div
+      <div
         style={{
           textAlign: 'right',
           fontSize: '0.98em',
@@ -267,22 +267,20 @@ export default function App() {
           gap: 4,
         }}
       >
-        <Trans i18nKey="tonari_supports">
-          by Tonari
-          <img
-            src="/tonari.png"
-            alt="となりくん"
-            style={{
-              width: 22,
-              height: 22,
-              marginLeft: 2,
-              verticalAlign: 'middle',
-              borderRadius: '50%',
-              boxShadow: '0 1px 4px #bbb8',
-            }}
-          />
-          がいつも応援中！
-        </Trans>
+        <span>{t('by_tonari')}</span>
+        <img
+          src="/tonari.png"
+          alt="となりくん"
+          style={{
+            width: 22,
+            height: 22,
+            marginLeft: 2,
+            verticalAlign: 'middle',
+            borderRadius: '50%',
+            boxShadow: '0 1px 4px #bbb8',
+          }}
+        />
+        <span style={{ fontSize: '0.90em', marginLeft: 2 }}>{t('応援中', { defaultValue: 'がいつも応援中！' })}</span>
       </div>
     </div>
   );
