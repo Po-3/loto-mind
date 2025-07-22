@@ -5,7 +5,7 @@ import PastResultsPro from './PastResultsPro';
 import Diagnosis from './Diagnosis';
 import Prediction from './Prediction';
 import Settings from './Settings';
-import WinningOutlet from './components/WinningOutlet'; // ★追加
+import WinningOutlet from './components/WinningOutlet.js'; // ★追加
 
 const tabs = [
   { key: 'miniloto', labelKey: 'miniloto', url: 'https://po-3.github.io/miniloto-data/miniloto.json' },
