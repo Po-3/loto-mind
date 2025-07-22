@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';  // 追加
 
 // 見出し色
 const labelColors = {
@@ -24,7 +25,7 @@ function SectionTitle({ children, color }) {
 function LatestList({ label, color, details }) {
   return (
     <div>
-      <SectionTitle color={color}>{label} 最新高額当選情報</SectionTitle>
+      <SectionTitle color={color}>{label}</SectionTitle> {/* 直接「最新高額当選情報」含めず */}
       {details.length === 0 ? (
         <div style={{ color: '#999', margin: '10px 0 24px 0' }}>データがありません</div>
       ) : (
@@ -64,7 +65,7 @@ function LatestList({ label, color, details }) {
 function RankingList({ label, color, entries, field }) {
   return (
     <div>
-      <SectionTitle color={color}>{label} 売場ランキング（第5位まで）</SectionTitle>
+      <SectionTitle color={color}>{label}</SectionTitle> {/* 直接「売場ランキング（第5位まで）」含めず */}
       {entries.length === 0 ? (
         <div style={{ color: '#999', margin: '10px 0 24px 0' }}>データがありません</div>
       ) : (
@@ -105,6 +106,8 @@ function RankingList({ label, color, entries, field }) {
 }
 
 export default function WinningOutlet() {
+  const { t } = useTranslation();  // 追加
+
   const [loading, setLoading] = useState(true);
   const [latest, setLatest] = useState({ miniloto: [], loto6: [], loto7: [] });
   const [ranking, setRanking] = useState({ total: [], miniloto: [], loto6: [], loto7: [] });
@@ -154,18 +157,18 @@ export default function WinningOutlet() {
       .catch(() => setLoading(false));
   }, []);
 
-  if (loading) return <div style={{ padding: 24 }}>読込中...</div>;
+  if (loading) return <div style={{ padding: 24 }}>{t('loading')}</div>;
 
   return (
     <div style={{ padding: '8px 0 34px 0', maxWidth: 620, margin: '0 auto' }}>
-      <LatestList label="ミニロト" color={labelColors['ミニロト']} details={latest.miniloto} />
-      <LatestList label="ロト6" color={labelColors['ロト6']} details={latest.loto6} />
-      <LatestList label="ロト7" color={labelColors['ロト7']} details={latest.loto7} />
+      <LatestList label={t('winning_miniloto_latest')} color={labelColors['ミニロト']} details={latest.miniloto} />
+      <LatestList label={t('winning_loto6_latest')} color={labelColors['ロト6']} details={latest.loto6} />
+      <LatestList label={t('winning_loto7_latest')} color={labelColors['ロト7']} details={latest.loto7} />
 
-      <RankingList label="総合高額当選" color={labelColors['総合']} entries={ranking.total} field="合計当選金額" />
-      <RankingList label="ロト6 高額当選" color={labelColors['ロト6']} entries={ranking.loto6} field="ロト6当選金額" />
-      <RankingList label="ロト7 高額当選" color={labelColors['ロト7']} entries={ranking.loto7} field="ロト7当選金額" />
-      <RankingList label="ミニロト 高額当選" color={labelColors['ミニロト']} entries={ranking.miniloto} field="ミニロト当選金額" />
+      <RankingList label={t('winning_total_ranking')} color={labelColors['総合']} entries={ranking.total} field="合計当選金額" />
+      <RankingList label={t('winning_loto6_ranking')} color={labelColors['ロト6']} entries={ranking.loto6} field="ロト6当選金額" />
+      <RankingList label={t('winning_loto7_ranking')} color={labelColors['ロト7']} entries={ranking.loto7} field="ロト7当選金額" />
+      <RankingList label={t('winning_miniloto_ranking')} color={labelColors['ミニロト']} entries={ranking.miniloto} field="ミニロト当選金額" />
     </div>
   );
 }
