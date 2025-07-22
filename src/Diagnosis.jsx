@@ -135,21 +135,53 @@ export default function Diagnosis({ jsonUrl }) {
     let tries = 0;
     let sum, oddCount, evenCount;
 
-    while (++tries < 3000) {
-      // ...（ここは省略なしでそのまま移植、内容は同じ）
-      // 中略：runDiagnosisのロジックは現状のまま
-      // 省略不可の場合は再展開可
-      // ...
-
-      // 省略せず貼りたい場合はここで指示ください
-      break;
-    }
-
-    setResult({
-      recommend: nums,
-      comment: generateComment(nums, maxNum)
-    });
+function runDiagnosis(json, patternId) {
+  let maxNum = 43, recommendCount = 6, numKeys = 6;
+  if (lotoType === 'miniloto') {
+    maxNum = 31; recommendCount = 5; numKeys = 5;
+  } else if (lotoType === 'loto7') {
+    maxNum = 37; recommendCount = 7; numKeys = 7;
   }
+  let allNums = [];
+  json.forEach(row => {
+    for (let i = 1; i <= numKeys; i++) {
+      const key = `第${i}数字`;
+      let raw = row[key];
+      if (typeof raw === "string") raw = raw.trim();
+      if (raw !== undefined && raw !== null && raw !== "" && !isNaN(raw)) {
+        const val = Number(raw);
+        if (val > 0) allNums.push(val);
+      }
+    }
+  });
+  const all = Array.from({ length: maxNum }, (_, i) => i + 1);
+  let nums = [];
+  let tries = 0;
+
+  while (++tries < 3000) {
+    if (patternId === 'notAppeared') {
+      const notAppear = all.filter(n => !allNums.includes(n));
+      const pool = notAppear.length >= recommendCount ? notAppear : all;
+      nums = getRandomNums(pool, recommendCount);
+    } else if (patternId === 'appeared') {
+      let freq = {};
+      all.forEach(n => { freq[n] = 0; });
+      allNums.forEach(n => { if (freq[n] !== undefined) freq[n]++; });
+      const sorted = all.sort((a, b) => freq[b] - freq[a]);
+      nums = getRandomNums(sorted.slice(0, recommendCount * 2), recommendCount);
+    } else if (patternId === 'random') {
+      nums = getRandomNums(all, recommendCount);
+    } else {
+      nums = getRandomNums(all, recommendCount);
+    }
+    break; // 必ずここでbreak!!
+  }
+
+  setResult({
+    recommend: nums,
+    comment: generateComment(nums, maxNum)
+  });
+}
 
   function generateComment(nums, maxNum) {
     const sorted = [...nums].sort((a, b) => a - b);
