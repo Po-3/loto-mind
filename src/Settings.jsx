@@ -28,12 +28,21 @@ const PaletteIcon = ({ size = 27 }) => (
 <svg width="22" height="22" viewBox="0 0 22 22">
   {/* 大きなまんまる */}
   <circle cx="11" cy="11" r="10" fill="#f7c873" stroke="#be9000" strokeWidth="1.2"/>
-  {/* 中心を軸に等間隔で小まんまる（例：5つを円周上に配置） */}
-  <circle cx="16.5" cy="11" r="1.2" fill="#ed3a45"/>
-  <circle cx="13.12" cy="16.04" r="1.2" fill="#42c6ff"/>
-  <circle cx="8.88" cy="16.04" r="1.2" fill="#74e088"/>
-  <circle cx="5.5" cy="11" r="1.2" fill="#fff78d"/>
-  <circle cx="11" cy="6" r="1.2" fill="#e883d3"/>
+  {/* 等間隔で小まんまる（円周上に5つ配置） */}
+  {
+    [0,1,2,3,4].map(i => {
+      // 角度（-90度からスタート、72度ずつ回転＝円周上で五等分）
+      const angle = (Math.PI * 2 * i) / 5 - Math.PI/2;
+      // 半径7.5で円周上に配置（大きなまんまる中心=11,11）
+      const cx = 11 + 7.5 * Math.cos(angle);
+      const cy = 11 + 7.5 * Math.sin(angle);
+      // 色（好きなだけどうぞ、ここは例）
+      const colors = ["#ed3a45","#42c6ff","#74e088","#fff78d","#e883d3"];
+      return (
+        <circle key={i} cx={cx} cy={cy} r="1.2" fill={colors[i]} />
+      );
+    })
+  }
 </svg>
 );
 
