@@ -133,55 +133,31 @@ export default function Diagnosis({ jsonUrl }) {
     const all = Array.from({ length: maxNum }, (_, i) => i + 1);
     let nums = [];
     let tries = 0;
-    let sum, oddCount, evenCount;
 
-function runDiagnosis(json, patternId) {
-  let maxNum = 43, recommendCount = 6, numKeys = 6;
-  if (lotoType === 'miniloto') {
-    maxNum = 31; recommendCount = 5; numKeys = 5;
-  } else if (lotoType === 'loto7') {
-    maxNum = 37; recommendCount = 7; numKeys = 7;
-  }
-  let allNums = [];
-  json.forEach(row => {
-    for (let i = 1; i <= numKeys; i++) {
-      const key = `第${i}数字`;
-      let raw = row[key];
-      if (typeof raw === "string") raw = raw.trim();
-      if (raw !== undefined && raw !== null && raw !== "" && !isNaN(raw)) {
-        const val = Number(raw);
-        if (val > 0) allNums.push(val);
+    while (++tries < 3000) {
+      if (patternId === 'notAppeared') {
+        const notAppear = all.filter(n => !allNums.includes(n));
+        const pool = notAppear.length >= recommendCount ? notAppear : all;
+        nums = getRandomNums(pool, recommendCount);
+      } else if (patternId === 'appeared') {
+        let freq = {};
+        all.forEach(n => { freq[n] = 0; });
+        allNums.forEach(n => { if (freq[n] !== undefined) freq[n]++; });
+        const sorted = all.sort((a, b) => freq[b] - freq[a]);
+        nums = getRandomNums(sorted.slice(0, recommendCount * 2), recommendCount);
+      } else if (patternId === 'random') {
+        nums = getRandomNums(all, recommendCount);
+      } else {
+        nums = getRandomNums(all, recommendCount);
       }
+      break;
     }
-  });
-  const all = Array.from({ length: maxNum }, (_, i) => i + 1);
-  let nums = [];
-  let tries = 0;
 
-  while (++tries < 3000) {
-    if (patternId === 'notAppeared') {
-      const notAppear = all.filter(n => !allNums.includes(n));
-      const pool = notAppear.length >= recommendCount ? notAppear : all;
-      nums = getRandomNums(pool, recommendCount);
-    } else if (patternId === 'appeared') {
-      let freq = {};
-      all.forEach(n => { freq[n] = 0; });
-      allNums.forEach(n => { if (freq[n] !== undefined) freq[n]++; });
-      const sorted = all.sort((a, b) => freq[b] - freq[a]);
-      nums = getRandomNums(sorted.slice(0, recommendCount * 2), recommendCount);
-    } else if (patternId === 'random') {
-      nums = getRandomNums(all, recommendCount);
-    } else {
-      nums = getRandomNums(all, recommendCount);
-    }
-    break; // 必ずここでbreak!!
+    setResult({
+      recommend: nums,
+      comment: generateComment(nums, maxNum)
+    });
   }
-
-  setResult({
-    recommend: nums,
-    comment: generateComment(nums, maxNum)
-  });
-}
 
   function generateComment(nums, maxNum) {
     const sorted = [...nums].sort((a, b) => a - b);
@@ -225,6 +201,7 @@ function runDiagnosis(json, patternId) {
 
   useEffect(() => {
     if (data && pattern) runDiagnosis(data, pattern);
+    // eslint-disable-next-line
   }, [data, pattern]);
 
   return (
@@ -239,7 +216,7 @@ function runDiagnosis(json, patternId) {
               padding: '5px 16px',
               borderRadius: 6,
               border: '1px solid #bbb',
-              mmarginBottom: 4
+              marginBottom: 4
             }}
           >
             {patternList.map(p => (
@@ -252,43 +229,44 @@ function runDiagnosis(json, patternId) {
         </span>
       </div>
       <button
-  style={{
-    padding: '6px 16px',
-    borderRadius: '6px',
-    border: '1px solid #aaa',
-    background: '#f4f4fc',
-    color: '#345',
-    marginBottom: 10,
-    cursor: 'pointer'
-  }}
-  onClick={() => data && runDiagnosis(data, pattern)}
->
-  {t('update_diagnosis')}
-</button>
-{result ? (
-  <>
-    <div style={numStyle}>
-      {result.recommend.map(n => (
-        <span key={n} style={numItemStyle}>{n}</span>
-      ))}
-    </div>
-    <p style={{
-      ...footerStyle,
-      marginTop: 8,
-      color: '#ca3',
-      fontWeight: 500
-    }}>{result.comment}</p>
-    <p style={footerStyle}>
-      {t('switch_loto_type')}
-      <br />
-      {t('notify_if_win')}
-    </p>
-  </>
-) : <p>{t('diagnosing')}</p>}
+        style={{
+          padding: '6px 16px',
+          borderRadius: '6px',
+          border: '1px solid #aaa',
+          background: '#f4f4fc',
+          color: '#345',
+          marginBottom: 10,
+          cursor: 'pointer'
+        }}
+        onClick={() => data && runDiagnosis(data, pattern)}
+      >
+        {t('update_diagnosis')}
+      </button>
+      {result ? (
+        <>
+          <div style={numStyle}>
+            {result.recommend.map(n => (
+              <span key={n} style={numItemStyle}>{n}</span>
+            ))}
+          </div>
+          <p style={{
+            ...footerStyle,
+            marginTop: 8,
+            color: '#ca3',
+            fontWeight: 500
+          }}>{result.comment}</p>
+          <p style={footerStyle}>
+            {t('switch_loto_type')}
+            <br />
+            {t('notify_if_win')}
+          </p>
+        </>
+      ) : <p>{t('diagnosing')}</p>}
     </div>
   );
 }
 
+// --- スタイル定義 ---
 const outerStyle = {
   width: '100%',
   padding: '0 12px',
