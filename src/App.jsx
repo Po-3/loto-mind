@@ -129,14 +129,28 @@ export default function App() {
       )}
 
       {/* アイコン＋見出し（ロゴ） */}
-      <div style={headerContainerStyle}>
-        <div style={logoRowStyle}>
-          <span style={logoTextLeft}>Loto</span>
-          <img src="/tonari.png" alt="となりアイコン" style={logoIconStyle} />
-          <span style={logoTextRight}>Mind</span>
-        </div>
-        <div style={logoByTonariStyle}>{t('by_tonari')}</div>
-      </div>
+<div style={headerContainerStyle}>
+  <div
+    style={{
+      ...logoRowStyle,
+      cursor: 'pointer',
+      userSelect: 'none',
+      transition: 'opacity .13s',
+      opacity: 0.97,
+    }}
+    title="最新の画面にリロード"
+    onClick={() => window.location.reload()}
+    tabIndex={0}
+    onKeyDown={e => (e.key === 'Enter' || e.key === ' ') && window.location.reload()}
+    role="button"
+    aria-label="ロゴをタップでリロード"
+  >
+    <span style={logoTextLeft}>Loto</span>
+    <img src="/tonari.png" alt="となりアイコン" style={logoIconStyle} />
+    <span style={logoTextRight}>Mind</span>
+  </div>
+  <div style={logoByTonariStyle}>{t('by_tonari')}</div>
+</div>
 
       {/* ロト種別タブ */}
       <div style={tabRowStyle}>
