@@ -322,5 +322,23 @@
   "label_prediction_numbers": "Prediction Numbers",
   "label_axis_number": "Axis Number",
   "label_features_and_aim": "Features & Aim",
-  "prediction_score": "Prediction Score"
+  "prediction_score": "Prediction Score",
+
+  "guide_title": "Guide",
+  "guide_pwa_title": "Installable as a PWA: You can launch it like an app by adding it to your home screen as follows.",
+  "guide_pwa_iphone": "iPhone (Safari): Tap the 'Share' button at the bottom → 'Add to Home Screen'",
+  "guide_pwa_android": "Android (Chrome): Tap the '︙' menu at the top right → 'Add to Home screen'",
+  "guide_pwa_pc": "PC (Chrome): Click the 'Install' button at the right end of the address bar to install as an app",
+  "guide_pwa_icon": "You can access it like an app anytime from the home screen icon.",
+  "guide_pwa_update": "* PWA supported. Updates are automatically applied.",
+  "guide_auto_update": "Latest lottery results are automatically fetched and displayed.",
+  "guide_features": "All unique features such as 'Tonari Prediction', 'Tonari Diagnosis', and 'Past Results Search Tool' are free to use.",
+  "guide_no_ads": "No ads or account registration required. Anyone can use it with peace of mind.",
+  "guide_data_accuracy": "All data and analysis results are cross-checked with official CSV data to ensure maximum accuracy.",
+  "guide_blog": "Kujitonari Official Blog (Detailed trend analysis & predictions here)",
+  "guide_note": "Kujitonari on note (In-depth studies & paid predictions here)",
+  "guide_x": "Latest info on X (formerly Twitter)",
+  "guide_youtube": "Kujitonari Official YouTube Channel (with video content!)",
+  "guide_disclaimer": "* This service is provided for entertainment and data verification purposes. Please make your own decisions and take responsibility when purchasing based on predictions/analyses."
+
 }

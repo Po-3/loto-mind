@@ -308,49 +308,44 @@ export default function Settings({
       </div>
 
       {/* --- ガイド／公式リンク --- */}
-      <h2 style={{ fontSize: '1.10em', margin: '18px 0 8px' }}>ガイド</h2>
-      <ul style={{ fontSize: '0.98em', marginTop: 8, paddingLeft: 18, marginBottom: 0, color: '#222' }}>
-        <li>
-          <strong>PWAとしてインストール可能：</strong>
-          以下の手順でホーム画面に追加すれば、アプリのように起動できます。
-          <ul style={{ margin: '8px 0 10px 1.1em', paddingLeft: '1.1em' }}>
-            <li><b>iPhone（Safari）：</b> 画面下の <b>「共有」ボタン</b> → <b>「ホーム画面に追加」</b> をタップ</li>
-            <li><b>Android（Chrome）：</b> 画面右上 <b>「︙」メニュー</b> → <b>「ホーム画面に追加」</b> をタップ</li>
-            <li><b>PC（Chrome）：</b> アドレスバー右端の「インストール」ボタンからアプリ化できます</li>
-            <li>ホーム画面アイコンからいつでもアプリ感覚でアクセス可能です</li>
-            <li style={{ color:'#248', fontSize:'0.96em' }}>※ PWA対応なので、アップデートは自動で反映されます</li>
-          </ul>
-        </li>
-        <li>最新のロト抽せん結果は自動で取得・反映されます。</li>
-        <li>「となり流ズバリ予想」「となり診断」「過去結果検索ツール」など独自機能をすべて無料で利用可能です。</li>
-        <li>すべて広告表示なし、アカウント登録も不要。どなたでも安心して使えます。</li>
-        <li>当アプリの各種データ・分析結果は公式サイトから取得した過去結果一覧のCSVと照合済み、正確性を最優先しています。</li>
-      </ul>
-      <div style={{ marginTop: 16, fontSize: '0.97em' }}>
-        <a href="https://www.kujitonari.net/" target="_blank" rel="noopener noreferrer">
-          宝くじのとなり 公式ブログ（出現傾向＆予想の詳しい解説はこちら）
-        </a><br />
-        <a href="https://note.com/kujitonari" target="_blank" rel="noopener noreferrer">
-          note版 くじとなり（考察・有料予想はこちら）
-        </a><br />
-        <a href="https://x.com/tkjtonari" target="_blank" rel="noopener noreferrer">
-          X（旧Twitter）最新情報
-        </a><br />
-        <a href="https://www.youtube.com/@%E3%81%8F%E3%81%98%E3%81%A8%E3%81%AA%E3%82%8A" target="_blank" rel="noopener noreferrer">
-          くじとなり公式YouTubeチャンネル（動画も配信中！）
-        </a>
-      </div>
-      <div style={{ marginTop: 18, color: '#888', fontSize: '0.96em', display: 'flex', justifyContent: 'space-between' }}>
-         <span>
-          ※ 本サービスはデータ検証およびエンタメ目的で提供しています。<br />
-          予想・分析の結果に基づく購入はご自身の判断・責任でお願いします。<br />
-          <span style={{ fontSize: '0.92em', display: 'inline-block', marginTop: 2 }}>
-            <a href="https://www.kujitonari.net/LotoMind" target="_blank" rel="noopener noreferrer" style={{ color: '#888' }}>
-              Ver 1.08（2025-07-23）
-            </a>
-          </span>
-        </span>
-      </div>
+<h2 style={{ fontSize: '1.10em', margin: '18px 0 8px', color: '#c89e09' }}>
+  {t('guide_title')}
+</h2>
+<ul style={{ fontSize: '0.98em', marginTop: 8, paddingLeft: 18, marginBottom: 0, color: '#222' }}>
+  <li>
+    <strong>{t('guide_pwa_title')}</strong>
+    <ul style={{ margin: '8px 0 10px 1.1em', paddingLeft: '1.1em' }}>
+      <li><b>{t('guide_pwa_iphone')}</b></li>
+      <li><b>{t('guide_pwa_android')}</b></li>
+      <li><b>{t('guide_pwa_pc')}</b></li>
+      <li>{t('guide_pwa_icon')}</li>
+      <li style={{ color:'#248', fontSize:'0.96em' }}>
+        <span>{t('guide_pwa_update')}</span>
+      </li>
+    </ul>
+  </li>
+  <li>{t('guide_auto_update')}</li>
+  <li>{t('guide_features')}</li>
+  <li>{t('guide_no_ads')}</li>
+  <li>{t('guide_data_accuracy')}</li>
+</ul>
+<div style={{ marginTop: 16, fontSize: '0.97em' }}>
+  <a href="https://www.kujitonari.net/" target="_blank" rel="noopener noreferrer">{t('guide_blog')}</a><br />
+  <a href="https://note.com/kujitonari" target="_blank" rel="noopener noreferrer">{t('guide_note')}</a><br />
+  <a href="https://x.com/tkjtonari" target="_blank" rel="noopener noreferrer">{t('guide_x')}</a><br />
+  <a href="https://www.youtube.com/@%E3%81%8F%E3%81%98%E3%81%A8%E3%81%AA%E3%82%8A" target="_blank" rel="noopener noreferrer">{t('guide_youtube')}</a>
+</div>
+<div style={{ marginTop: 18, color: '#888', fontSize: '0.96em', display: 'flex', justifyContent: 'space-between' }}>
+  <span>
+    {t('guide_disclaimer')}
+    <br />
+    <span style={{ fontSize: '0.92em', display: 'inline-block', marginTop: 2 }}>
+      <a href="https://www.kujitonari.net/LotoMind" target="_blank" rel="noopener noreferrer" style={{ color: '#888' }}>
+        Ver 1.08（2025-07-23）
+      </a>
+    </span>
+  </span>
+</div>
     </div>
   );
 }

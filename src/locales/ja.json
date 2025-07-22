@@ -324,5 +324,23 @@
   "label_prediction_numbers": "予想数字",
   "label_axis_number": "軸数字",
   "label_features_and_aim": "特徴と狙い",
-  "prediction_score": "予想実績"
+  "prediction_score": "予想実績",
+
+  "guide_title": "ガイド",
+  "guide_pwa_title": "PWAとしてインストール可能：以下の手順でホーム画面に追加すれば、アプリのように起動できます。",
+  "guide_pwa_iphone": "iPhone（Safari）： 画面下の「共有」ボタン → 「ホーム画面に追加」をタップ",
+  "guide_pwa_android": "Android（Chrome）： 画面右上「︙」メニュー → 「ホーム画面に追加」をタップ",
+  "guide_pwa_pc": "PC（Chrome）： アドレスバー右端の「インストール」ボタンからアプリ化できます",
+  "guide_pwa_icon": "ホーム画面アイコンからいつでもアプリ感覚でアクセス可能です",
+  "guide_pwa_update": "※ PWA対応なので、アップデートは自動で反映されます",
+  "guide_auto_update": "最新のロト抽せん結果は自動で取得・反映されます。",
+  "guide_features": "「となり流ズバリ予想」「となり診断」「過去結果検索ツール」など独自機能をすべて無料で利用可能です。",
+  "guide_no_ads": "すべて広告表示なし、アカウント登録も不要。どなたでも安心して使えます。",
+  "guide_data_accuracy": "当アプリの各種データ・分析結果は公式サイトから取得した過去結果一覧のCSVと照合済み、正確性を最優先しています。",
+  "guide_blog": "宝くじのとなり 公式ブログ（出現傾向＆予想の詳しい解説はこちら）",
+  "guide_note": "note版 くじとなり（考察・有料予想はこちら）",
+  "guide_x": "X（旧Twitter）最新情報",
+  "guide_youtube": "くじとなり公式YouTubeチャンネル（動画も配信中！）",
+  "guide_disclaimer": "※ 本サービスはデータ検証およびエンタメ目的で提供しています。予想・分析の結果に基づく購入はご自身の判断・責任でお願いします。"
+
 }
