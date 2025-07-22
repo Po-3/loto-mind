@@ -6,6 +6,7 @@ import Diagnosis from './Diagnosis';
 import Prediction from './Prediction';
 import Settings from './Settings';
 import WinningOutlet from './components/WinningOutlet.jsx'; // ★追加
+import { Trans } from 'react-i18next';
 
 const tabs = [
   { key: 'miniloto', labelKey: 'miniloto', url: 'https://po-3.github.io/miniloto-data/miniloto.json' },
