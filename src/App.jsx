@@ -5,17 +5,12 @@ import PastResultsPro from './PastResultsPro';
 import Diagnosis from './Diagnosis';
 import Prediction from './Prediction';
 import Settings from './Settings';
+import WinningOutlet from './components/WinningOutlet'; // ★追加
 
 const tabs = [
   { key: 'miniloto', labelKey: 'miniloto', url: 'https://po-3.github.io/miniloto-data/miniloto.json' },
   { key: 'loto6', labelKey: 'loto6', url: 'https://po-3.github.io/loto6-data/loto6.json' },
   { key: 'loto7', labelKey: 'loto7', url: 'https://po-3.github.io/loto7-data/loto7.json' },
-];
-const features = [
-  { key: 'past', labelKey: 'past' },
-  { key: 'diagnosis', labelKey: 'diagnosis' },
-  { key: 'prediction', labelKey: 'prediction' },
-  { key: 'settings', labelKey: 'settings_tab' }
 ];
 const DEFAULT_BG_COLOR = '#fafcff';
 
@@ -38,6 +33,15 @@ function getSettings() {
 export default function App() {
   const { t } = useTranslation();
   const [settings, setSettings] = useState(getSettings);
+
+  // features配列を関数内で定義しtを使う
+  const features = [
+    { key: 'past', labelKey: 'past' },
+    { key: 'diagnosis', labelKey: 'diagnosis' },
+    { key: 'prediction', labelKey: 'prediction' },
+    { key: 'settings', labelKey: 'settings_tab' },
+    { key: 'winning', labelKey: 'winning_outlet' }, // ←ここはlabelKeyでOK
+  ];
 
   // 初期値は sessionStorage優先
   const [selectedTab, setSelectedTab] = useState(() => getStartupValue('LotoType', 'defaultLotoType', 'loto6'));
@@ -180,6 +184,7 @@ export default function App() {
             font={font}
           />
         )}
+        {feature === 'winning' && <WinningOutlet />}  {/* ★ここを追加 */}
       </div>
 
       {/* ガイド文＆リンク */}
