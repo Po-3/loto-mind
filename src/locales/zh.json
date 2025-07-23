@@ -320,6 +320,9 @@
   "desc_high_low_mix": "同时包含小于10和大于30的数字。",
 
   "label_type": "类型",
+  "万能型": "万能型",
+  "堅実型": "稳健型",
+  "勝負型": "进取型",
   "label_prediction_numbers": "预测数字",
   "label_axis_number": "轴心数字",
   "label_features_and_aim": "特征和目标",

@@ -381,8 +381,8 @@ const handleInfo = (label, e) => {
         </div>
         <div style={{ fontSize: '0.97em', margin: '8px 0' }}>
           <span>
-            {t('search_result')}：<b>{filtered.length}</b>{t('件')}
-            {getFilterSummary() && <span>{getFilterSummary()}</span>}
+  {t('search_result', { count: filtered.length })} 
+  {getFilterSummary() && <span>{getFilterSummary()}</span>}
           </span>
           <br />
           <span style={{ color: '#357' }}>
