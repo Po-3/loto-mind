@@ -52,7 +52,7 @@ function pickRandom(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
-export default function Diagnosis({ jsonUrl }) {
+export default function Diagnosis({ jsonUrl, textColor }) {
   const { t } = useTranslation();
   const [result, setResult] = useState(null);
   const [data, setData] = useState(null);
@@ -134,23 +134,23 @@ export default function Diagnosis({ jsonUrl }) {
     let nums = [];
     let tries = 0;
 
- while (++tries < 3000) {
-  if (patternId === 'birthday') {
-    // 誕生日縛りは1〜31のみから選ぶ
-    nums = getRandomNums(Array.from({ length: 31 }, (_, i) => i + 1), recommendCount);
-    break;
-  }
-  if (patternId === 'notAppeared') {
-    // ...省略...
-  } else if (patternId === 'appeared') {
-    // ...省略...
-  } else if (patternId === 'random') {
-    nums = getRandomNums(all, recommendCount);
-  } else {
-    nums = getRandomNums(all, recommendCount);
-  }
-  break;
-}
+    while (++tries < 3000) {
+      if (patternId === 'birthday') {
+        // 誕生日縛りは1〜31のみから選ぶ
+        nums = getRandomNums(Array.from({ length: 31 }, (_, i) => i + 1), recommendCount);
+        break;
+      }
+      if (patternId === 'notAppeared') {
+        // ...省略...
+      } else if (patternId === 'appeared') {
+        // ...省略...
+      } else if (patternId === 'random') {
+        nums = getRandomNums(all, recommendCount);
+      } else {
+        nums = getRandomNums(all, recommendCount);
+      }
+      break;
+    }
 
     setResult({
       recommend: nums,
@@ -174,14 +174,14 @@ export default function Diagnosis({ jsonUrl }) {
     const isWide = range >= Math.floor(maxNum * 0.8);
 
     const patterns = [
-      { check: () => hasConsecutive, comments: [t("連番アタック！流れに乗る日は大きく当たる日。"),t("連続数字が熱い！波に乗れそうな予感。"),t("連番多め。勢い重視のギャンブラー型診断！")] },
-      { check: () => allOdd, comments: [t("全て奇数！波乱の予感漂うアグレッシブ診断。"),t("オッズ型フルスロットル！攻めの日です。")] },
-      { check: () => allEven, comments: [t("全て偶数！堅実・安定感マックス。"),t("偶数オンリー。落ち着いた構成で勝負！")] },
-      { check: () => isBalanced, comments: [t("奇数偶数バランス型。大穴狙いでも鉄板狙いでもイケる！"),t("バランス型！何が来てもおかしくない絶妙ライン。")] },
-      { check: () => lowCount >= Math.max(2, Math.floor(nums.length / 2)), comments: [t("低位ゾーンに集中。地に足ついた堅実型！"),t("1ケタばかりの慎重派。小さな当たりも積み重ね！")] },
-      { check: () => highCount >= Math.max(2, Math.floor(nums.length / 2)), comments: [t("高位ゾーンで夢を見ろ！一発逆転狙いの攻め型。"),t("高位ゾーン中心のジャンボ狙い。")] },
-      { check: () => isNarrow, comments: [t("数字のまとまり感がスゴい！結束力バツグン。"),t("レンジが狭い…団結力で当たりを呼ぶパターン!?")] },
-      { check: () => isWide, comments: [t("広範囲カバー型。どこからでも“当たり”を拾いに行ける！"),t("ばらけている時こそ、意外な一発に期待！")] },
+      { check: () => hasConsecutive, comments: [t("連番アタック！流れに乗る日は大きく当たる日。"), t("連続数字が熱い！波に乗れそうな予感。"), t("連番多め。勢い重視のギャンブラー型診断！")] },
+      { check: () => allOdd, comments: [t("全て奇数！波乱の予感漂うアグレッシブ診断。"), t("オッズ型フルスロットル！攻めの日です。")] },
+      { check: () => allEven, comments: [t("全て偶数！堅実・安定感マックス。"), t("偶数オンリー。落ち着いた構成で勝負！")] },
+      { check: () => isBalanced, comments: [t("奇数偶数バランス型。大穴狙いでも鉄板狙いでもイケる！"), t("バランス型！何が来てもおかしくない絶妙ライン。")] },
+      { check: () => lowCount >= Math.max(2, Math.floor(nums.length / 2)), comments: [t("低位ゾーンに集中。地に足ついた堅実型！"), t("1ケタばかりの慎重派。小さな当たりも積み重ね！")] },
+      { check: () => highCount >= Math.max(2, Math.floor(nums.length / 2)), comments: [t("高位ゾーンで夢を見ろ！一発逆転狙いの攻め型。"), t("高位ゾーン中心のジャンボ狙い。")] },
+      { check: () => isNarrow, comments: [t("数字のまとまり感がスゴい！結束力バツグン。"), t("レンジが狭い…団結力で当たりを呼ぶパターン!?")] },
+      { check: () => isWide, comments: [t("広範囲カバー型。どこからでも“当たり”を拾いに行ける！"), t("ばらけている時こそ、意外な一発に期待！")] },
     ];
     for (const pattern of patterns) {
       if (pattern.check()) {
@@ -204,7 +204,7 @@ export default function Diagnosis({ jsonUrl }) {
   }, [data, pattern]);
 
   return (
-    <div style={outerStyle}>
+    <div style={{ ...outerStyle, color: textColor }}>
       <div style={{ marginBottom: 12, display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
         <label>
           <select
@@ -215,7 +215,8 @@ export default function Diagnosis({ jsonUrl }) {
               padding: '5px 16px',
               borderRadius: 6,
               border: '1px solid #bbb',
-              marginBottom: 4
+              marginBottom: 4,
+              color: textColor
             }}
           >
             {patternList.map(p => (
@@ -223,7 +224,7 @@ export default function Diagnosis({ jsonUrl }) {
             ))}
           </select>
         </label>
-        <span style={{ color: '#666', fontSize: '0.98em', marginLeft: 4 }}>
+        <span style={{ color: textColor, fontSize: '0.98em', marginLeft: 4 }}>
           ※ {t(desc)}
         </span>
       </div>
@@ -233,7 +234,7 @@ export default function Diagnosis({ jsonUrl }) {
           borderRadius: '6px',
           border: '1px solid #aaa',
           background: '#f4f4fc',
-          color: '#345',
+          color: textColor,
           marginBottom: 10,
           cursor: 'pointer'
         }}
@@ -251,16 +252,16 @@ export default function Diagnosis({ jsonUrl }) {
           <p style={{
             ...footerStyle,
             marginTop: 8,
-            color: '#ca3',
+            color: textColor,
             fontWeight: 500
           }}>{result.comment}</p>
-          <p style={footerStyle}>
+          <p style={{ ...footerStyle, color: textColor }}>
             {t('switch_loto_type')}
             <br />
             {t('notify_if_win')}
           </p>
         </>
-      ) : <p>{t('diagnosing')}</p>}
+      ) : <p style={{ color: textColor }}>{t('diagnosing')}</p>}
     </div>
   );
 }
@@ -289,6 +290,5 @@ const numItemStyle = {
 };
 const footerStyle = {
   fontSize: '0.96em',
-  color: '#248',
   marginTop: 12,
 };
