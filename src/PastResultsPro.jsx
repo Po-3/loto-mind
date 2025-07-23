@@ -1,5 +1,3 @@
-console.log('ja:', t('回'), 'en:', t('draw'), t('Draw'))
-
 import { useTranslation } from 'react-i18next';
 import { useEffect, useState, useRef } from 'react';
 
@@ -102,6 +100,7 @@ const InfoIcon = ({ onClick }) => (
 
 export default function PastResultsPro({ jsonUrl, lotoType }) {
   const { t } = useTranslation();
+    console.log('ja:', t('回'), 'en:', t('draw'), t('Draw')); 
   const [data, setData] = useState([]);
   const [filter, setFilter] = useState({
     fromRound: '', toRound: '', fromDate: '', toDate: '',
