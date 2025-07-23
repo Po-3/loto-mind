@@ -94,7 +94,7 @@
   "loto6": "로또6",
   "loto7": "로또7",
   "past": "검색 도구",
-  "diagnosis": "とな리 진단",
+  "diagnosis": "となり 진단",
   "prediction": "정확한 예측",
   "settings_tab": "설정",
   "winning_outlet": "고액 당첨 판매점 정보",
@@ -113,7 +113,7 @@
   "notify_if_win": "당첨되면 알려주세요! byとなり",
   "diagnosing": "진단 중…",
 
-  "prediction_title": "とな리의 정확 예측",
+  "prediction_title": "となり 정확 예측",
   "latest_prediction": "최신 예측",
   "draw_picker": "회차 선택",
   "auto_fetch_hint": "회차를 선택하면 예측을 자동으로 불러옵니다.",
@@ -158,15 +158,15 @@
   "pwa_icon_access": "홈 화면 아이콘에서 언제든 앱처럼 접근 가능",
   "pwa_auto_update": "※PWA는 자동 업데이트를 지원합니다.",
   "auto_results": "최신 추첨 결과는 자동 반영됩니다.",
-  "all_free_features": "とな리 예측, 진단, 과거 검색 등 모든 기능 무료.",
+  "all_free_features": "となり 예측, 진단, 과거 검색 등 모든 기능 무료.",
   "no_ads_no_account": "광고 없음, 계정 불필요, 누구나 안심 사용!",
   "accuracy_note": "모든 데이터/분석 결과는 공식 CSV와 대조하여 최고 정확도를 목표로 합니다.",
   "disclaimer": "※ 이 서비스는 데이터 검증 및 엔터테인먼트 목적입니다. 구매 결정 및 최종 책임은 본인에게 있습니다.",
 
-  "blog": "とな리 공식 블로그(경향, 심층 예측 등)",
-  "note": "とな리 Note(심층 분석, 유료 예측)",
+  "blog": "となり 공식 블로그(경향, 심층 예측 등)",
+  "note": "となり Note(심층 분석, 유료 예측)",
   "x": "X(구 Twitter): 최신 정보",
-  "youtube": "とな리 공식 YouTube(동영상도 업로드!)",
+  "youtube": "となり 공식 YouTube(동영상도 업로드!)",
 
   "draw": "회차",
   "date": "날짜",
@@ -193,7 +193,7 @@
 
   "vs": "vs",
 
-  "color_tonari": "とな리 색상",
+  "color_tonari": "となり 색상",
   "color_ivory": "아이보리",
   "color_gray": "심플 그레이",
   "color_sakura": "벚꽃 핑크",
@@ -336,12 +336,12 @@
   "guide_pwa_icon": "홈화면 아이콘에서 언제든 앱처럼 접속 가능",
   "guide_pwa_update": "※ PWA이므로 업데이트는 자동 반영됩니다.",
   "guide_auto_update": "최신 로또 추첨 결과가 자동으로 반영됩니다.",
-  "guide_features": "とな리 예측, 진단, 과거 검색 등 모든 독자 기능 무료!",
+  "guide_features": "となり 예측, 진단, 과거 검색 등 모든 독자 기능 무료!",
   "guide_no_ads": "광고 없음, 계정 등록 불필요. 누구나 안심하고 이용하세요.",
   "guide_data_accuracy": "본 앱의 모든 데이터와 분석 결과는 공식 사이트의 과거 결과 CSV와 대조하여 정확성을 최우선합니다.",
-  "guide_blog": "로또의とな리 공식 블로그(출현 경향 및 자세한 해설)",
-  "guide_note": "노트판 くじとな리(심층 해설/유료 예측)",
+  "guide_blog": "로또의となり 공식 블로그(출현 경향 및 자세한 해설)",
+  "guide_note": "노트판 くじとなり(심층 해설/유료 예측)",
   "guide_x": "X(구 Twitter) 최신 정보",
-  "guide_youtube": "くじとな리 공식 YouTube(영상도 업로드!)",
+  "guide_youtube": "くじとなり공식 YouTube(영상도 업로드!)",
   "guide_disclaimer": "※ 본 서비스는 데이터 검증 및 엔터테인먼트 목적으로 제공됩니다. 예측·분석 결과에 따른 구매는 본인의 판단과 책임으로 하시기 바랍니다."
 }
