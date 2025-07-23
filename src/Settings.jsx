@@ -30,7 +30,7 @@ const TEXT_COLOR_PRESETS = [
 const LANG_OPTIONS = [
   { label: '日本語', value: 'ja' },
   { label: 'English', value: 'en' },
-  { key: 'zh', labelKey: 'lang_zh' }
+  { label: '简体中文', value: 'zh' }
 ];
 
 const PaletteIcon = ({ size = 27 }) => (
