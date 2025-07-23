@@ -320,6 +320,9 @@
   "選ばれし数字たちに身を委ねよう。": "Let fate pick your numbers.",
 
   "label_type": "Type",
+  "万能型": "Universal",
+  "堅実型": "Steady",
+  "勝負型": "Bold",
   "label_prediction_numbers": "Prediction Numbers",
   "label_axis_number": "Axis Number",
   "label_features_and_aim": "Features & Aim",
