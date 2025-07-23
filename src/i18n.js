@@ -5,6 +5,8 @@ import ja from './locales/ja.json';
 import en from './locales/en.json';
 import zh from './locales/zh.json';
 import zhTW from './locales/zh-TW.json';
+import de from './locales/de.json';
+import ko from './locales/ko.json';   
 import LanguageDetector from 'i18next-browser-languagedetector';
 
 // ▼推奨：rank名やbonus名もJSONリソース側で管理する
