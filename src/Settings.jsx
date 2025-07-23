@@ -32,8 +32,8 @@ const LANG_OPTIONS = [
   { label: 'English', value: 'en' },
   { label: '简体中文', value: 'zh' },
   { label: '繁體中文', value: 'zh-tw' },
-  { label: 'Deutsch', value: 'de' } ,
   { label: '한국어', value: 'ko' }
+  { label: 'Deutsch', value: 'de' } ,
 ];
 
 const PaletteIcon = ({ size = 27 }) => (
