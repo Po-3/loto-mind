@@ -133,7 +133,7 @@ export default function App() {
 
       {/* アイコン＋見出し（ロゴ） */}
       <div style={headerContainerStyle}>
-<div
+        <div
   style={{
     ...logoRowStyle,
     cursor: 'pointer',
@@ -153,6 +153,7 @@ export default function App() {
   <span style={logoTextRight}>Mind</span>
 </div>
 <div style={logoByTonariStyle}>{t('by_tonari')}</div>
+      </div>
 
       {/* ロト種別タブ */}
       <div style={tabRowStyle}>
