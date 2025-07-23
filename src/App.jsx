@@ -102,6 +102,8 @@ export default function App() {
   const showPastScrollBtns = feature === 'past' && showScrollBtns;
 
   // --- App全体（root div）にもstyle反映 ---
+  // ここで「検索エリアは常に黒字」にしたい場合、過去検索画面だけ子要素を <div className="search-area">... とする
+  // それ以外は親div(style/color)で一括コントロール
   return (
     <div
       style={{
@@ -130,28 +132,28 @@ export default function App() {
       )}
 
       {/* アイコン＋見出し（ロゴ） */}
-<div style={headerContainerStyle}>
-  <div
-    style={{
-      ...logoRowStyle,
-      cursor: 'pointer',
-      userSelect: 'none',
-      transition: 'opacity .13s',
-      opacity: 0.97,
-    }}
-    title="最新の画面にリロード"
-    onClick={() => window.location.reload()}
-    tabIndex={0}
-    onKeyDown={e => (e.key === 'Enter' || e.key === ' ') && window.location.reload()}
-    role="button"
-    aria-label="ロゴをタップでリロード"
-  >
-    <span style={logoTextLeft}>Loto</span>
-    <img src="/tonari.png" alt="となりアイコン" style={logoIconStyle} />
-    <span style={logoTextRight}>Mind</span>
-  </div>
-  <div style={logoByTonariStyle}>{t('by_tonari')}</div>
-</div>
+      <div style={headerContainerStyle}>
+        <div
+          style={{
+            ...logoRowStyle,
+            cursor: 'pointer',
+            userSelect: 'none',
+            transition: 'opacity .13s',
+            opacity: 0.97,
+          }}
+          title="最新の画面にリロード"
+          onClick={() => window.location.reload()}
+          tabIndex={0}
+          onKeyDown={e => (e.key === 'Enter' || e.key === ' ') && window.location.reload()}
+          role="button"
+          aria-label="ロゴをタップでリロード"
+        >
+          <span style={logoTextLeft}>Loto</span>
+          <img src="/tonari.png" alt="となりアイコン" style={logoIconStyle} />
+          <span style={logoTextRight}>Mind</span>
+        </div>
+        <div style={logoByTonariStyle}>{t('by_tonari')}</div>
+      </div>
 
       {/* ロト種別タブ */}
       <div style={tabRowStyle}>
@@ -218,7 +220,8 @@ export default function App() {
       {/* メイン表示エリア */}
       <div style={{ width: '100%', position: 'relative' }}>
         {feature === 'past' && (
-          <div style={{ margin: '-12px -18px 0 -18px', maxWidth: 'none' }}>
+          // 検索画面だけ強制で黒字にしたい場合ここでラップ
+          <div className="search-area" style={{ color: '#222' }}>
             <PastResultsPro jsonUrl={selectedUrl} lotoType={selectedTabObj.key} />
           </div>
         )}
@@ -280,7 +283,8 @@ export default function App() {
             boxShadow: '0 1px 4px #bbb8',
           }}
         />
-<span style={{ fontSize: '0.90em', marginLeft: 2 }}>{t('tonari_supports')}</span>      </div>
+        <span style={{ fontSize: '0.90em', marginLeft: 2 }}>{t('tonari_supports')}</span>
+      </div>
     </div>
   );
 }
