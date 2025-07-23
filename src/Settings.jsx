@@ -308,10 +308,10 @@ export default function Settings({
       </div>
 
       {/* --- ガイド／公式リンク --- */}
-<h2 style={{ fontSize: '1.10em', margin: '18px 0 8px', color: '#c89e09' }}>
+<h2 style={{ fontSize: '1.10em', margin: '18px 0 8px', color: textColor }}>
   {t('guide_title')}
 </h2>
-<ul style={{ fontSize: '0.98em', marginTop: 8, paddingLeft: 18, marginBottom: 0, color: '#222' }}>
+<ul style={{ fontSize: '0.98em', marginTop: 8, paddingLeft: 18, marginBottom: 0, color: textColor }}>
   <li>
     <strong>{t('guide_pwa_title')}</strong>
     <ul style={{ margin: '8px 0 10px 1.1em', paddingLeft: '1.1em' }}>
@@ -319,7 +319,7 @@ export default function Settings({
       <li><b>{t('guide_pwa_android')}</b></li>
       <li><b>{t('guide_pwa_pc')}</b></li>
       <li>{t('guide_pwa_icon')}</li>
-      <li style={{ color:'#248', fontSize:'0.96em' }}>
+      <li style={{ color: textColor, fontSize:'0.96em' }}>
         <span>{t('guide_pwa_update')}</span>
       </li>
     </ul>
@@ -329,18 +329,18 @@ export default function Settings({
   <li>{t('guide_no_ads')}</li>
   <li>{t('guide_data_accuracy')}</li>
 </ul>
-<div style={{ marginTop: 16, fontSize: '0.97em' }}>
+<div style={{ marginTop: 16, fontSize: '0.97em', color: textColor }}>
   <a href="https://www.kujitonari.net/" target="_blank" rel="noopener noreferrer">{t('guide_blog')}</a><br />
   <a href="https://note.com/kujitonari" target="_blank" rel="noopener noreferrer">{t('guide_note')}</a><br />
   <a href="https://x.com/tkjtonari" target="_blank" rel="noopener noreferrer">{t('guide_x')}</a><br />
   <a href="https://www.youtube.com/@%E3%81%8F%E3%81%98%E3%81%A8%E3%81%AA%E3%82%8A" target="_blank" rel="noopener noreferrer">{t('guide_youtube')}</a>
 </div>
-<div style={{ marginTop: 18, color: '#888', fontSize: '0.96em', display: 'flex', justifyContent: 'space-between' }}>
+<div style={{ marginTop: 18, color: textColor, fontSize: '0.96em', display: 'flex', justifyContent: 'space-between' }}>
   <span>
     {t('guide_disclaimer')}
     <br />
     <span style={{ fontSize: '0.92em', display: 'inline-block', marginTop: 2 }}>
-      <a href="https://www.kujitonari.net/LotoMind" target="_blank" rel="noopener noreferrer" style={{ color: '#888' }}>
+      <a href="https://www.kujitonari.net/LotoMind" target="_blank" rel="noopener noreferrer" style={{ color: textColor }}>
         Ver 1.08（2025-07-23）
       </a>
     </span>
