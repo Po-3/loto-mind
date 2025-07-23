@@ -290,5 +290,5 @@ const numItemStyle = {
 const footerStyle = {
   fontSize: '0.96em',
   color: '#248',
-  marginTop: 12
+  marginTop: 12,
 };

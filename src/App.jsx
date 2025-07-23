@@ -226,8 +226,9 @@ export default function App() {
           </div>
         )}
         {feature === 'diagnosis' && (
-          <Diagnosis jsonUrl={selectedUrl} lotoType={selectedTabObj.key} />
+          <Diagnosis jsonUrl={selectedUrl} lotoType={selectedTabObj.key} textColor={textColor} />
         )}
+        
         {feature === 'prediction' && (
           <Prediction lotoType={selectedTabObj.key} textColor={textColor} />
         )}
