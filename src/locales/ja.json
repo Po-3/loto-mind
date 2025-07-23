@@ -57,7 +57,7 @@
   "score_not_found": "実績データがありません。",
   "no_prediction": "予想がありません。",
 
-  "search_result": "検索結果：{count}件",
+  "search_result": "検索結果：{{count}}件",
   "most_frequent_numbers": "よく出る数字",
   "least_frequent_numbers": "出にくい数字",
 
@@ -322,6 +322,9 @@
   "選ばれし数字たちに身を委ねよう。": "選ばれし数字たちに身を委ねよう。",
 
   "label_type": "タイプ",
+  "万能型": "万能型",
+  "堅実型": "堅実型",
+  "勝負型": "勝負型",
   "label_prediction_numbers": "予想数字",
   "label_axis_number": "軸数字",
   "label_features_and_aim": "特徴と狙い",
