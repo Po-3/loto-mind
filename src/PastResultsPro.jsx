@@ -136,7 +136,7 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
 
   // --- Filtering ---
   const filtered = data.filter(row => {
-    const draw = Number(row['開催回']);
+    const round = Number(row['開催回']);
     const dateNorm = normalizeDate(row['日付']);
     if (filter.fromRound && round < Number(filter.fromRound)) return false;
     if (filter.toRound && round > Number(filter.toRound)) return false;
