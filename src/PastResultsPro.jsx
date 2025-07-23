@@ -223,7 +223,8 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
 const handleInfo = (label, e) => {
   e.stopPropagation();
   // ↓これでOK（tで説明文も多言語化！）
-  const text = t(featureInfo[label]) || t(label) || label;
+    const labelKey = label.trim();
+  const text = t(featureInfo[labelKey]) || t(labelKey) || labelKey;
   if (!text || !text.trim()) return;
   // ポップアップを画面中央に表示
   const popupWidth = 240;
