@@ -213,10 +213,10 @@ export default function Prediction({ lotoType, latestDrawNoFromProps }) {
               <tbody>
                 {rows.map((row, idx) => (
                   <tr key={idx}>
-                    <td style={tdStyle}>{t(row.type)}</td>
-                    <td style={tdStyle}>{row.nums}</td>
-                    <td style={{ ...tdStyle, fontWeight: 700 }}>{row.axis}</td>
-                    <td style={{ ...tdStyle, textAlign: 'left' }}>{row.feature}</td>
+  <td style={tdStyle}>{t(row.type.trim())}</td>
+  <td style={tdStyle}>{row.nums}</td>
+  <td style={{ ...tdStyle, fontWeight: 700 }}>{row.axis}</td>
+  <td style={{ ...tdStyle, textAlign: 'left' }}>{row.feature}</td>
                   </tr>
                 ))}
               </tbody>
