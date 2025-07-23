@@ -446,12 +446,16 @@ const handleInfo = (label, e) => {
                   <td key={name} style={{ ...tdStyle, color: '#fa5', fontWeight: 600 }}>{row[name]}</td>
                 )}
                 <td style={{ ...tdStyle, color: '#286', fontSize: '0.98em' }}>
-  {(row['特徴'] || '').split('・').map((label, idx) =>
-    <span key={idx}>
-      {idx > 0 && '・'}
-      {t(label.trim())}
-    </span>
-  )}
+  {(row['特徴'] || '')
+    .split('・')
+    .filter(label => label && label.trim())   // ★空やスペースのみを除外
+    .map((label, idx) =>
+      <span key={idx}>
+        {idx > 0 && '・'}
+        {t(label.trim())}
+      </span>
+    )
+  }
 </td>
                 <td style={{ ...tdStyle, color: '#135', fontWeight: 600 }}>{sumMain(row)}</td>
                 {(lotoType === 'loto6' || lotoType === 'loto7') && (
