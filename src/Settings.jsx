@@ -29,7 +29,8 @@ const TEXT_COLOR_PRESETS = [
 // 言語選択肢
 const LANG_OPTIONS = [
   { label: '日本語', value: 'ja' },
-  { label: 'English', value: 'en' }
+  { label: 'English', value: 'en' },
+  { key: 'zh', labelKey: 'lang_zh' }
 ];
 
 const PaletteIcon = ({ size = 27 }) => (
@@ -341,7 +342,7 @@ export default function Settings({
     <br />
     <span style={{ fontSize: '0.92em', display: 'inline-block', marginTop: 2 }}>
       <a href="https://www.kujitonari.net/LotoMind" target="_blank" rel="noopener noreferrer" style={{ color: textColor }}>
-       <br/> Ver 1.4.2（2025-07-23）
+       <br/> Ver 1.4.3（2025-07-23）
       </a>
     </span>
   </span>

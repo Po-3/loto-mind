@@ -145,6 +145,7 @@
   "lang_ja": "Japanese",
   "lang_en": "English",
   "label_language": "Language",
+  "lang_zh": "Chinese",
 
   "font_standard": "Standard (Recommended / Supported on all devices)",
   "font_serif": "Serif (Standard)",
@@ -339,6 +340,6 @@
   "guide_note": "Kujitonari on note (In-depth studies & paid predictions here)",
   "guide_x": "Latest info on X (formerly Twitter)",
   "guide_youtube": "Kujitonari Official YouTube Channel (with video content!)",
-  "guide_disclaimer": "* This service is provided for entertainment and data verification purposes. Please make your own decisions and take responsibility when purchasing based on predictions/analyses."
+  "guide_disclaimer": "* This service is provided for entertainment and data verification purposes. Please make your own decisions and take responsibility when purchasing based on predictions/analyses.",
 
 }
