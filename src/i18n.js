@@ -18,7 +18,9 @@ const resources = {
   ja: { translation: ja },
   en: { translation: en },
   zh: { translation: zh },
-  'zh-TW': { translation: zhTW },
+  "zh-TW": { translation: zhTW },
+  de: { translation: de },
+  ko: { translation: ko }
 };
 
 i18n
