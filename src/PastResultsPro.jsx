@@ -322,7 +322,7 @@ const handleInfo = (label, e) => {
             }));
           }}
           style={{ cursor: 'pointer' }}
-        /> {t(label)}
+        /> {t(label.trim())}
       </label>
       <span
         onMouseDown={e => e.stopPropagation()}
