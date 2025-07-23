@@ -109,24 +109,9 @@ thead th {
   color: #213547 !important;
   background-color: #e0e0e0 !important;
 }
-
-/* ----------- */
-/* ⚠️ ここから下は全て削除 ----------- */
-
-/* 🌙 ダークモード対応（このセクションごと削除） */
-/*
-@media (prefers-color-scheme: dark) {
-  :root { ... }
-  body { ... }
-  a { ... }
-  button { ... }
-  table { ... }
-  th, td { ... }
-  thead { ... }
+/* ▼ となり診断ページのフォントカラー強制適用 */
+.tonari-diagnosis *,
+.tonari-diagnosis *::before,
+.tonari-diagnosis *::after {
+  color: #213547 !important;
 }
-@media (prefers-color-scheme: dark) {
-  thead th { ... }
-}
-*/
-
-/* ----------- */

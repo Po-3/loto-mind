@@ -102,8 +102,8 @@ export default function App() {
   const showPastScrollBtns = feature === 'past' && showScrollBtns;
 
   // --- App全体（root div）にもstyle反映 ---
-  // ここで「検索エリアは常に黒字」にしたい場合、過去検索画面だけ子要素を <div className="search-area">... とする
-  // それ以外は親div(style/color)で一括コントロール
+  // 検索エリアだけ黒字にしたい場合は、PastResultsProを
+  // <div className="search-area" style={{ color: '#222' }}>で囲む形にしています
   return (
     <div
       style={{
@@ -228,7 +228,9 @@ export default function App() {
         {feature === 'diagnosis' && (
           <Diagnosis jsonUrl={selectedUrl} lotoType={selectedTabObj.key} />
         )}
-        {feature === 'prediction' && <Prediction lotoType={selectedTabObj.key} />}
+        {feature === 'prediction' && (
+          <Prediction lotoType={selectedTabObj.key} textColor={textColor} />
+        )}
         {feature === 'settings' && (
           <Settings
             onThemeColorChange={handleThemeColorChange}
