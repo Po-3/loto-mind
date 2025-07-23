@@ -26,12 +26,14 @@ const TEXT_COLOR_PRESETS = [
   { labelKey: 'color_brown', value: '#946800' }
 ];
 
-// 言語選択肢
+/// 言語選択肢
 const LANG_OPTIONS = [
   { label: '日本語', value: 'ja' },
   { label: 'English', value: 'en' },
   { label: '简体中文', value: 'zh' },
-   { label: '繁體中文', value: 'zh-tw' }
+  { label: '繁體中文', value: 'zh-tw' },
+  { label: 'Deutsch', value: 'de' } ,
+  { label: '한국어', value: 'ko' }
 ];
 
 const PaletteIcon = ({ size = 27 }) => (
