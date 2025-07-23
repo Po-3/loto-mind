@@ -152,7 +152,9 @@ export default function App() {
   <img src="/tonari.png" alt="となりアイコン" style={logoIconStyle} />
   <span style={logoTextRight}>Mind</span>
 </div>
-<div style={logoByTonariStyle}>{t('by_tonari')}</div>
+<div style={{ ...logoByTonariStyle, color: textColor }}>
+  {t('by_tonari')}
+</div>
       </div>
 
       {/* ロト種別タブ */}
