@@ -158,20 +158,20 @@ export default function App() {
       </div>
 
       {/* ロト種別タブ */}
-      <div style={tabRowStyle}>
-        {tabs.map((tab) => (
-          <button
-            key={tab.key}
-            onClick={() => handleTabChange(tab.key)}
-            style={{
-              ...tabStyle,
-              ...(selectedTab === tab.key ? activeTabStyle : {}),
-            }}
-          >
-            {t(tab.labelKey)}
-          </button>
-        ))}
-      </div>
+<div style={tabRowStyle}>
+  {tabs.map((tab) => (
+    <button
+      key={tab.key}
+      onClick={() => handleTabChange(tab.key)}
+      style={{
+        ...tabStyle,
+        ...(selectedTab === tab.key ? activeTabStyle : {}),
+      }}
+    >
+      {t(tab.labelKey)}
+    </button>
+  ))}
+</div>
 
       {/* 機能タブ */}
       <div style={featureTabRowStyle}>
@@ -385,40 +385,45 @@ const logoByTonariStyle = {
   textAlign: 'center',
   userSelect: 'none',
 };
+// --- タブ行（4つの場合） ---
 const tabRowStyle = {
   display: 'grid',
-  gridTemplateColumns: `repeat(${tabs.length}, 1fr)`,
-  gap: 4,
-  marginBottom: 12,
+  gridTemplateColumns: 'repeat(4, 1fr)',   // ← 4つの場合
+  gap: 8,                                  // ボタン間の隙間
   width: '100%',
   maxWidth: 470,
+  margin: '0 auto 12px auto',
 };
 
+// --- タブボタン ---
 const tabStyle = {
   width: '100%',
+  aspectRatio: '1.9/1',        // ← ボタンの縦横比（数値を変えれば細長にも正方形にもできる！）
   minWidth: 0,
-  fontWeight: 600,
+  minHeight: 54,
   background: '#fff',
-  border: '1px solid #888',
-  borderRadius: 10,
-  padding: '9px 0',
-  height: '45px',
+  border: '1.5px solid #bbb',
+  borderRadius: 15,
+  fontWeight: 700,
+  fontSize: 'clamp(1.05em, 5vw, 1.28em)', // モバイルで大きく
+  letterSpacing: '0.05em',
   cursor: 'pointer',
-  fontSize: 'clamp(13px, 4vw, 1.16em)', // ←スマホで縮む、PCで大きくなりすぎない
-  letterSpacing: '0.01em',
+  overflow: 'hidden',
   textOverflow: 'ellipsis',
   whiteSpace: 'nowrap',
-  overflow: 'hidden',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  transition: 'all 0.13s',
+  boxShadow: '0 2px 10px #e0eaf3aa',
+  transition: 'all .14s',
 };
+
 const activeTabStyle = {
-  background: '#ededed',
-  fontWeight: 700,
-  border: '1.5px solid #1767a7',
+  background: '#eaf5ff',
   color: '#1767a7',
+  border: '2.5px solid #1767a7',
+  fontWeight: 900,
+  boxShadow: '0 4px 16px #9ee9ff22',
 };
 const featureTabRowStyle = {
   display: 'grid',
