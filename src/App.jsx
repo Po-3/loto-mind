@@ -386,27 +386,33 @@ const logoByTonariStyle = {
   userSelect: 'none',
 };
 const tabRowStyle = {
-  display: 'flex',
-  gap: 4, // gapを縮小して余白を減らす
-  justifyContent: 'center',
-  marginBottom: 10,
+  display: 'grid',
+  gridTemplateColumns: `repeat(${tabs.length}, 1fr)`,
+  gap: 4,
+  marginBottom: 12,
   width: '100%',
+  maxWidth: 470,
 };
 
 const tabStyle = {
-  flex: 1,
-  minWidth: 0, // 必須
-  fontWeight: 400,
+  width: '100%',
+  minWidth: 0,
+  fontWeight: 600,
   background: '#fff',
   border: '1px solid #888',
-  borderRadius: 8,
-  padding: '8px 0', // ← 横paddingを"0"に近く
+  borderRadius: 10,
+  padding: '9px 0',
+  height: '45px',
   cursor: 'pointer',
-  fontSize: 'max(1em, 3.8vw)', // ← スマホで縮む
-  transition: 'all 0.14s',
-  overflow: 'hidden',
+  fontSize: 'clamp(13px, 4vw, 1.16em)', // ←スマホで縮む、PCで大きくなりすぎない
+  letterSpacing: '0.01em',
   textOverflow: 'ellipsis',
   whiteSpace: 'nowrap',
+  overflow: 'hidden',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  transition: 'all 0.13s',
 };
 const activeTabStyle = {
   background: '#ededed',
@@ -415,32 +421,33 @@ const activeTabStyle = {
   color: '#1767a7',
 };
 const featureTabRowStyle = {
-  display: 'flex',
-  gap: 2, // できるだけ狭く
-  justifyContent: 'space-between',
-  marginBottom: 10,
+  display: 'grid',
+  gridTemplateColumns: `repeat(${features.length}, 1fr)`,
+  gap: 2,
+  marginBottom: 12,
   width: '100%',
-  maxWidth: 440,
-  marginLeft: 'auto',
-  marginRight: 'auto',
+  maxWidth: 470,
 };
 
 const featureTabStyle = {
-  flex: 1,
+  width: '100%',
   minWidth: 0,
   background: '#f7f7f7',
   color: '#444',
   border: 'none',
   borderBottom: '3.5px solid #e3e3e3',
   fontWeight: 500,
-  fontSize: 'max(0.96em, 3vw)', // ここも可変
+  fontSize: 'clamp(11px, 3.4vw, 1.08em)',
   cursor: 'pointer',
-  padding: '9px 0 8px 0', // 横padding減らす
+  padding: '8px 0',
+  height: '41px',
   outline: 'none',
   boxShadow: 'none',
   transition: 'all 0.12s',
   overflow: 'hidden',
-  textOverflow: 'ellipsis',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
   whiteSpace: 'nowrap',
 };
 const activeFeatureTabStyle = {
