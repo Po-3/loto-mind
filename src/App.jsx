@@ -38,7 +38,10 @@ function getSettings() {
 }
 
 export default function App() {
-  const { t } = useTranslation();
+  // ⬇️⬇️⬇️ ここでOK！ ⬇️⬇️⬇️
+  const { i18n, t } = useTranslation();
+  const lang = i18n.language; // 'ja', 'en', 'de' など
+
   const [settings, setSettings] = useState(getSettings);
 
   const [selectedTab, setSelectedTab] = useState(() => getStartupValue('LotoType', 'defaultLotoType', 'loto6'));
@@ -102,8 +105,6 @@ export default function App() {
   const showPastScrollBtns = feature === 'past' && showScrollBtns;
 
   // --- App全体（root div）にもstyle反映 ---
-  // 検索エリアだけ黒字にしたい場合は、PastResultsProを
-  // <div className="search-area" style={{ color: '#222' }}>で囲む形にしています
   return (
     <div
       style={{
@@ -134,27 +135,27 @@ export default function App() {
       {/* アイコン＋見出し（ロゴ） */}
       <div style={headerContainerStyle}>
         <div
-  style={{
-    ...logoRowStyle,
-    cursor: 'pointer',
-    userSelect: 'none',
-    transition: 'opacity .13s',
-    opacity: 0.97,
-  }}
-  title="最新の画面にリロード"
-  onClick={() => window.location.reload()}
-  tabIndex={0}
-  onKeyDown={e => (e.key === 'Enter' || e.key === ' ') && window.location.reload()}
-  role="button"
-  aria-label="ロゴをタップでリロード"
->
-  <span style={{ ...logoTextLeft, color: textColor }}>Loto</span>
-  <img src="/tonari.png" alt="となりアイコン" style={logoIconStyle} />
-  <span style={logoTextRight}>Mind</span>
-</div>
-<div style={{ ...logoByTonariStyle, color: textColor }}>
-  {t('by_tonari')}
-</div>
+          style={{
+            ...logoRowStyle,
+            cursor: 'pointer',
+            userSelect: 'none',
+            transition: 'opacity .13s',
+            opacity: 0.97,
+          }}
+          title="最新の画面にリロード"
+          onClick={() => window.location.reload()}
+          tabIndex={0}
+          onKeyDown={e => (e.key === 'Enter' || e.key === ' ') && window.location.reload()}
+          role="button"
+          aria-label="ロゴをタップでリロード"
+        >
+          <span style={{ ...logoTextLeft, color: textColor }}>Loto</span>
+          <img src="/tonari.png" alt="となりアイコン" style={logoIconStyle} />
+          <span style={logoTextRight}>Mind</span>
+        </div>
+        <div style={{ ...logoByTonariStyle, color: textColor }}>
+          {t('by_tonari')}
+        </div>
       </div>
 
       {/* ロト種別タブ */}
@@ -182,9 +183,13 @@ export default function App() {
             style={{
               ...featureTabStyle,
               ...(feature === f.key ? activeFeatureTabStyle : {}),
+              // ⬇️ 言語によって大きさ＆フォントを調整（例：独・英のみ文字小さめ＆高さ大きめ）
+              ...(lang === 'de' || lang === 'en'
+                ? { fontSize: '0.93em', minHeight: 46, padding: '11px 0 10px 0', letterSpacing: '-0.5px' }
+                : {}),
             }}
           >
-            <span style={{ whiteSpace: 'pre-line', lineHeight: 1.15 }}>{t(f.labelKey)}</span>
+            <span style={{ whiteSpace: 'pre-line', lineHeight: 1.18 }}>{t(f.labelKey)}</span>
           </button>
         ))}
       </div>
@@ -222,7 +227,6 @@ export default function App() {
       {/* メイン表示エリア */}
       <div style={{ width: '100%', position: 'relative' }}>
         {feature === 'past' && (
-          // 検索画面だけ強制で黒字にしたい場合ここでラップ
           <div className="search-area" style={{ color: '#222' }}>
             <PastResultsPro jsonUrl={selectedUrl} lotoType={selectedTabObj.key} />
           </div>
@@ -230,7 +234,6 @@ export default function App() {
         {feature === 'diagnosis' && (
           <Diagnosis jsonUrl={selectedUrl} lotoType={selectedTabObj.key} textColor={textColor} />
         )}
-        
         {feature === 'prediction' && (
           <Prediction lotoType={selectedTabObj.key} textColor={textColor} />
         )}
