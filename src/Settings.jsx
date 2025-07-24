@@ -345,7 +345,7 @@ export default function Settings({
     <br />
     <span style={{ fontSize: '0.92em', display: 'inline-block', marginTop: 2 }}>
       <a href="https://www.kujitonari.net/LotoMind" target="_blank" rel="noopener noreferrer" style={{ color: textColor }}>
-       <br/> Ver 1.4.3（2025-07-23）
+       <br/> Ver 1.4.4（2025-07-24）
       </a>
     </span>
   </span>
