@@ -93,6 +93,11 @@ const lotoConfig = {
   }
 };
 
+// --- ラベル正規化関数 ---
+function normalizeKey(str) {
+  return (str || '').replace(/\s/g, '').trim();
+}
+
 // --- アイコン ---
 const InfoIcon = ({ onClick }) => (
   <span style={{ display: 'inline-block', marginLeft: 6, cursor: 'pointer', color: '#e26580', fontSize: 15 }} onClick={onClick}>ⓘ</span>
@@ -175,7 +180,7 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
     const head = [
       t('round'), t('date'),
       ...Array(config.main).fill(0).map((_, i) => t('main_num', { num: i + 1 })),
-        ...config.bonusNames.map((name, i) => t('bonus_num', { num: i + 1 })),
+      ...config.bonusNames.map((name, i) => t('bonus_num', { num: i + 1 })),
       ...config.bonusNames, t('features'),
       ...(lotoType === 'loto6' || lotoType === 'loto7' ? [t('carryover')] : []),
       ...config.ranks.flatMap(rank => [t('rank_count', { rank: rank.rank }), t('rank_prize', { rank: rank.rank })])
@@ -219,20 +224,19 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
     });
   }, [jsonUrl]);
 
-// --- Infoポップアップ ---
-const handleInfo = (label, e) => {
-  e.stopPropagation();
-  // ↓これでOK（tで説明文も多言語化！）
-    const labelKey = label.trim();
-  const text = t(featureInfo[labelKey]) || t(labelKey) || labelKey;
-  if (!text || !text.trim()) return;
-  // ポップアップを画面中央に表示
-  const popupWidth = 240;
-  const popupHeight = 80;
-  const x = Math.max((window.innerWidth - popupWidth) / 2, 0);
-  const y = Math.max((window.innerHeight - popupHeight) / 2, 0);
-  setPopup({ show: true, text, x, y });
-};
+  // --- Infoポップアップ ---
+  const handleInfo = (label, e) => {
+    e.stopPropagation();
+    const labelKey = normalizeKey(label);
+    const text = t(featureInfo[labelKey]) || t(labelKey) || labelKey;
+    if (!text || !text.trim()) return;
+    // ポップアップを画面中央に表示
+    const popupWidth = 240;
+    const popupHeight = 80;
+    const x = Math.max((window.innerWidth - popupWidth) / 2, 0);
+    const y = Math.max((window.innerHeight - popupHeight) / 2, 0);
+    setPopup({ show: true, text, x, y });
+  };
 
   const hidePopup = () => setPopup(popup => ({ ...popup, show: false }));
 
@@ -307,39 +311,31 @@ const handleInfo = (label, e) => {
           </label>
         </div>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, alignItems: 'center', marginBottom: 7 }}>
-
-// --- 追加：ラベル正規化関数 ---
-function normalizeKey(str) 
-  return (str || '').replace(/\s/g, '').trim();
-
-{config.labels.map(label => {
-  return (
-    <span key={label} style={{ marginRight: 3, display: 'inline-flex', alignItems: 'center' }}>
-      <label style={{ margin: 0, cursor: 'pointer' }}>
-        <input
-          type="checkbox"
-          checked={filter.features.includes(label)}
-          onChange={e => {
-            setFilter(f => ({
-              ...f,
-              features: e.target.checked
-                ? [...f.features, label]
-                : f.features.filter(l => l !== label)
-            }));
-          }}
-          style={{ cursor: 'pointer' }}
-        /> {t(label.trim())}
-      </label>
-      <span
-        onMouseDown={e => e.stopPropagation()}
-        style={{ display: 'inline-block' }}
-      >
-        {/* ▼ここを修正（説明も多言語化） */}
-       <InfoIcon onClick={ev => handleInfo(label, ev)} />
-      </span>
-    </span>
-  );
-})}
+          {config.labels.map(label => (
+            <span key={label} style={{ marginRight: 3, display: 'inline-flex', alignItems: 'center' }}>
+              <label style={{ margin: 0, cursor: 'pointer' }}>
+                <input
+                  type="checkbox"
+                  checked={filter.features.includes(label)}
+                  onChange={e => {
+                    setFilter(f => ({
+                      ...f,
+                      features: e.target.checked
+                        ? [...f.features, label]
+                        : f.features.filter(l => l !== label)
+                    }));
+                  }}
+                  style={{ cursor: 'pointer' }}
+                /> {t(normalizeKey(label))}
+              </label>
+              <span
+                onMouseDown={e => e.stopPropagation()}
+                style={{ display: 'inline-block' }}
+              >
+                <InfoIcon onClick={ev => handleInfo(label, ev)} />
+              </span>
+            </span>
+          ))}
           <label style={{ marginLeft: 6 }}>{t('from_sum')}:
             <input
               type="number"
@@ -386,8 +382,8 @@ function normalizeKey(str)
         </div>
         <div style={{ fontSize: '0.97em', margin: '8px 0' }}>
           <span>
-  {t('search_result', { count: filtered.length })} 
-  {getFilterSummary() && <span>{getFilterSummary()}</span>}
+            {t('search_result', { count: filtered.length })} 
+            {getFilterSummary() && <span>{getFilterSummary()}</span>}
           </span>
           <br />
           <span style={{ color: '#357' }}>
@@ -417,29 +413,29 @@ function normalizeKey(str)
         minWidth: 0
       }}>
         <table style={{ borderCollapse: 'collapse', width: '100%', minWidth: 850, fontSize: '0.96em' }}>
-<thead>
-  <tr>
-    <th style={{ ...thStyle, ...stickyLeftStyle }}>{t('draw')}</th>
-    <th style={thStyle}>{t('date')}</th>
-    {Array(config.main).fill(0).map((_, i) =>
-      <th key={i} style={thStyle}>{t('main_num', { num: i + 1 })}</th>
-    )}
-    {config.bonusNames.map((name, i) =>
-      <th key={name} style={thStyle}>{t('bonus_num', { num: i + 1 })}</th>
-    )}
-    <th style={{ ...thStyle, minWidth: 180, width: '24%' }}>{t('features')}</th>
-    <th style={thStyle}>{t('sum')}</th>
-    {(lotoType === 'loto6' || lotoType === 'loto7') && (
-      <th style={thStyle}>{t('carryover')}</th>
-    )}
-    {config.ranks.map(({ rank }) => (
-      <th key={rank} style={thStyle}>{t('rank_count', { rank: t(`ranks.${rank}`) })}</th>
-    ))}
-    {config.ranks.map(({ rank }) => (
-      <th key={rank + '_prize'} style={thStyle}>{t('rank_prize', { rank: t(`ranks.${rank}`) })}</th>
-    ))}
-  </tr>
-</thead>
+          <thead>
+            <tr>
+              <th style={{ ...thStyle, ...stickyLeftStyle }}>{t('draw')}</th>
+              <th style={thStyle}>{t('date')}</th>
+              {Array(config.main).fill(0).map((_, i) =>
+                <th key={i} style={thStyle}>{t('main_num', { num: i + 1 })}</th>
+              )}
+              {config.bonusNames.map((name, i) =>
+                <th key={name} style={thStyle}>{t('bonus_num', { num: i + 1 })}</th>
+              )}
+              <th style={{ ...thStyle, minWidth: 180, width: '24%' }}>{t('features')}</th>
+              <th style={thStyle}>{t('sum')}</th>
+              {(lotoType === 'loto6' || lotoType === 'loto7') && (
+                <th style={thStyle}>{t('carryover')}</th>
+              )}
+              {config.ranks.map(({ rank }) => (
+                <th key={rank} style={thStyle}>{t('rank_count', { rank: t(`ranks.${rank}`) })}</th>
+              ))}
+              {config.ranks.map(({ rank }) => (
+                <th key={rank + '_prize'} style={thStyle}>{t('rank_prize', { rank: t(`ranks.${rank}`) })}</th>
+              ))}
+            </tr>
+          </thead>
           <tbody>
             {paged.map(row => (
               <tr key={row['開催回']}>
@@ -452,21 +448,21 @@ function normalizeKey(str)
                   <td key={name} style={{ ...tdStyle, color: '#fa5', fontWeight: 600 }}>{row[name]}</td>
                 )}
                 <td style={{ ...tdStyle, color: '#286', fontSize: '0.98em' }}>
-  {Array.isArray(row['特徴'])
-    ? row['特徴'].map((label, idx) =>
-        <span key={idx}>
-          {idx > 0 && '・'}
-          {t(label.trim())}
-        </span>
-      )
-    : (row['特徴'] || '').split('・').map((label, idx) =>
-        <span key={idx}>
-          {idx > 0 && '・'}
-          {t(label.trim())}
-        </span>
-      )
-  }
-</td>
+                  {Array.isArray(row['特徴'])
+                    ? row['特徴'].map((label, idx) =>
+                        <span key={idx}>
+                          {idx > 0 && '・'}
+                          {t(normalizeKey(label))}
+                        </span>
+                      )
+                    : (row['特徴'] || '').split('・').map((label, idx) =>
+                        <span key={idx}>
+                          {idx > 0 && '・'}
+                          {t(normalizeKey(label))}
+                        </span>
+                      )
+                  }
+                </td>
                 <td style={{ ...tdStyle, color: '#135', fontWeight: 600 }}>{sumMain(row)}</td>
                 {(lotoType === 'loto6' || lotoType === 'loto7') && (
                   <td style={{ ...tdStyle, color: '#c43', fontWeight: 600, whiteSpace: 'nowrap' }}>
