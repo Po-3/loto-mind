@@ -366,7 +366,7 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
             >
               <option value="">{t('all')}</option>
               {config.oddEvenPatterns.map(opt =>
-                <option key={opt.value} value={opt.value}>{opt.label}</option>
+  <option key={opt.value} value={opt.value}>{t(`odd_even_patterns.${opt.value}`)}</option>
               )}
             </select>
           </label>
