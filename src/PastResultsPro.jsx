@@ -307,6 +307,11 @@ const handleInfo = (label, e) => {
           </label>
         </div>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, alignItems: 'center', marginBottom: 7 }}>
+
+// --- 追加：ラベル正規化関数 ---
+function normalizeKey(str) 
+  return (str || '').replace(/\s/g, '').trim();
+
 {config.labels.map(label => {
   return (
     <span key={label} style={{ marginRight: 3, display: 'inline-flex', alignItems: 'center' }}>
