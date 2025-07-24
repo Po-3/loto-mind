@@ -174,20 +174,20 @@ export default function App() {
 </div>
 
       {/* 機能タブ */}
-      <div style={featureTabRowStyle}>
-        {features.map((f) => (
-          <button
-            key={f.key}
-            onClick={() => handleFeatureChange(f.key)}
-            style={{
-              ...featureTabStyle,
-              ...(feature === f.key ? activeFeatureTabStyle : {}),
-            }}
-          >
-            <span style={{ whiteSpace: 'pre-line', lineHeight: 1.15 }}>{t(f.labelKey)}</span>
-          </button>
-        ))}
-      </div>
+<div style={featureTabRowStyle}>
+  {features.map((f) => (
+    <button
+      key={f.key}
+      onClick={() => handleFeatureChange(f.key)}
+      style={{
+        ...featureTabStyle,
+        ...(feature === f.key ? activeFeatureTabStyle : {}),
+      }}
+    >
+      <span style={{ textAlign: 'center', width: '100%' }}>{t(f.labelKey)}</span>
+    </button>
+  ))}
+</div>
 
       {/* 高額当選売場情報ボタン（横幅100%・中央） */}
       <div style={{
@@ -427,40 +427,41 @@ const activeTabStyle = {
 };
 const featureTabRowStyle = {
   display: 'grid',
-  gridTemplateColumns: `repeat(${features.length}, 1fr)`,
-  gap: 2,
-  marginBottom: 12,
+  gridTemplateColumns: 'repeat(4, 1fr)',   // 4つを均等分割
+  gap: 10,
   width: '100%',
   maxWidth: 470,
+  margin: '0 auto 14px auto',
 };
 
 const featureTabStyle = {
   width: '100%',
+  aspectRatio: '1.8/1',    // 横長四角形（1.8:1） 縦長がいいなら'1/1'
   minWidth: 0,
+  minHeight: 56,           // これでスマホでも指で押しやすい
   background: '#f7f7f7',
-  color: '#444',
+  color: '#333',
   border: 'none',
-  borderBottom: '3.5px solid #e3e3e3',
-  fontWeight: 500,
-  fontSize: 'clamp(11px, 3.4vw, 1.08em)',
+  borderRadius: 13,
+  fontWeight: 600,
+  fontSize: 'clamp(1.08em, 4vw, 1.25em)', // 画面幅に応じて大きく
   cursor: 'pointer',
-  padding: '8px 0',
-  height: '41px',
-  outline: 'none',
-  boxShadow: 'none',
-  transition: 'all 0.12s',
+  padding: '0',            // 横padding不要
+  boxShadow: '0 2px 8px #f0f2f6cc',
+  transition: 'all .13s',
   overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  whiteSpace: 'pre-line',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  whiteSpace: 'nowrap',
+  lineHeight: 1.15,
 };
 const activeFeatureTabStyle = {
   background: '#337be8',
   color: '#fff',
-  borderBottom: '3.5px solid #225bb7',
-  fontWeight: 700,
-  boxShadow: '0 2px 8px #337be811',
+  fontWeight: 800,
+  boxShadow: '0 2px 18px #337be855',
 };
 const guideStyle = {
   background: '#f8fafd',
