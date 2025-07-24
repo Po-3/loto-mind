@@ -158,36 +158,36 @@ export default function App() {
       </div>
 
       {/* ロト種別タブ */}
-<div style={tabRowStyle}>
-  {tabs.map((tab) => (
-    <button
-      key={tab.key}
-      onClick={() => handleTabChange(tab.key)}
-      style={{
-        ...tabStyle,
-        ...(selectedTab === tab.key ? activeTabStyle : {}),
-      }}
-    >
-      {t(tab.labelKey)}
-    </button>
-  ))}
-</div>
+      <div style={tabRowStyle}>
+        {tabs.map((tab) => (
+          <button
+            key={tab.key}
+            onClick={() => handleTabChange(tab.key)}
+            style={{
+              ...tabStyle,
+              ...(selectedTab === tab.key ? activeTabStyle : {}),
+            }}
+          >
+            {t(tab.labelKey)}
+          </button>
+        ))}
+      </div>
 
       {/* 機能タブ */}
-<div style={featureTabRowStyle}>
-  {features.map((f) => (
-    <button
-      key={f.key}
-      onClick={() => handleFeatureChange(f.key)}
-      style={{
-        ...featureTabStyle,
-        ...(feature === f.key ? activeFeatureTabStyle : {}),
-      }}
-    >
-      <span style={{ textAlign: 'center', width: '100%' }}>{t(f.labelKey)}</span>
-    </button>
-  ))}
-</div>
+      <div style={featureTabRowStyle}>
+        {features.map((f) => (
+          <button
+            key={f.key}
+            onClick={() => handleFeatureChange(f.key)}
+            style={{
+              ...featureTabStyle,
+              ...(feature === f.key ? activeFeatureTabStyle : {}),
+            }}
+          >
+            <span style={{ whiteSpace: 'pre-line', lineHeight: 1.15 }}>{t(f.labelKey)}</span>
+          </button>
+        ))}
+      </div>
 
       {/* 高額当選売場情報ボタン（横幅100%・中央） */}
       <div style={{
@@ -385,83 +385,61 @@ const logoByTonariStyle = {
   textAlign: 'center',
   userSelect: 'none',
 };
-// --- タブ行（4つの場合） ---
 const tabRowStyle = {
-  display: 'grid',
-  gridTemplateColumns: 'repeat(4, 1fr)',   // ← 4つの場合
-  gap: 8,                                  // ボタン間の隙間
-  width: '100%',
-  maxWidth: 470,
-  margin: '0 auto 12px auto',
-};
-
-// --- タブボタン ---
-const tabStyle = {
-  width: '100%',
-  aspectRatio: '1.9/1',        // ← ボタンの縦横比（数値を変えれば細長にも正方形にもできる！）
-  minWidth: 0,
-  minHeight: 54,
-  background: '#fff',
-  border: '1.5px solid #bbb',
-  borderRadius: 15,
-  fontWeight: 700,
-  fontSize: 'clamp(1.05em, 5vw, 1.28em)', // モバイルで大きく
-  letterSpacing: '0.05em',
-  cursor: 'pointer',
-  overflow: 'hidden',
-  textOverflow: 'ellipsis',
-  whiteSpace: 'nowrap',
   display: 'flex',
-  alignItems: 'center',
+  gap: 12,
   justifyContent: 'center',
-  boxShadow: '0 2px 10px #e0eaf3aa',
-  transition: 'all .14s',
+  marginBottom: 15,
+  width: '100%',
 };
-
+const tabStyle = {
+  fontWeight: 400,
+  background: '#fff',
+  border: '1px solid #888',
+  borderRadius: 8,
+  padding: '8px 20px',
+  cursor: 'pointer',
+  flex: 1,
+  minWidth: 0,
+  fontSize: '1em',
+  transition: 'all 0.14s',
+};
 const activeTabStyle = {
-  background: '#eaf5ff',
+  background: '#ededed',
+  fontWeight: 700,
+  border: '1.5px solid #1767a7',
   color: '#1767a7',
-  border: '2.5px solid #1767a7',
-  fontWeight: 900,
-  boxShadow: '0 4px 16px #9ee9ff22',
 };
 const featureTabRowStyle = {
-  display: 'grid',
-  gridTemplateColumns: 'repeat(4, 1fr)',   // 4つを均等分割
-  gap: 10,
-  width: '100%',
-  maxWidth: 470,
-  margin: '0 auto 14px auto',
-};
-
-const featureTabStyle = {
-  width: '100%',
-  aspectRatio: '1.8/1',    // 横長四角形（1.8:1） 縦長がいいなら'1/1'
-  minWidth: 0,
-  minHeight: 56,           // これでスマホでも指で押しやすい
-  background: '#f7f7f7',
-  color: '#333',
-  border: 'none',
-  borderRadius: 13,
-  fontWeight: 600,
-  fontSize: 'clamp(1.08em, 4vw, 1.25em)', // 画面幅に応じて大きく
-  cursor: 'pointer',
-  padding: '0',            // 横padding不要
-  boxShadow: '0 2px 8px #f0f2f6cc',
-  transition: 'all .13s',
-  overflow: 'hidden',
-  textOverflow: 'ellipsis',
-  whiteSpace: 'pre-line',
   display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  lineHeight: 1.15,
+  justifyContent: 'space-between',
+  marginBottom: 16,
+  width: '100%',
+  maxWidth: 440,
+  marginLeft: 'auto',
+  marginRight: 'auto',
+};
+const featureTabStyle = {
+  flex: 1,
+  background: '#f7f7f7',
+  color: '#444',
+  border: 'none',
+  borderBottom: '3.5px solid #e3e3e3',
+  fontWeight: 500,
+  fontSize: '1.05em',
+  cursor: 'pointer',
+  padding: '12px 0 9px 0',
+  minWidth: 0,
+  outline: 'none',
+  boxShadow: 'none',
+  transition: 'all 0.12s',
 };
 const activeFeatureTabStyle = {
   background: '#337be8',
   color: '#fff',
-  fontWeight: 800,
-  boxShadow: '0 2px 18px #337be855',
+  borderBottom: '3.5px solid #225bb7',
+  fontWeight: 700,
+  boxShadow: '0 2px 8px #337be811',
 };
 const guideStyle = {
   background: '#f8fafd',

@@ -123,7 +123,7 @@
   "score_not_found": "실적 데이터가 없습니다.",
   "no_prediction": "예측이 없습니다.",
 
-  "search_result": "검색 결과: {count}건",
+  "search_result": "검색 결과: {{count}}건",
   "most_frequent_numbers": "자주 나오는 숫자",
   "least_frequent_numbers": "잘 나오지 않는 숫자",
 

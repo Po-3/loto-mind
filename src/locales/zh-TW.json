@@ -123,7 +123,7 @@
   "score_not_found": "沒有成績資料。",
   "no_prediction": "沒有預測。",
 
-  "search_result": "搜尋結果：{count}筆",
+  "search_result": "搜尋結果：{{count}}筆",
   "most_frequent_numbers": "最常出現的號碼",
   "least_frequent_numbers": "最少出現的號碼",
 
