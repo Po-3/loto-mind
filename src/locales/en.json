@@ -57,7 +57,7 @@
   "score_not_found": "No result data found.",
   "no_prediction": "No prediction available.",
 
-  "search_result": "Search result: {count} items",
+  "search_result": "Search result: {{count}}items",
   "most_frequent_numbers": "Most Frequent Numbers",
   "least_frequent_numbers": "Least Frequent Numbers",
 
