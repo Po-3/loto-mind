@@ -387,22 +387,26 @@ const logoByTonariStyle = {
 };
 const tabRowStyle = {
   display: 'flex',
-  gap: 12,
+  gap: 4, // gapを縮小して余白を減らす
   justifyContent: 'center',
-  marginBottom: 15,
+  marginBottom: 10,
   width: '100%',
 };
+
 const tabStyle = {
+  flex: 1,
+  minWidth: 0, // 必須
   fontWeight: 400,
   background: '#fff',
   border: '1px solid #888',
   borderRadius: 8,
-  padding: '8px 20px',
+  padding: '8px 0', // ← 横paddingを"0"に近く
   cursor: 'pointer',
-  flex: 1,
-  minWidth: 0,
-  fontSize: '1em',
+  fontSize: 'max(1em, 3.8vw)', // ← スマホで縮む
   transition: 'all 0.14s',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  whiteSpace: 'nowrap',
 };
 const activeTabStyle = {
   background: '#ededed',
@@ -412,27 +416,32 @@ const activeTabStyle = {
 };
 const featureTabRowStyle = {
   display: 'flex',
+  gap: 2, // できるだけ狭く
   justifyContent: 'space-between',
-  marginBottom: 16,
+  marginBottom: 10,
   width: '100%',
   maxWidth: 440,
   marginLeft: 'auto',
   marginRight: 'auto',
 };
+
 const featureTabStyle = {
   flex: 1,
+  minWidth: 0,
   background: '#f7f7f7',
   color: '#444',
   border: 'none',
   borderBottom: '3.5px solid #e3e3e3',
   fontWeight: 500,
-  fontSize: '1.05em',
+  fontSize: 'max(0.96em, 3vw)', // ここも可変
   cursor: 'pointer',
-  padding: '12px 0 9px 0',
-  minWidth: 0,
+  padding: '9px 0 8px 0', // 横padding減らす
   outline: 'none',
   boxShadow: 'none',
   transition: 'all 0.12s',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  whiteSpace: 'nowrap',
 };
 const activeFeatureTabStyle = {
   background: '#337be8',
