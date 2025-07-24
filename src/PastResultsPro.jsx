@@ -120,7 +120,9 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
 
   function getFilterSummary() {
     const out = [];
-    if (filter.features.length > 0) out.push(filter.features.join('・'));
+    if (filter.features.length > 0) out.push(
+  filter.features.map(label => t(normalizeKey(label))).join('・')
+);
     if (filter.includeNumbers) out.push(`${t('include_numbers')}:${filter.includeNumbers}`);
     if (filter.excludeNumbers) out.push(`${t('exclude_numbers')}:${filter.excludeNumbers}`);
     if (filter.fromRound || filter.toRound) out.push(`${t('from_round')}:${filter.fromRound || '?'}〜${filter.toRound || '?'}`);

@@ -123,7 +123,7 @@
   "score_not_found": "没有成绩数据。",
   "no_prediction": "没有预测。",
 
-  "search_result": "搜索结果：{count}条",
+  "search_result": "搜索结果：{{count}}条",
   "most_frequent_numbers": "最常出现的数字",
   "least_frequent_numbers": "最少出现的数字",
 
