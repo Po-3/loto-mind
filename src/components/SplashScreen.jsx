@@ -5,7 +5,7 @@ export default function SplashScreen({ onFinish }) {
   useEffect(() => {
     const timer = setTimeout(() => {
       onFinish();
-    }, 700); // 表示時間（ミリ秒）
+    }, 1000); // 表示時間：1秒
     return () => clearTimeout(timer);
   }, [onFinish]);
 
@@ -14,7 +14,7 @@ export default function SplashScreen({ onFinish }) {
       <img
         src="/logo.png"
         alt="LotoMind Logo"
-        className="w-24 h-24 mb-4"
+        className="w-28 h-28 mb-4"
         style={{ objectFit: 'contain' }}
       />
       <p className="text-gray-600 text-sm tracking-wide">読み込み中…</p>
