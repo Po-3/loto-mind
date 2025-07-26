@@ -2,12 +2,12 @@ import { useEffect } from "react";
 
 export default function SplashScreen({ onFinish }) {
   useEffect(() => {
-    const timer = setTimeout(onFinish, 1000); // 1秒後にスプラッシュを終了
+    const timer = setTimeout(onFinish, 1000);
     return () => clearTimeout(timer);
   }, [onFinish]);
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-white z-50">
+    <div className="fixed inset-0 h-screen w-screen flex items-center justify-center bg-white z-50">
       <div className="text-center">
         <img
           src="/logo.png"
