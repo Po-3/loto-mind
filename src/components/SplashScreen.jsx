@@ -1,17 +1,16 @@
-// src/components/SplashScreen.jsx
+import { useEffect } from "react";
 
 export default function SplashScreen({ onFinish }) {
-  // 自動非表示のタイマー（任意）
-  // useEffect(() => {
-  //   const timer = setTimeout(onFinish, 1500); // 1.5秒後に消す例
-  //   return () => clearTimeout(timer);
-  // }, [onFinish]);
+  useEffect(() => {
+    const timer = setTimeout(onFinish, 1000); // 1秒後にスプラッシュを終了
+    return () => clearTimeout(timer);
+  }, [onFinish]);
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-white z-50">
       <div className="text-center">
         <img
-          src="/logo.png" // パスは必要に応じて変更
+          src="/logo.png"
           alt="Logo"
           className="w-24 h-24 mx-auto mb-4"
         />
