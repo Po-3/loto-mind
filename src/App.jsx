@@ -7,6 +7,24 @@ import Prediction from './Prediction';
 import Settings from './Settings';
 import WinningOutlet from './components/WinningOutlet.jsx'; // ★追加
 import { Trans } from 'react-i18next';
+import SplashScreen from './components/SplashScreen';
+
+// ⬇️ スプラッシュ用の軽いAppラッパー
+function AppWrapper() {
+  const [showSplash, setShowSplash] = useState(true);
+
+  return (
+    <>
+      {showSplash ? (
+        <SplashScreen onFinish={() => setShowSplash(false)} />
+      ) : (
+        <App />
+      )}
+    </>
+  );
+}
+
+export default AppWrapper;
 
 const tabs = [
   { key: 'miniloto', labelKey: 'miniloto', url: 'https://po-3.github.io/miniloto-data/miniloto.json' },
@@ -37,8 +55,8 @@ function getSettings() {
   };
 }
 
-export default function App() {
-  // ⬇️⬇️⬇️ ここでOK！ ⬇️⬇️⬇️
+// ⬇️⬇️⬇️ 本体はここから function App() で囲む ⬇️⬇️⬇️
+function App() {
   const { i18n, t } = useTranslation();
   const lang = i18n.language; // 'ja', 'en', 'de' など
 
