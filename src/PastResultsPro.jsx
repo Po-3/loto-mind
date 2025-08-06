@@ -22,6 +22,13 @@ const featureInfo = {
   '高低ミックス': 'desc_highlow_mix'
 };
 
+// --- 特徴ごと説明キー自動切り替え関数 ---
+function getFeatureDescKey(label, lotoType) {
+  if (label === '合計小さめ') return `desc_low_sum_${lotoType}`;
+  if (label === '合計大きめ') return `desc_high_sum_${lotoType}`;
+  return featureInfo[label] || label;
+}
+
 // --- ロト種別ごとの設定（HTMLラベルに完全一致） ---
 const lotoConfig = {
   miniloto: {
@@ -229,8 +236,8 @@ export default function PastResultsPro({ jsonUrl, lotoType }) {
   // --- Infoポップアップ ---
   const handleInfo = (label, e) => {
     e.stopPropagation();
-    const labelKey = normalizeKey(label);
-    const text = t(featureInfo[labelKey]) || t(labelKey) || labelKey;
+const descKey = getFeatureDescKey(label, lotoType);
+const text = t(descKey) || t(label) || label;
     if (!text || !text.trim()) return;
     // ポップアップを画面中央に表示
     const popupWidth = 240;
