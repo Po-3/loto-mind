@@ -19,7 +19,7 @@ const featureInfo = {
   '偶数多め_loto7': 'desc_even_heavy_loto7',
   '合計小さめ_loto7': 'desc_low_sum_loto7',
   '合計大きめ_loto7': 'desc_high_sum_loto7',
-  '高低ミックス': 'desc_highlow_mix'
+  '高低ミックス': 'desc_high_low_mix'
 };
 
 // --- 特徴ごと説明キー自動切り替え関数 ---
