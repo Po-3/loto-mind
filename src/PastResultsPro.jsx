@@ -26,6 +26,8 @@ const featureInfo = {
 function getFeatureDescKey(label, lotoType) {
   if (label === '合計小さめ') return `desc_low_sum_${lotoType}`;
   if (label === '合計大きめ') return `desc_high_sum_${lotoType}`;
+  if (label === '奇数多め') return `desc_odd_heavy_${lotoType}`;
+  if (label === '偶数多め') return `desc_even_heavy_${lotoType}`;
   return featureInfo[label] || label;
 }
 
